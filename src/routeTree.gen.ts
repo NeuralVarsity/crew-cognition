@@ -16,6 +16,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as JiraRouteImport } from './routes/jira'
@@ -24,6 +25,7 @@ import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
@@ -61,6 +63,11 @@ const ReportsRoute = ReportsRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -103,6 +110,11 @@ const ClickupRoute = ClickupRouteImport.update({
   path: '/clickup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -123,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -131,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -143,6 +157,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -151,6 +166,7 @@ export interface FileRoutesByTo {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -164,6 +180,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -172,6 +189,7 @@ export interface FileRoutesById {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -186,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -194,6 +213,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -206,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -214,6 +235,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -226,6 +248,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -234,6 +257,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -247,6 +271,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministrationRoute: typeof AdministrationRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  AuthRoute: typeof AuthRoute
   ClickupRoute: typeof ClickupRoute
   DepartmentsRoute: typeof DepartmentsRoute
   EmployeesRoute: typeof EmployeesRoute
@@ -255,6 +280,7 @@ export interface RootRouteChildren {
   JiraRoute: typeof JiraRoute
   MaintenanceRoute: typeof MaintenanceRoute
   NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
   ProjectsRoute: typeof ProjectsRoute
   ReportsRoute: typeof ReportsRoute
   ServerErrorRoute: typeof ServerErrorRoute
@@ -315,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
@@ -371,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClickupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/analytics': {
       id: '/analytics'
       path: '/analytics'
@@ -399,6 +439,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministrationRoute: AdministrationRoute,
   AnalyticsRoute: AnalyticsRoute,
+  AuthRoute: AuthRoute,
   ClickupRoute: ClickupRoute,
   DepartmentsRoute: DepartmentsRoute,
   EmployeesRoute: EmployeesRoute,
@@ -407,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   JiraRoute: JiraRoute,
   MaintenanceRoute: MaintenanceRoute,
   NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
   ProjectsRoute: ProjectsRoute,
   ReportsRoute: ReportsRoute,
   ServerErrorRoute: ServerErrorRoute,
