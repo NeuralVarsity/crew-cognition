@@ -882,6 +882,16 @@ export type Database = {
     }
     Functions: {
       can_manage_workforce: { Args: { _user_id: string }; Returns: boolean }
+      create_organization_and_join: {
+        Args: {
+          _country?: string
+          _currency?: string
+          _industry?: string
+          _name: string
+          _timezone?: string
+        }
+        Returns: string
+      }
       current_org_id: { Args: never; Returns: string }
       has_role: {
         Args: {
