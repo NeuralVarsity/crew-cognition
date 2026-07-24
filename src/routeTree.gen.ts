@@ -29,6 +29,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -131,6 +132,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmployeesIdRoute = EmployeesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EmployeesRoute,
+} as any)
 const ApiPublicGithubCallbackRoute = ApiPublicGithubCallbackRouteImport.update({
   id: '/api/public/github/callback',
   path: '/api/public/github/callback',
@@ -144,7 +150,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
 }
 export interface FileRoutesByTo {
@@ -167,7 +174,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
 }
 export interface FileRoutesById {
@@ -191,7 +199,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
-  '/employees': typeof EmployeesRoute
+  '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
@@ -205,6 +213,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
 }
 export interface FileRouteTypes {
@@ -230,6 +239,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/employees/$id'
     | '/api/public/github/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/employees/$id'
     | '/api/public/github/callback'
   id:
     | '__root__'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/employees/$id'
     | '/api/public/github/callback'
   fileRoutesById: FileRoutesById
 }
@@ -286,7 +298,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ClickupRoute: typeof ClickupRoute
   DepartmentsRoute: typeof DepartmentsRoute
-  EmployeesRoute: typeof EmployeesRoute
+  EmployeesRoute: typeof EmployeesRouteWithChildren
   ExcelUploadRoute: typeof ExcelUploadRoute
   GithubRoute: typeof GithubRoute
   JiraRoute: typeof JiraRoute
@@ -445,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/employees/$id': {
+      id: '/employees/$id'
+      path: '/$id'
+      fullPath: '/employees/$id'
+      preLoaderRoute: typeof EmployeesIdRouteImport
+      parentRoute: typeof EmployeesRoute
+    }
     '/api/public/github/callback': {
       id: '/api/public/github/callback'
       path: '/api/public/github/callback'
@@ -455,6 +474,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface EmployeesRouteChildren {
+  EmployeesIdRoute: typeof EmployeesIdRoute
+}
+
+const EmployeesRouteChildren: EmployeesRouteChildren = {
+  EmployeesIdRoute: EmployeesIdRoute,
+}
+
+const EmployeesRouteWithChildren = EmployeesRoute._addFileChildren(
+  EmployeesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministrationRoute: AdministrationRoute,
@@ -462,7 +493,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ClickupRoute: ClickupRoute,
   DepartmentsRoute: DepartmentsRoute,
-  EmployeesRoute: EmployeesRoute,
+  EmployeesRoute: EmployeesRouteWithChildren,
   ExcelUploadRoute: ExcelUploadRoute,
   GithubRoute: GithubRoute,
   JiraRoute: JiraRoute,

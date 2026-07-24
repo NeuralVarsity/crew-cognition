@@ -277,63 +277,84 @@ export type Database = {
           deleted_at: string | null
           department_id: string | null
           designation: string | null
+          dob: string | null
           email: string
           employee_code: string
           employment_type: Database["public"]["Enums"]["employment_type"]
+          first_name: string | null
           full_name: string
           id: string
           joining_date: string | null
+          last_name: string | null
           location: string | null
           manager_id: string | null
+          notes: string | null
+          office_location: string | null
           organization_id: string
           phone: string | null
           profile_photo: string | null
+          salary: number | null
           status: Database["public"]["Enums"]["employee_status"]
           team_id: string | null
           updated_at: string
           user_id: string | null
+          work_location: string | null
         }
         Insert: {
           created_at?: string
           deleted_at?: string | null
           department_id?: string | null
           designation?: string | null
+          dob?: string | null
           email: string
           employee_code: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          first_name?: string | null
           full_name: string
           id?: string
           joining_date?: string | null
+          last_name?: string | null
           location?: string | null
           manager_id?: string | null
+          notes?: string | null
+          office_location?: string | null
           organization_id: string
           phone?: string | null
           profile_photo?: string | null
+          salary?: number | null
           status?: Database["public"]["Enums"]["employee_status"]
           team_id?: string | null
           updated_at?: string
           user_id?: string | null
+          work_location?: string | null
         }
         Update: {
           created_at?: string
           deleted_at?: string | null
           department_id?: string | null
           designation?: string | null
+          dob?: string | null
           email?: string
           employee_code?: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          first_name?: string | null
           full_name?: string
           id?: string
           joining_date?: string | null
+          last_name?: string | null
           location?: string | null
           manager_id?: string | null
+          notes?: string | null
+          office_location?: string | null
           organization_id?: string
           phone?: string | null
           profile_photo?: string | null
+          salary?: number | null
           status?: Database["public"]["Enums"]["employee_status"]
           team_id?: string | null
           updated_at?: string
           user_id?: string | null
+          work_location?: string | null
         }
         Relationships: [
           {
