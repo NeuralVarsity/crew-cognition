@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TeamsRouteImport } from './routes/teams'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ReportsRouteImport } from './routes/reports'
@@ -35,6 +36,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const TeamsRoute = TeamsRouteImport.update({
   id: '/teams',
   path: '/teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
 }
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
 }
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
 }
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/server-error'
     | '/settings'
+    | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
   fileRoutesByTo: FileRoutesByTo
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/server-error'
     | '/settings'
+    | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
   id:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/server-error'
     | '/settings'
+    | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
   fileRoutesById: FileRoutesById
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   ReportsRoute: typeof ReportsRoute
   ServerErrorRoute: typeof ServerErrorRoute
   SettingsRoute: typeof SettingsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
 }
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/teams'
       preLoaderRoute: typeof TeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportsRoute: ReportsRoute,
   ServerErrorRoute: ServerErrorRoute,
   SettingsRoute: SettingsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
 }
