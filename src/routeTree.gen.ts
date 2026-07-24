@@ -24,6 +24,7 @@ import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
@@ -103,6 +104,11 @@ const ClickupRoute = ClickupRouteImport.update({
   path: '/clickup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
+  '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/'
     | '/administration'
     | '/analytics'
+    | '/auth'
     | '/clickup'
     | '/departments'
     | '/employees'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministrationRoute: typeof AdministrationRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  AuthRoute: typeof AuthRoute
   ClickupRoute: typeof ClickupRoute
   DepartmentsRoute: typeof DepartmentsRoute
   EmployeesRoute: typeof EmployeesRoute
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClickupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/analytics': {
       id: '/analytics'
       path: '/analytics'
@@ -399,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministrationRoute: AdministrationRoute,
   AnalyticsRoute: AnalyticsRoute,
+  AuthRoute: AuthRoute,
   ClickupRoute: ClickupRoute,
   DepartmentsRoute: DepartmentsRoute,
   EmployeesRoute: EmployeesRoute,
