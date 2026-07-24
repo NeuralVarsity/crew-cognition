@@ -33,10 +33,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const { next } = useSearch({ from: "/auth" });
 
-  if (!loading && session) {
-    // Already signed in — bounce home
-    navigate({ to: next ?? "/" });
-  }
+  // Redirect handled by AuthGate; avoid calling navigate during render.
 
   return (
     <div className="grid min-h-screen place-items-center bg-muted/30 px-4 py-10">
