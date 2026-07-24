@@ -23,7 +23,6 @@ import { Route as JiraRouteImport } from './routes/jira'
 import { Route as GithubRouteImport } from './routes/github'
 import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
-import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
@@ -102,11 +101,6 @@ const EmployeesRoute = EmployeesRouteImport.update({
   path: '/employees',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DepartmentsRoute = DepartmentsRouteImport.update({
-  id: '/departments',
-  path: '/departments',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ClickupRoute = ClickupRouteImport.update({
   id: '/clickup',
   path: '/clickup',
@@ -149,7 +143,6 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
-  '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
@@ -173,7 +166,6 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
-  '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
@@ -198,7 +190,6 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
-  '/departments': typeof DepartmentsRoute
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
@@ -224,7 +215,6 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/auth'
     | '/clickup'
-    | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
@@ -248,7 +238,6 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/auth'
     | '/clickup'
-    | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
@@ -272,7 +261,6 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/auth'
     | '/clickup'
-    | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
@@ -297,7 +285,6 @@ export interface RootRouteChildren {
   AnalyticsRoute: typeof AnalyticsRoute
   AuthRoute: typeof AuthRoute
   ClickupRoute: typeof ClickupRoute
-  DepartmentsRoute: typeof DepartmentsRoute
   EmployeesRoute: typeof EmployeesRouteWithChildren
   ExcelUploadRoute: typeof ExcelUploadRoute
   GithubRoute: typeof GithubRoute
@@ -415,13 +402,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/departments': {
-      id: '/departments'
-      path: '/departments'
-      fullPath: '/departments'
-      preLoaderRoute: typeof DepartmentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/clickup': {
       id: '/clickup'
       path: '/clickup'
@@ -492,7 +472,6 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsRoute: AnalyticsRoute,
   AuthRoute: AuthRoute,
   ClickupRoute: ClickupRoute,
-  DepartmentsRoute: DepartmentsRoute,
   EmployeesRoute: EmployeesRouteWithChildren,
   ExcelUploadRoute: ExcelUploadRoute,
   GithubRoute: GithubRoute,
