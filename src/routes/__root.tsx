@@ -12,8 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { AppShell } from "@/components/layout/app-shell";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/providers/auth-provider";
+import { AuthGate } from "@/components/layout/auth-gate";
 
 function NotFoundComponent() {
   return (
@@ -129,9 +130,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AppShell>
-          <Outlet />
-        </AppShell>
+        <AuthProvider>
+          <AuthGate>
+            <Outlet />
+          </AuthGate>
+        </AuthProvider>
         <Toaster richColors position="top-right" />
       </ThemeProvider>
     </QueryClientProvider>

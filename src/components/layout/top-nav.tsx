@@ -1,8 +1,7 @@
-import { Bell, Search, ChevronDown, LogOut, User, Building } from "lucide-react";
+import { Bell, ChevronDown, LogOut, User, Building } from "lucide-react";
 import { useRouterState } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "./theme-toggle";
 import { navigation } from "@/config/navigation";
+import { GlobalSearch } from "./global-search";
+import { useAuth } from "@/providers/auth-provider";
+import { initials } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 function useCrumbs() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
@@ -32,6 +36,20 @@ function useCrumbs() {
 
 export function TopNav() {
   const crumbs = useCrumbs();
+  const { profile, organizationId, signOut, roles } = useAuth();
+  const orgQuery = useQuery({
+    queryKey: ["current-org", organizationId],
+    enabled: !!organizationId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("organizations")
+        .select("id, name")
+        .eq("id", organizationId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const primaryRole = roles[0]?.replace(/_/g, " ") ?? "member";
 
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/60 bg-background/80 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-4">
@@ -56,27 +74,19 @@ export function TopNav() {
       </nav>
 
       <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-        <div className="relative hidden md:block">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search employees, projects…"
-            className="h-9 w-64 pl-8 lg:w-80"
-          />
-        </div>
+        <GlobalSearch />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="hidden gap-2 sm:inline-flex">
               <Building className="h-4 w-4" />
-              <span className="max-w-[110px] truncate">Acme Corp</span>
+              <span className="max-w-[110px] truncate">{orgQuery.data?.name ?? "Workspace"}</span>
               <ChevronDown className="h-3.5 w-3.5 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Organizations</DropdownMenuLabel>
-            <DropdownMenuItem>Acme Corp</DropdownMenuItem>
-            <DropdownMenuItem disabled>Add organization…</DropdownMenuItem>
+            <DropdownMenuItem disabled>{orgQuery.data?.name ?? "No workspace"}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -92,13 +102,15 @@ export function TopNav() {
             <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition hover:bg-accent">
               <Avatar className="h-7 w-7">
                 <AvatarFallback className="bg-primary text-xs text-primary-foreground">
-                  AD
+                  {initials(profile?.full_name ?? profile?.email)}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden text-left lg:block">
-                <div className="text-xs font-medium leading-tight">Admin User</div>
-                <Badge variant="secondary" className="mt-0.5 h-4 px-1 text-[10px]">
-                  Admin
+                <div className="text-xs font-medium leading-tight">
+                  {profile?.full_name ?? profile?.email ?? "User"}
+                </div>
+                <Badge variant="secondary" className="mt-0.5 h-4 px-1 text-[10px] capitalize">
+                  {primaryRole}
                 </Badge>
               </div>
             </button>
@@ -109,7 +121,7 @@ export function TopNav() {
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" /> Profile
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => void signOut()}>
               <LogOut className="mr-2 h-4 w-4" /> Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
