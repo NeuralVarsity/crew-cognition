@@ -148,36 +148,83 @@ export type Database = {
       }
       departments: {
         Row: {
+          budget: number | null
+          color: string | null
           created_at: string
+          created_by: string | null
           deleted_at: string | null
+          department_code: string | null
           description: string | null
+          email: string | null
           head_user_id: string | null
+          icon: string | null
           id: string
+          location: string | null
+          manager_id: string | null
           name: string
+          notes: string | null
           organization_id: string
+          phone: string | null
+          status: string
           updated_at: string
         }
         Insert: {
+          budget?: number | null
+          color?: string | null
           created_at?: string
+          created_by?: string | null
           deleted_at?: string | null
+          department_code?: string | null
           description?: string | null
+          email?: string | null
           head_user_id?: string | null
+          icon?: string | null
           id?: string
+          location?: string | null
+          manager_id?: string | null
           name: string
+          notes?: string | null
           organization_id: string
+          phone?: string | null
+          status?: string
           updated_at?: string
         }
         Update: {
+          budget?: number | null
+          color?: string | null
           created_at?: string
+          created_by?: string | null
           deleted_at?: string | null
+          department_code?: string | null
           description?: string | null
+          email?: string | null
           head_user_id?: string | null
+          icon?: string | null
           id?: string
+          location?: string | null
+          manager_id?: string | null
           name?: string
+          notes?: string | null
           organization_id?: string
+          phone?: string | null
+          status?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "departments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "departments_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "departments_organization_id_fkey"
             columns: ["organization_id"]

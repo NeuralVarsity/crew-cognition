@@ -1,3 +1,3 @@
 // Feature: departments
-// Scaffolded module. Extended in future prompts.
-export {};
+export * from "./types";
+export * from "./api";
