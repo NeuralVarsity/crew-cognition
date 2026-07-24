@@ -601,9 +601,13 @@ function IssuesTab() {
       header: "Labels",
       cell: (r) => (
         <div className="flex flex-wrap gap-1">
-          {(Array.isArray(r.labels) ? r.labels : []).slice(0, 3).map((l: { name: string }, i: number) => (
-            <Badge key={i} variant="outline" className="text-[10px]">{l.name}</Badge>
-          ))}
+          {((Array.isArray(r.labels) ? r.labels : []) as Array<{ name?: string }>)
+            .slice(0, 3)
+            .map((l, i) => (
+              <Badge key={i} variant="outline" className="text-[10px]">
+                {l?.name ?? ""}
+              </Badge>
+            ))}
         </div>
       ),
     },
