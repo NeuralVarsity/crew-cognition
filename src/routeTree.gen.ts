@@ -16,6 +16,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as JiraRouteImport } from './routes/jira'
@@ -62,6 +63,11 @@ const ReportsRoute = ReportsRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/projects': typeof ProjectsRoute
   '/reports': typeof ReportsRoute
   '/server-error': typeof ServerErrorRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '/jira'
     | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/projects'
     | '/reports'
     | '/server-error'
@@ -268,6 +280,7 @@ export interface RootRouteChildren {
   JiraRoute: typeof JiraRoute
   MaintenanceRoute: typeof MaintenanceRoute
   NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
   ProjectsRoute: typeof ProjectsRoute
   ReportsRoute: typeof ReportsRoute
   ServerErrorRoute: typeof ServerErrorRoute
@@ -326,6 +339,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -428,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   JiraRoute: JiraRoute,
   MaintenanceRoute: MaintenanceRoute,
   NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
   ProjectsRoute: ProjectsRoute,
   ReportsRoute: ReportsRoute,
   ServerErrorRoute: ServerErrorRoute,

@@ -34,8 +34,8 @@ function OnboardingPage() {
     mutationFn: async () => {
       const { error } = await supabase.rpc("create_organization_and_join", {
         _name: name,
-        _industry: industry || null,
-        _country: country || null,
+        _industry: industry || undefined,
+        _country: country || undefined,
       });
       if (error) throw error;
     },
