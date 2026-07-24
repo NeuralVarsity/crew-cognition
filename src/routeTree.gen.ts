@@ -9,8 +9,110 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as TeamsRouteImport } from './routes/teams'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ServerErrorRouteImport } from './routes/server-error'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
+import { Route as JiraRouteImport } from './routes/jira'
+import { Route as GithubRouteImport } from './routes/github'
+import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
+import { Route as EmployeesRouteImport } from './routes/employees'
+import { Route as DepartmentsRouteImport } from './routes/departments'
+import { Route as ClickupRouteImport } from './routes/clickup'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamsRoute = TeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServerErrorRoute = ServerErrorRouteImport.update({
+  id: '/server-error',
+  path: '/server-error',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JiraRoute = JiraRouteImport.update({
+  id: '/jira',
+  path: '/jira',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GithubRoute = GithubRouteImport.update({
+  id: '/github',
+  path: '/github',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExcelUploadRoute = ExcelUploadRouteImport.update({
+  id: '/excel-upload',
+  path: '/excel-upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesRoute = EmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepartmentsRoute = DepartmentsRouteImport.update({
+  id: '/departments',
+  path: '/departments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClickupRoute = ClickupRouteImport.update({
+  id: '/clickup',
+  path: '/clickup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdministrationRoute = AdministrationRouteImport.update({
+  id: '/administration',
+  path: '/administration',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +121,270 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/administration': typeof AdministrationRoute
+  '/analytics': typeof AnalyticsRoute
+  '/clickup': typeof ClickupRoute
+  '/departments': typeof DepartmentsRoute
+  '/employees': typeof EmployeesRoute
+  '/excel-upload': typeof ExcelUploadRoute
+  '/github': typeof GithubRoute
+  '/jira': typeof JiraRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/notifications': typeof NotificationsRoute
+  '/projects': typeof ProjectsRoute
+  '/reports': typeof ReportsRoute
+  '/server-error': typeof ServerErrorRoute
+  '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teams': typeof TeamsRoute
+  '/unauthorized': typeof UnauthorizedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/administration': typeof AdministrationRoute
+  '/analytics': typeof AnalyticsRoute
+  '/clickup': typeof ClickupRoute
+  '/departments': typeof DepartmentsRoute
+  '/employees': typeof EmployeesRoute
+  '/excel-upload': typeof ExcelUploadRoute
+  '/github': typeof GithubRoute
+  '/jira': typeof JiraRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/notifications': typeof NotificationsRoute
+  '/projects': typeof ProjectsRoute
+  '/reports': typeof ReportsRoute
+  '/server-error': typeof ServerErrorRoute
+  '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teams': typeof TeamsRoute
+  '/unauthorized': typeof UnauthorizedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/administration': typeof AdministrationRoute
+  '/analytics': typeof AnalyticsRoute
+  '/clickup': typeof ClickupRoute
+  '/departments': typeof DepartmentsRoute
+  '/employees': typeof EmployeesRoute
+  '/excel-upload': typeof ExcelUploadRoute
+  '/github': typeof GithubRoute
+  '/jira': typeof JiraRoute
+  '/maintenance': typeof MaintenanceRoute
+  '/notifications': typeof NotificationsRoute
+  '/projects': typeof ProjectsRoute
+  '/reports': typeof ReportsRoute
+  '/server-error': typeof ServerErrorRoute
+  '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/teams': typeof TeamsRoute
+  '/unauthorized': typeof UnauthorizedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/administration'
+    | '/analytics'
+    | '/clickup'
+    | '/departments'
+    | '/employees'
+    | '/excel-upload'
+    | '/github'
+    | '/jira'
+    | '/maintenance'
+    | '/notifications'
+    | '/projects'
+    | '/reports'
+    | '/server-error'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/teams'
+    | '/unauthorized'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/administration'
+    | '/analytics'
+    | '/clickup'
+    | '/departments'
+    | '/employees'
+    | '/excel-upload'
+    | '/github'
+    | '/jira'
+    | '/maintenance'
+    | '/notifications'
+    | '/projects'
+    | '/reports'
+    | '/server-error'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/teams'
+    | '/unauthorized'
+  id:
+    | '__root__'
+    | '/'
+    | '/administration'
+    | '/analytics'
+    | '/clickup'
+    | '/departments'
+    | '/employees'
+    | '/excel-upload'
+    | '/github'
+    | '/jira'
+    | '/maintenance'
+    | '/notifications'
+    | '/projects'
+    | '/reports'
+    | '/server-error'
+    | '/settings'
+    | '/sitemap.xml'
+    | '/teams'
+    | '/unauthorized'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdministrationRoute: typeof AdministrationRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  ClickupRoute: typeof ClickupRoute
+  DepartmentsRoute: typeof DepartmentsRoute
+  EmployeesRoute: typeof EmployeesRoute
+  ExcelUploadRoute: typeof ExcelUploadRoute
+  GithubRoute: typeof GithubRoute
+  JiraRoute: typeof JiraRoute
+  MaintenanceRoute: typeof MaintenanceRoute
+  NotificationsRoute: typeof NotificationsRoute
+  ProjectsRoute: typeof ProjectsRoute
+  ReportsRoute: typeof ReportsRoute
+  ServerErrorRoute: typeof ServerErrorRoute
+  SettingsRoute: typeof SettingsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TeamsRoute: typeof TeamsRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teams': {
+      id: '/teams'
+      path: '/teams'
+      fullPath: '/teams'
+      preLoaderRoute: typeof TeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/server-error': {
+      id: '/server-error'
+      path: '/server-error'
+      fullPath: '/server-error'
+      preLoaderRoute: typeof ServerErrorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jira': {
+      id: '/jira'
+      path: '/jira'
+      fullPath: '/jira'
+      preLoaderRoute: typeof JiraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/github': {
+      id: '/github'
+      path: '/github'
+      fullPath: '/github'
+      preLoaderRoute: typeof GithubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/excel-upload': {
+      id: '/excel-upload'
+      path: '/excel-upload'
+      fullPath: '/excel-upload'
+      preLoaderRoute: typeof ExcelUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees': {
+      id: '/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof EmployeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/departments': {
+      id: '/departments'
+      path: '/departments'
+      fullPath: '/departments'
+      preLoaderRoute: typeof DepartmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clickup': {
+      id: '/clickup'
+      path: '/clickup'
+      fullPath: '/clickup'
+      preLoaderRoute: typeof ClickupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/administration': {
+      id: '/administration'
+      path: '/administration'
+      fullPath: '/administration'
+      preLoaderRoute: typeof AdministrationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +397,24 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdministrationRoute: AdministrationRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  ClickupRoute: ClickupRoute,
+  DepartmentsRoute: DepartmentsRoute,
+  EmployeesRoute: EmployeesRoute,
+  ExcelUploadRoute: ExcelUploadRoute,
+  GithubRoute: GithubRoute,
+  JiraRoute: JiraRoute,
+  MaintenanceRoute: MaintenanceRoute,
+  NotificationsRoute: NotificationsRoute,
+  ProjectsRoute: ProjectsRoute,
+  ReportsRoute: ReportsRoute,
+  ServerErrorRoute: ServerErrorRoute,
+  SettingsRoute: SettingsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TeamsRoute: TeamsRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
