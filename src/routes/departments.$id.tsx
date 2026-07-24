@@ -312,15 +312,15 @@ function DepartmentEmployeesTab({ departmentId, canManage, onChanged }: { depart
               onOpenChange={setTransferOpen}
               title="Bulk transfer"
               description="Move selected employees to another department."
-              onSubmit={async () => { await doTransfer(); setTransferOpen(false); }}
+              onSubmit={async () => { await doTransfer(); setTransferOpen(false); setTransferTo(""); }}
               trigger={<Button size="sm" variant="outline">Transfer selected</Button>}
             >
               <div>
                 <Label>Target department</Label>
-                <Select value={transferTo} onValueChange={setTransferTo}>
+                <Select value={transferTo || "__none__"} onValueChange={(v) => setTransferTo(v === "__none__" ? "" : v)}>
                   <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Unassigned</SelectItem>
+                    <SelectItem value="__none__">Unassigned</SelectItem>
                     {deptOptions.map((d) => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
