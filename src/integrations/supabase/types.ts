@@ -366,6 +366,728 @@ export type Database = {
           },
         ]
       }
+      github_commits: {
+        Row: {
+          additions: number
+          author_contributor_id: string | null
+          author_email: string | null
+          author_login: string | null
+          branch: string | null
+          changed_files: number
+          committed_at: string
+          created_at: string
+          deletions: number
+          id: string
+          message: string | null
+          organization_id: string
+          repository_id: string
+          sha: string
+        }
+        Insert: {
+          additions?: number
+          author_contributor_id?: string | null
+          author_email?: string | null
+          author_login?: string | null
+          branch?: string | null
+          changed_files?: number
+          committed_at: string
+          created_at?: string
+          deletions?: number
+          id?: string
+          message?: string | null
+          organization_id: string
+          repository_id: string
+          sha: string
+        }
+        Update: {
+          additions?: number
+          author_contributor_id?: string | null
+          author_email?: string | null
+          author_login?: string | null
+          branch?: string | null
+          changed_files?: number
+          committed_at?: string
+          created_at?: string
+          deletions?: number
+          id?: string
+          message?: string | null
+          organization_id?: string
+          repository_id?: string
+          sha?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_commits_author_contributor_id_fkey"
+            columns: ["author_contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_commits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_commits_repository_id_fkey"
+            columns: ["repository_id"]
+            isOneToOne: false
+            referencedRelation: "github_repositories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_connections: {
+        Row: {
+          access_token_ciphertext: string
+          account_type: Database["public"]["Enums"]["github_account_type"]
+          auto_sync: boolean
+          avatar: string | null
+          connected_by: string | null
+          created_at: string
+          github_account_id: number | null
+          github_login: string
+          id: string
+          last_sync_at: string | null
+          last_sync_status:
+            | Database["public"]["Enums"]["github_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext: string | null
+          scope: string | null
+          token_expires_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_ciphertext: string
+          account_type?: Database["public"]["Enums"]["github_account_type"]
+          auto_sync?: boolean
+          avatar?: string | null
+          connected_by?: string | null
+          created_at?: string
+          github_account_id?: number | null
+          github_login: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["github_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_ciphertext?: string
+          account_type?: Database["public"]["Enums"]["github_account_type"]
+          auto_sync?: boolean
+          avatar?: string | null
+          connected_by?: string | null
+          created_at?: string
+          github_account_id?: number | null
+          github_login?: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["github_sync_status"]
+            | null
+          organization_id?: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_contributors: {
+        Row: {
+          avatar: string | null
+          bio: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          followers: number
+          following: number
+          github_id: number
+          id: string
+          linked_employee_id: string | null
+          location: string | null
+          login: string
+          name: string | null
+          organization_id: string
+          public_repos: number
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string | null
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          followers?: number
+          following?: number
+          github_id: number
+          id?: string
+          linked_employee_id?: string | null
+          location?: string | null
+          login: string
+          name?: string | null
+          organization_id: string
+          public_repos?: number
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string | null
+          bio?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          followers?: number
+          following?: number
+          github_id?: number
+          id?: string
+          linked_employee_id?: string | null
+          location?: string | null
+          login?: string
+          name?: string | null
+          organization_id?: string
+          public_repos?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_contributors_linked_employee_id_fkey"
+            columns: ["linked_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_contributors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_issues: {
+        Row: {
+          assignee_contributor_id: string | null
+          assignee_login: string | null
+          author_contributor_id: string | null
+          author_login: string | null
+          body: string | null
+          closed_at: string | null
+          comment_count: number
+          created_at: string
+          github_id: number
+          id: string
+          issue_created_at: string
+          labels: Json
+          number: number
+          organization_id: string
+          repository_id: string
+          state: Database["public"]["Enums"]["github_issue_state"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assignee_contributor_id?: string | null
+          assignee_login?: string | null
+          author_contributor_id?: string | null
+          author_login?: string | null
+          body?: string | null
+          closed_at?: string | null
+          comment_count?: number
+          created_at?: string
+          github_id: number
+          id?: string
+          issue_created_at: string
+          labels?: Json
+          number: number
+          organization_id: string
+          repository_id: string
+          state?: Database["public"]["Enums"]["github_issue_state"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assignee_contributor_id?: string | null
+          assignee_login?: string | null
+          author_contributor_id?: string | null
+          author_login?: string | null
+          body?: string | null
+          closed_at?: string | null
+          comment_count?: number
+          created_at?: string
+          github_id?: number
+          id?: string
+          issue_created_at?: string
+          labels?: Json
+          number?: number
+          organization_id?: string
+          repository_id?: string
+          state?: Database["public"]["Enums"]["github_issue_state"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_issues_assignee_contributor_id_fkey"
+            columns: ["assignee_contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_issues_author_contributor_id_fkey"
+            columns: ["author_contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_issues_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_issues_repository_id_fkey"
+            columns: ["repository_id"]
+            isOneToOne: false
+            referencedRelation: "github_repositories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          organization_id: string
+          redirect_to: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          organization_id: string
+          redirect_to?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          organization_id?: string
+          redirect_to?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_pull_requests: {
+        Row: {
+          additions: number
+          author_contributor_id: string | null
+          author_login: string | null
+          base_branch: string | null
+          body: string | null
+          changed_files: number
+          closed_at: string | null
+          comment_count: number
+          created_at: string
+          deletions: number
+          draft: boolean
+          github_id: number
+          head_branch: string | null
+          id: string
+          merged: boolean
+          merged_at: string | null
+          number: number
+          organization_id: string
+          pr_created_at: string
+          repository_id: string
+          review_count: number
+          state: Database["public"]["Enums"]["github_pr_state"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          additions?: number
+          author_contributor_id?: string | null
+          author_login?: string | null
+          base_branch?: string | null
+          body?: string | null
+          changed_files?: number
+          closed_at?: string | null
+          comment_count?: number
+          created_at?: string
+          deletions?: number
+          draft?: boolean
+          github_id: number
+          head_branch?: string | null
+          id?: string
+          merged?: boolean
+          merged_at?: string | null
+          number: number
+          organization_id: string
+          pr_created_at: string
+          repository_id: string
+          review_count?: number
+          state?: Database["public"]["Enums"]["github_pr_state"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          additions?: number
+          author_contributor_id?: string | null
+          author_login?: string | null
+          base_branch?: string | null
+          body?: string | null
+          changed_files?: number
+          closed_at?: string | null
+          comment_count?: number
+          created_at?: string
+          deletions?: number
+          draft?: boolean
+          github_id?: number
+          head_branch?: string | null
+          id?: string
+          merged?: boolean
+          merged_at?: string | null
+          number?: number
+          organization_id?: string
+          pr_created_at?: string
+          repository_id?: string
+          review_count?: number
+          state?: Database["public"]["Enums"]["github_pr_state"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_pull_requests_author_contributor_id_fkey"
+            columns: ["author_contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_pull_requests_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_pull_requests_repository_id_fkey"
+            columns: ["repository_id"]
+            isOneToOne: false
+            referencedRelation: "github_repositories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_repo_contributors: {
+        Row: {
+          contributions: number
+          contributor_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          repository_id: string
+        }
+        Insert: {
+          contributions?: number
+          contributor_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          repository_id: string
+        }
+        Update: {
+          contributions?: number
+          contributor_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          repository_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_repo_contributors_contributor_id_fkey"
+            columns: ["contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_repo_contributors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_repo_contributors_repository_id_fkey"
+            columns: ["repository_id"]
+            isOneToOne: false
+            referencedRelation: "github_repositories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_repositories: {
+        Row: {
+          archived: boolean
+          connection_id: string
+          created_at: string
+          default_branch: string | null
+          description: string | null
+          disabled: boolean
+          forks: number
+          full_name: string
+          github_id: number
+          id: string
+          language: string | null
+          last_synced_at: string | null
+          name: string
+          open_issues: number
+          organization_id: string
+          owner: string
+          pushed_at: string | null
+          repo_created_at: string | null
+          size_kb: number
+          stars: number
+          tracked: boolean
+          updated_at: string
+          visibility: Database["public"]["Enums"]["github_repo_visibility"]
+          watchers: number
+        }
+        Insert: {
+          archived?: boolean
+          connection_id: string
+          created_at?: string
+          default_branch?: string | null
+          description?: string | null
+          disabled?: boolean
+          forks?: number
+          full_name: string
+          github_id: number
+          id?: string
+          language?: string | null
+          last_synced_at?: string | null
+          name: string
+          open_issues?: number
+          organization_id: string
+          owner: string
+          pushed_at?: string | null
+          repo_created_at?: string | null
+          size_kb?: number
+          stars?: number
+          tracked?: boolean
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["github_repo_visibility"]
+          watchers?: number
+        }
+        Update: {
+          archived?: boolean
+          connection_id?: string
+          created_at?: string
+          default_branch?: string | null
+          description?: string | null
+          disabled?: boolean
+          forks?: number
+          full_name?: string
+          github_id?: number
+          id?: string
+          language?: string | null
+          last_synced_at?: string | null
+          name?: string
+          open_issues?: number
+          organization_id?: string
+          owner?: string
+          pushed_at?: string | null
+          repo_created_at?: string | null
+          size_kb?: number
+          stars?: number
+          tracked?: boolean
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["github_repo_visibility"]
+          watchers?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_repositories_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "github_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_repositories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          github_id: number
+          id: string
+          organization_id: string
+          pull_request_id: string
+          reviewer_contributor_id: string | null
+          reviewer_login: string | null
+          state: Database["public"]["Enums"]["github_review_state"]
+          submitted_at: string | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          github_id: number
+          id?: string
+          organization_id: string
+          pull_request_id: string
+          reviewer_contributor_id?: string | null
+          reviewer_login?: string | null
+          state: Database["public"]["Enums"]["github_review_state"]
+          submitted_at?: string | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          github_id?: number
+          id?: string
+          organization_id?: string
+          pull_request_id?: string
+          reviewer_contributor_id?: string | null
+          reviewer_login?: string | null
+          state?: Database["public"]["Enums"]["github_review_state"]
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_reviews_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_reviews_pull_request_id_fkey"
+            columns: ["pull_request_id"]
+            isOneToOne: false
+            referencedRelation: "github_pull_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_reviews_reviewer_contributor_id_fkey"
+            columns: ["reviewer_contributor_id"]
+            isOneToOne: false
+            referencedRelation: "github_contributors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      github_sync_logs: {
+        Row: {
+          connection_id: string | null
+          created_at: string
+          duration_ms: number | null
+          finished_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["github_sync_kind"]
+          message: string | null
+          organization_id: string
+          repository_id: string | null
+          started_at: string
+          stats: Json
+          status: Database["public"]["Enums"]["github_sync_status"]
+          triggered_by: string | null
+        }
+        Insert: {
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["github_sync_kind"]
+          message?: string | null
+          organization_id: string
+          repository_id?: string | null
+          started_at?: string
+          stats?: Json
+          status?: Database["public"]["Enums"]["github_sync_status"]
+          triggered_by?: string | null
+        }
+        Update: {
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["github_sync_kind"]
+          message?: string | null
+          organization_id?: string
+          repository_id?: string | null
+          started_at?: string
+          stats?: Json
+          status?: Database["public"]["Enums"]["github_sync_status"]
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "github_sync_logs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "github_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_sync_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "github_sync_logs_repository_id_fkey"
+            columns: ["repository_id"]
+            isOneToOne: false
+            referencedRelation: "github_repositories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           accepted_at: string | null
@@ -918,6 +1640,22 @@ export type Database = {
         | "contract"
         | "intern"
         | "consultant"
+      github_account_type: "user" | "organization"
+      github_issue_state: "open" | "closed"
+      github_pr_state: "open" | "closed" | "merged"
+      github_repo_visibility: "public" | "private" | "internal"
+      github_review_state:
+        | "approved"
+        | "changes_requested"
+        | "commented"
+        | "dismissed"
+        | "pending"
+      github_sync_kind:
+        | "manual_full"
+        | "manual_incremental"
+        | "auto_incremental"
+        | "background"
+      github_sync_status: "running" | "success" | "partial" | "failed"
       invitation_status: "pending" | "accepted" | "expired" | "revoked"
       org_status: "active" | "trialing" | "suspended" | "archived"
       proficiency_level: "beginner" | "intermediate" | "advanced" | "expert"
@@ -1081,6 +1819,24 @@ export const Constants = {
         "intern",
         "consultant",
       ],
+      github_account_type: ["user", "organization"],
+      github_issue_state: ["open", "closed"],
+      github_pr_state: ["open", "closed", "merged"],
+      github_repo_visibility: ["public", "private", "internal"],
+      github_review_state: [
+        "approved",
+        "changes_requested",
+        "commented",
+        "dismissed",
+        "pending",
+      ],
+      github_sync_kind: [
+        "manual_full",
+        "manual_incremental",
+        "auto_incremental",
+        "background",
+      ],
+      github_sync_status: ["running", "success", "partial", "failed"],
       invitation_status: ["pending", "accepted", "expired", "revoked"],
       org_status: ["active", "trialing", "suspended", "archived"],
       proficiency_level: ["beginner", "intermediate", "advanced", "expert"],
