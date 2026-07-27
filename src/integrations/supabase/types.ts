@@ -146,6 +146,895 @@ export type Database = {
           },
         ]
       }
+      clickup_attachments: {
+        Row: {
+          attachment_created_at: string | null
+          attachment_id: string
+          created_at: string
+          extension: string | null
+          id: string
+          kind: string
+          mime_type: string | null
+          organization_id: string
+          size_bytes: number
+          task_id: string
+          thumbnail_url: string | null
+          title: string | null
+          uploaded_by: string | null
+          url: string | null
+        }
+        Insert: {
+          attachment_created_at?: string | null
+          attachment_id: string
+          created_at?: string
+          extension?: string | null
+          id?: string
+          kind?: string
+          mime_type?: string | null
+          organization_id: string
+          size_bytes?: number
+          task_id: string
+          thumbnail_url?: string | null
+          title?: string | null
+          uploaded_by?: string | null
+          url?: string | null
+        }
+        Update: {
+          attachment_created_at?: string | null
+          attachment_id?: string
+          created_at?: string
+          extension?: string | null
+          id?: string
+          kind?: string
+          mime_type?: string | null
+          organization_id?: string
+          size_bytes?: number
+          task_id?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          uploaded_by?: string | null
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_attachments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_attachments_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_checklist_items: {
+        Row: {
+          assignee_name: string | null
+          checklist_id: string
+          created_at: string
+          id: string
+          item_id: string
+          name: string
+          organization_id: string
+          resolved: boolean
+        }
+        Insert: {
+          assignee_name?: string | null
+          checklist_id: string
+          created_at?: string
+          id?: string
+          item_id: string
+          name: string
+          organization_id: string
+          resolved?: boolean
+        }
+        Update: {
+          assignee_name?: string | null
+          checklist_id?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          name?: string
+          organization_id?: string
+          resolved?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_checklist_items_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_checklists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_checklist_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_checklists: {
+        Row: {
+          checklist_id: string
+          created_at: string
+          id: string
+          item_count: number
+          name: string
+          organization_id: string
+          resolved_count: number
+          task_id: string
+          updated_at: string
+        }
+        Insert: {
+          checklist_id: string
+          created_at?: string
+          id?: string
+          item_count?: number
+          name: string
+          organization_id: string
+          resolved_count?: number
+          task_id: string
+          updated_at?: string
+        }
+        Update: {
+          checklist_id?: string
+          created_at?: string
+          id?: string
+          item_count?: number
+          name?: string
+          organization_id?: string
+          resolved_count?: number
+          task_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_checklists_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_checklists_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_connections: {
+        Row: {
+          access_token_ciphertext: string
+          auto_sync: boolean
+          connected_by: string | null
+          connected_user_email: string | null
+          connected_user_name: string | null
+          created_at: string
+          id: string
+          last_sync_at: string | null
+          last_sync_status:
+            | Database["public"]["Enums"]["clickup_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext: string | null
+          scope: string | null
+          token_expires_at: string | null
+          updated_at: string
+          workspace_avatar: string | null
+          workspace_color: string | null
+          workspace_id: string
+          workspace_name: string
+        }
+        Insert: {
+          access_token_ciphertext: string
+          auto_sync?: boolean
+          connected_by?: string | null
+          connected_user_email?: string | null
+          connected_user_name?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["clickup_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          workspace_avatar?: string | null
+          workspace_color?: string | null
+          workspace_id: string
+          workspace_name: string
+        }
+        Update: {
+          access_token_ciphertext?: string
+          auto_sync?: boolean
+          connected_by?: string | null
+          connected_user_email?: string | null
+          connected_user_name?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["clickup_sync_status"]
+            | null
+          organization_id?: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          workspace_avatar?: string | null
+          workspace_color?: string | null
+          workspace_id?: string
+          workspace_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_folders: {
+        Row: {
+          archived: boolean
+          created_at: string
+          folder_id: string
+          hidden: boolean
+          id: string
+          name: string
+          organization_id: string
+          space_id: string | null
+          task_count: number
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          folder_id: string
+          hidden?: boolean
+          id?: string
+          name: string
+          organization_id: string
+          space_id?: string | null
+          task_count?: number
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          folder_id?: string
+          hidden?: boolean
+          id?: string
+          name?: string
+          organization_id?: string
+          space_id?: string | null
+          task_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_folders_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_folders_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_lists: {
+        Row: {
+          archived: boolean
+          content: string | null
+          created_at: string
+          due_date: string | null
+          folder_id: string | null
+          id: string
+          list_id: string
+          name: string
+          organization_id: string
+          space_id: string | null
+          start_date: string | null
+          status: string | null
+          task_count: number
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          content?: string | null
+          created_at?: string
+          due_date?: string | null
+          folder_id?: string | null
+          id?: string
+          list_id: string
+          name: string
+          organization_id: string
+          space_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          task_count?: number
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          content?: string | null
+          created_at?: string
+          due_date?: string | null
+          folder_id?: string | null
+          id?: string
+          list_id?: string
+          name?: string
+          organization_id?: string
+          space_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          task_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_lists_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_lists_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_lists_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_members: {
+        Row: {
+          active: boolean
+          color: string | null
+          connection_id: string | null
+          created_at: string
+          email: string | null
+          id: string
+          invited_by: string | null
+          linked_employee_id: string | null
+          member_id: string
+          organization_id: string
+          profile_picture: string | null
+          role: string | null
+          role_key: number | null
+          updated_at: string
+          username: string | null
+        }
+        Insert: {
+          active?: boolean
+          color?: string | null
+          connection_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          invited_by?: string | null
+          linked_employee_id?: string | null
+          member_id: string
+          organization_id: string
+          profile_picture?: string | null
+          role?: string | null
+          role_key?: number | null
+          updated_at?: string
+          username?: string | null
+        }
+        Update: {
+          active?: boolean
+          color?: string | null
+          connection_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          invited_by?: string | null
+          linked_employee_id?: string | null
+          member_id?: string
+          organization_id?: string
+          profile_picture?: string | null
+          role?: string | null
+          role_key?: number | null
+          updated_at?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_members_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_members_linked_employee_id_fkey"
+            columns: ["linked_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          organization_id: string
+          redirect_to: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          organization_id: string
+          redirect_to?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          organization_id?: string
+          redirect_to?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      clickup_spaces: {
+        Row: {
+          archived: boolean
+          avatar: string | null
+          color: string | null
+          connection_id: string
+          created_at: string
+          description: string | null
+          id: string
+          last_synced_at: string | null
+          name: string
+          organization_id: string
+          private: boolean
+          space_created_at: string | null
+          space_id: string
+          statuses: Json
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          avatar?: string | null
+          color?: string | null
+          connection_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_synced_at?: string | null
+          name: string
+          organization_id: string
+          private?: boolean
+          space_created_at?: string | null
+          space_id: string
+          statuses?: Json
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          avatar?: string | null
+          color?: string | null
+          connection_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_synced_at?: string | null
+          name?: string
+          organization_id?: string
+          private?: boolean
+          space_created_at?: string | null
+          space_id?: string
+          statuses?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_spaces_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_spaces_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_sync_logs: {
+        Row: {
+          api_calls: number
+          connection_id: string | null
+          created_at: string
+          duration_ms: number | null
+          finished_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["clickup_sync_kind"]
+          message: string | null
+          organization_id: string
+          started_at: string
+          stats: Json
+          status: Database["public"]["Enums"]["clickup_sync_status"]
+          triggered_by: string | null
+        }
+        Insert: {
+          api_calls?: number
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["clickup_sync_kind"]
+          message?: string | null
+          organization_id: string
+          started_at?: string
+          stats?: Json
+          status: Database["public"]["Enums"]["clickup_sync_status"]
+          triggered_by?: string | null
+        }
+        Update: {
+          api_calls?: number
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["clickup_sync_kind"]
+          message?: string | null
+          organization_id?: string
+          started_at?: string
+          stats?: Json
+          status?: Database["public"]["Enums"]["clickup_sync_status"]
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_sync_logs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_sync_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_task_comments: {
+        Row: {
+          author_member_id: string | null
+          author_name: string | null
+          body: string | null
+          comment_created_at: string | null
+          comment_id: string
+          comment_updated_at: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          resolved: boolean
+          task_id: string
+        }
+        Insert: {
+          author_member_id?: string | null
+          author_name?: string | null
+          body?: string | null
+          comment_created_at?: string | null
+          comment_id: string
+          comment_updated_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          resolved?: boolean
+          task_id: string
+        }
+        Update: {
+          author_member_id?: string | null
+          author_name?: string | null
+          body?: string | null
+          comment_created_at?: string | null
+          comment_id?: string
+          comment_updated_at?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          resolved?: boolean
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_task_comments_author_member_id_fkey"
+            columns: ["author_member_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_task_comments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_task_comments_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_tasks: {
+        Row: {
+          archived: boolean
+          assignees: Json
+          comment_count: number
+          completed_at: string | null
+          created_at: string
+          creator_member_id: string | null
+          creator_name: string | null
+          custom_id: string | null
+          description: string | null
+          due_date: string | null
+          folder_id: string | null
+          id: string
+          list_id: string | null
+          name: string
+          organization_id: string
+          parent_task_id: string | null
+          primary_assignee_id: string | null
+          primary_assignee_name: string | null
+          priority: string | null
+          priority_order: number | null
+          space_id: string | null
+          start_date: string | null
+          status: string | null
+          status_type: string | null
+          tags: Json
+          task_created_at: string | null
+          task_id: string
+          task_state: Database["public"]["Enums"]["clickup_task_state"]
+          task_updated_at: string | null
+          time_estimate_ms: number
+          time_spent_ms: number
+          updated_at: string
+          url: string | null
+          watchers: Json
+        }
+        Insert: {
+          archived?: boolean
+          assignees?: Json
+          comment_count?: number
+          completed_at?: string | null
+          created_at?: string
+          creator_member_id?: string | null
+          creator_name?: string | null
+          custom_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          folder_id?: string | null
+          id?: string
+          list_id?: string | null
+          name: string
+          organization_id: string
+          parent_task_id?: string | null
+          primary_assignee_id?: string | null
+          primary_assignee_name?: string | null
+          priority?: string | null
+          priority_order?: number | null
+          space_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          status_type?: string | null
+          tags?: Json
+          task_created_at?: string | null
+          task_id: string
+          task_state?: Database["public"]["Enums"]["clickup_task_state"]
+          task_updated_at?: string | null
+          time_estimate_ms?: number
+          time_spent_ms?: number
+          updated_at?: string
+          url?: string | null
+          watchers?: Json
+        }
+        Update: {
+          archived?: boolean
+          assignees?: Json
+          comment_count?: number
+          completed_at?: string | null
+          created_at?: string
+          creator_member_id?: string | null
+          creator_name?: string | null
+          custom_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          folder_id?: string | null
+          id?: string
+          list_id?: string | null
+          name?: string
+          organization_id?: string
+          parent_task_id?: string | null
+          primary_assignee_id?: string | null
+          primary_assignee_name?: string | null
+          priority?: string | null
+          priority_order?: number | null
+          space_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          status_type?: string | null
+          tags?: Json
+          task_created_at?: string | null
+          task_id?: string
+          task_state?: Database["public"]["Enums"]["clickup_task_state"]
+          task_updated_at?: string | null
+          time_estimate_ms?: number
+          time_spent_ms?: number
+          updated_at?: string
+          url?: string | null
+          watchers?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_tasks_creator_member_id_fkey"
+            columns: ["creator_member_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_tasks_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_tasks_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_tasks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_tasks_primary_assignee_id_fkey"
+            columns: ["primary_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_tasks_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clickup_time_entries: {
+        Row: {
+          billable: boolean
+          created_at: string
+          description: string | null
+          duration_ms: number
+          ended_at: string | null
+          entry_id: string
+          id: string
+          member_id: string | null
+          member_name: string | null
+          organization_id: string
+          started_at: string | null
+          task_id: string | null
+        }
+        Insert: {
+          billable?: boolean
+          created_at?: string
+          description?: string | null
+          duration_ms?: number
+          ended_at?: string | null
+          entry_id: string
+          id?: string
+          member_id?: string | null
+          member_name?: string | null
+          organization_id: string
+          started_at?: string | null
+          task_id?: string | null
+        }
+        Update: {
+          billable?: boolean
+          created_at?: string
+          description?: string | null
+          duration_ms?: number
+          ended_at?: string | null
+          entry_id?: string
+          id?: string
+          member_id?: string | null
+          member_name?: string | null
+          organization_id?: string
+          started_at?: string | null
+          task_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clickup_time_entries_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_time_entries_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clickup_time_entries_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "clickup_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           budget: number | null
@@ -2484,6 +3373,20 @@ export type Database = {
         | "team_lead"
         | "employee"
         | "recruiter"
+      clickup_sync_kind:
+        | "manual_full"
+        | "manual_incremental"
+        | "auto_incremental"
+        | "background"
+        | "retry"
+      clickup_sync_status: "running" | "success" | "partial" | "failed"
+      clickup_task_state:
+        | "open"
+        | "in_progress"
+        | "blocked"
+        | "done"
+        | "cancelled"
+        | "unknown"
       employee_status: "active" | "on_leave" | "terminated" | "probation"
       employment_type:
         | "full_time"
@@ -2670,6 +3573,22 @@ export const Constants = {
         "team_lead",
         "employee",
         "recruiter",
+      ],
+      clickup_sync_kind: [
+        "manual_full",
+        "manual_incremental",
+        "auto_incremental",
+        "background",
+        "retry",
+      ],
+      clickup_sync_status: ["running", "success", "partial", "failed"],
+      clickup_task_state: [
+        "open",
+        "in_progress",
+        "blocked",
+        "done",
+        "cancelled",
+        "unknown",
       ],
       employee_status: ["active", "on_leave", "terminated", "probation"],
       employment_type: [
