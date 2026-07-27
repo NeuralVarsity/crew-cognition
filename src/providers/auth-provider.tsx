@@ -91,7 +91,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile: profileQuery.data ?? null,
     roles,
     organizationId: profileQuery.data?.organization_id ?? null,
-    loading: !initialized || (!!userId && (profileQuery.isLoading || rolesQuery.isLoading)),
+    // isLoading is false while a query is enabled-but-not-yet-fetching, which briefly
+    // made organizationId look null and bounced signed-in users to /onboarding.
+    loading: !initialized || (!!userId && (profileQuery.isPending || rolesQuery.isPending)),
     signOut: async () => {
       await qc.cancelQueries();
       qc.clear();

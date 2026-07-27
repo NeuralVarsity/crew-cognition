@@ -44,7 +44,14 @@ function OnboardingPage() {
       await refresh();
       navigate({ to: "/" });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: async (e: Error) => {
+      if (/already belongs to an organization/i.test(e.message)) {
+        await refresh();
+        navigate({ to: "/" });
+        return;
+      }
+      toast.error(e.message);
+    },
   });
 
   return (
