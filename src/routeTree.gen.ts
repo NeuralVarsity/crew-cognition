@@ -33,6 +33,7 @@ import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
+import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -154,6 +155,12 @@ const ApiPublicGithubCallbackRoute = ApiPublicGithubCallbackRouteImport.update({
   path: '/api/public/github/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicClickupCallbackRoute =
+  ApiPublicClickupCallbackRouteImport.update({
+    id: '/api/public/clickup/callback',
+    path: '/api/public/clickup/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/departments/$id'
     | '/employees/$id'
+    | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -285,6 +296,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/departments/$id'
     | '/employees/$id'
+    | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
   id:
@@ -311,6 +323,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/departments/$id'
     | '/employees/$id'
+    | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
   fileRoutesById: FileRoutesById
@@ -336,6 +349,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
 }
@@ -510,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicGithubCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/clickup/callback': {
+      id: '/api/public/clickup/callback'
+      path: '/api/public/clickup/callback'
+      fullPath: '/api/public/clickup/callback'
+      preLoaderRoute: typeof ApiPublicClickupCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -558,6 +579,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
 }

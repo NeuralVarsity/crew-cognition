@@ -1,3 +1,1 @@
-// Feature: clickup
-// Scaffolded module. Extended in future prompts.
-export {};
+export { ClickUpModule } from "./components/ClickUpModule";
