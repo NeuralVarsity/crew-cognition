@@ -1035,6 +1035,215 @@ export type Database = {
           },
         ]
       }
+      data_import_errors: {
+        Row: {
+          column_name: string | null
+          created_at: string
+          error_type: string
+          id: string
+          import_id: string
+          message: string
+          organization_id: string
+          raw_row: Json | null
+          row_number: number
+          severity: Database["public"]["Enums"]["data_import_severity"]
+        }
+        Insert: {
+          column_name?: string | null
+          created_at?: string
+          error_type: string
+          id?: string
+          import_id: string
+          message: string
+          organization_id: string
+          raw_row?: Json | null
+          row_number?: number
+          severity?: Database["public"]["Enums"]["data_import_severity"]
+        }
+        Update: {
+          column_name?: string | null
+          created_at?: string
+          error_type?: string
+          id?: string
+          import_id?: string
+          message?: string
+          organization_id?: string
+          raw_row?: Json | null
+          row_number?: number
+          severity?: Database["public"]["Enums"]["data_import_severity"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_import_errors_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "data_imports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_import_errors_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_import_records: {
+        Row: {
+          created_at: string
+          dataset: Database["public"]["Enums"]["data_import_dataset"]
+          external_key: string | null
+          id: string
+          import_id: string
+          organization_id: string
+          payload: Json
+          row_number: number
+        }
+        Insert: {
+          created_at?: string
+          dataset: Database["public"]["Enums"]["data_import_dataset"]
+          external_key?: string | null
+          id?: string
+          import_id: string
+          organization_id: string
+          payload?: Json
+          row_number?: number
+        }
+        Update: {
+          created_at?: string
+          dataset?: Database["public"]["Enums"]["data_import_dataset"]
+          external_key?: string | null
+          id?: string
+          import_id?: string
+          organization_id?: string
+          payload?: Json
+          row_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_import_records_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "data_imports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_import_records_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_imports: {
+        Row: {
+          column_mapping: Json
+          created_at: string
+          created_by: string | null
+          created_by_name: string | null
+          dataset: Database["public"]["Enums"]["data_import_dataset"]
+          detected_columns: Json
+          duplicate_rows: number
+          duration_ms: number | null
+          error_count: number
+          error_message: string | null
+          failed_rows: number
+          file_name: string
+          file_path: string | null
+          file_size: number
+          file_type: string | null
+          finished_at: string | null
+          id: string
+          imported_rows: number
+          mode: Database["public"]["Enums"]["data_import_mode"]
+          options: Json
+          organization_id: string
+          sheet_name: string | null
+          sheet_names: Json
+          skipped_rows: number
+          started_at: string | null
+          status: Database["public"]["Enums"]["data_import_status"]
+          total_rows: number
+          updated_at: string
+          updated_rows: number
+          warning_count: number
+        }
+        Insert: {
+          column_mapping?: Json
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string | null
+          dataset?: Database["public"]["Enums"]["data_import_dataset"]
+          detected_columns?: Json
+          duplicate_rows?: number
+          duration_ms?: number | null
+          error_count?: number
+          error_message?: string | null
+          failed_rows?: number
+          file_name: string
+          file_path?: string | null
+          file_size?: number
+          file_type?: string | null
+          finished_at?: string | null
+          id?: string
+          imported_rows?: number
+          mode?: Database["public"]["Enums"]["data_import_mode"]
+          options?: Json
+          organization_id: string
+          sheet_name?: string | null
+          sheet_names?: Json
+          skipped_rows?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["data_import_status"]
+          total_rows?: number
+          updated_at?: string
+          updated_rows?: number
+          warning_count?: number
+        }
+        Update: {
+          column_mapping?: Json
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string | null
+          dataset?: Database["public"]["Enums"]["data_import_dataset"]
+          detected_columns?: Json
+          duplicate_rows?: number
+          duration_ms?: number | null
+          error_count?: number
+          error_message?: string | null
+          failed_rows?: number
+          file_name?: string
+          file_path?: string | null
+          file_size?: number
+          file_type?: string | null
+          finished_at?: string | null
+          id?: string
+          imported_rows?: number
+          mode?: Database["public"]["Enums"]["data_import_mode"]
+          options?: Json
+          organization_id?: string
+          sheet_name?: string | null
+          sheet_names?: Json
+          skipped_rows?: number
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["data_import_status"]
+          total_rows?: number
+          updated_at?: string
+          updated_rows?: number
+          warning_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_imports_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           budget: number | null
@@ -3387,6 +3596,41 @@ export type Database = {
         | "done"
         | "cancelled"
         | "unknown"
+      data_import_dataset:
+        | "employees"
+        | "departments"
+        | "teams"
+        | "projects"
+        | "skills"
+        | "attendance"
+        | "leaves"
+        | "payroll"
+        | "performance_reviews"
+        | "training_records"
+        | "assets"
+        | "github"
+        | "jira"
+        | "clickup"
+        | "custom"
+      data_import_mode:
+        | "insert"
+        | "update"
+        | "upsert"
+        | "skip_duplicates"
+        | "replace"
+        | "dry_run"
+      data_import_severity: "error" | "warning"
+      data_import_status:
+        | "pending"
+        | "uploading"
+        | "validating"
+        | "ready"
+        | "importing"
+        | "completed"
+        | "partial"
+        | "failed"
+        | "cancelled"
+        | "dry_run"
       employee_status: "active" | "on_leave" | "terminated" | "probation"
       employment_type:
         | "full_time"
@@ -3589,6 +3833,44 @@ export const Constants = {
         "done",
         "cancelled",
         "unknown",
+      ],
+      data_import_dataset: [
+        "employees",
+        "departments",
+        "teams",
+        "projects",
+        "skills",
+        "attendance",
+        "leaves",
+        "payroll",
+        "performance_reviews",
+        "training_records",
+        "assets",
+        "github",
+        "jira",
+        "clickup",
+        "custom",
+      ],
+      data_import_mode: [
+        "insert",
+        "update",
+        "upsert",
+        "skip_duplicates",
+        "replace",
+        "dry_run",
+      ],
+      data_import_severity: ["error", "warning"],
+      data_import_status: [
+        "pending",
+        "uploading",
+        "validating",
+        "ready",
+        "importing",
+        "completed",
+        "partial",
+        "failed",
+        "cancelled",
+        "dry_run",
       ],
       employee_status: ["active", "on_leave", "terminated", "probation"],
       employment_type: [
