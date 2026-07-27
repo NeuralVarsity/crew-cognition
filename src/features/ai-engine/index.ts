@@ -1,3 +1,3 @@
-// Feature: ai-engine
-// Scaffolded module. Extended in future prompts.
-export {};
+export { AiIntelligenceModule } from "./components/AiIntelligenceModule";
+export * from "./types";
+export { useAiIntelligence, useSaveAiSettings } from "./hooks";
