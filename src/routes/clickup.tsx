@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ListChecks } from "lucide-react";
-import { PlaceholderPage } from "@/components/common/placeholder-page";
+import { ClickUpModule } from "@/features/clickup/components/ClickUpModule";
 
 export const Route = createFileRoute("/clickup")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    connected: typeof search.connected === "string" ? search.connected : undefined,
+    error: typeof search.error === "string" ? search.error : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "ClickUp — TalentAI Enterprise" },
@@ -11,12 +14,5 @@ export const Route = createFileRoute("/clickup")({
       { property: "og:description", content: "Task execution insights from ClickUp." },
     ],
   }),
-  component: () => (
-    <PlaceholderPage
-      icon={ListChecks}
-      title="ClickUp"
-      description="Connect ClickUp spaces to track task execution, sprints, and workload."
-      status="Integration pending"
-    />
-  ),
+  component: ClickUpModule,
 });
