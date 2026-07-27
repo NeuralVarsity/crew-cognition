@@ -1,3 +1,2 @@
-// Feature: jira
-// Scaffolded module. Extended in future prompts.
-export {};
+export { JiraModule } from "./components/JiraModule";
+export * from "./hooks";

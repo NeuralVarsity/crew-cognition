@@ -31,6 +31,7 @@ import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
+import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -143,6 +144,11 @@ const DepartmentsIdRoute = DepartmentsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DepartmentsRoute,
 } as any)
+const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
+  id: '/api/public/jira/callback',
+  path: '/api/public/jira/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicGithubCallbackRoute = ApiPublicGithubCallbackRouteImport.update({
   id: '/api/public/github/callback',
   path: '/api/public/github/callback',
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
+  '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
+  '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
+  '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/github/callback'
+    | '/api/public/jira/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/github/callback'
+    | '/api/public/jira/callback'
   id:
     | '__root__'
     | '/'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/github/callback'
+    | '/api/public/jira/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -325,6 +337,7 @@ export interface RootRouteChildren {
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
+  ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -483,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentsIdRouteImport
       parentRoute: typeof DepartmentsRoute
     }
+    '/api/public/jira/callback': {
+      id: '/api/public/jira/callback'
+      path: '/api/public/jira/callback'
+      fullPath: '/api/public/jira/callback'
+      preLoaderRoute: typeof ApiPublicJiraCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/github/callback': {
       id: '/api/public/github/callback'
       path: '/api/public/github/callback'
@@ -539,6 +559,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
+  ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

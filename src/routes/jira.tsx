@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ClipboardList } from "lucide-react";
-import { PlaceholderPage } from "@/components/common/placeholder-page";
+import { JiraModule } from "@/features/jira";
 
 export const Route = createFileRoute("/jira")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    connected: typeof search.connected === "string" ? search.connected : undefined,
+    error: typeof search.error === "string" ? search.error : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Jira — TalentAI Enterprise" },
@@ -11,12 +14,5 @@ export const Route = createFileRoute("/jira")({
       { property: "og:description", content: "Delivery and workflow metrics from Jira." },
     ],
   }),
-  component: () => (
-    <PlaceholderPage
-      icon={ClipboardList}
-      title="Jira"
-      description="Connect Jira projects for issue flow, cycle time, and sprint execution insights."
-      status="Integration pending"
-    />
-  ),
+  component: JiraModule,
 });
