@@ -55,6 +55,44 @@ export type Database = {
           },
         ]
       }
+      ai_scoring_settings: {
+        Row: {
+          created_at: string
+          organization_id: string
+          rules: Json
+          thresholds: Json
+          updated_at: string
+          updated_by: string | null
+          weights: Json
+        }
+        Insert: {
+          created_at?: string
+          organization_id: string
+          rules?: Json
+          thresholds?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Update: {
+          created_at?: string
+          organization_id?: string
+          rules?: Json
+          thresholds?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_scoring_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_keys: {
         Row: {
           created_at: string

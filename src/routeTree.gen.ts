@@ -27,6 +27,7 @@ import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
@@ -125,6 +126,11 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiIntelligenceRoute = AiIntelligenceRouteImport.update({
+  id: '/ai-intelligence',
+  path: '/ai-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdministrationRoute = AdministrationRouteImport.update({
   id: '/administration',
   path: '/administration',
@@ -165,6 +171,7 @@ const ApiPublicClickupCallbackRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
+  '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
+  '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/administration': typeof AdministrationRoute
+  '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
   '/clickup': typeof ClickupRoute
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/administration'
+    | '/ai-intelligence'
     | '/analytics'
     | '/auth'
     | '/clickup'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/administration'
+    | '/ai-intelligence'
     | '/analytics'
     | '/auth'
     | '/clickup'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/administration'
+    | '/ai-intelligence'
     | '/analytics'
     | '/auth'
     | '/clickup'
@@ -331,6 +343,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdministrationRoute: typeof AdministrationRoute
+  AiIntelligenceRoute: typeof AiIntelligenceRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AuthRoute: typeof AuthRoute
   ClickupRoute: typeof ClickupRoute
@@ -482,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-intelligence': {
+      id: '/ai-intelligence'
+      path: '/ai-intelligence'
+      fullPath: '/ai-intelligence'
+      preLoaderRoute: typeof AiIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/administration': {
       id: '/administration'
       path: '/administration'
@@ -561,6 +581,7 @@ const EmployeesRouteWithChildren = EmployeesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdministrationRoute: AdministrationRoute,
+  AiIntelligenceRoute: AiIntelligenceRoute,
   AnalyticsRoute: AnalyticsRoute,
   AuthRoute: AuthRoute,
   ClickupRoute: ClickupRoute,
