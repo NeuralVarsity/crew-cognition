@@ -257,9 +257,18 @@ export function JiraModule() {
                     <Button variant="outline" size="sm" onClick={() => connectM.mutate()} disabled={connectM.isPending}>
                       <Plug className="mr-2 h-4 w-4" /> Reconnect
                     </Button>
-                    <Button variant="destructive" size="sm" onClick={() => setConfirmDisconnect(true)}>
-                      <Trash2 className="mr-2 h-4 w-4" /> Disconnect
-                    </Button>
+                    <ConfirmDialog
+                      trigger={
+                        <Button variant="destructive" size="sm">
+                          <Trash2 className="mr-2 h-4 w-4" /> Disconnect
+                        </Button>
+                      }
+                      title="Disconnect Jira?"
+                      description="This removes the encrypted tokens and all synced Jira data for this organization."
+                      confirmLabel="Disconnect"
+                      destructive
+                      onConfirm={() => disconnectM.mutate()}
+                    />
                   </div>
                 ) : (
                   <Alert>
@@ -283,15 +292,6 @@ export function JiraModule() {
         </Tabs>
       )}
 
-      <ConfirmDialog
-        open={confirmDisconnect}
-        onOpenChange={setConfirmDisconnect}
-        title="Disconnect Jira?"
-        description="This removes the encrypted tokens and all synced Jira data for this organization."
-        confirmLabel="Disconnect"
-        destructive
-        onConfirm={() => disconnectM.mutate()}
-      />
     </div>
   );
 }
