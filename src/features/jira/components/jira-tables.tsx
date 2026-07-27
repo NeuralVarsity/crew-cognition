@@ -283,7 +283,12 @@ export function JiraSyncLogsTab() {
   const rows = (q.data ?? []) as SyncLogRow[];
 
   const columns: Column<SyncLogRow>[] = [
-    { key: "started", header: "Started", cell: (r) => formatDate(r.started_at, true), sortValue: (r) => r.started_at },
+    {
+      key: "started",
+      header: "Started",
+      cell: (r) => new Date(r.started_at).toLocaleString(),
+      sortValue: (r) => r.started_at,
+    },
     { key: "kind", header: "Type", cell: (r) => <Badge variant="outline">{r.kind.replace("_", " ")}</Badge>, sortValue: (r) => r.kind },
     {
       key: "status",
