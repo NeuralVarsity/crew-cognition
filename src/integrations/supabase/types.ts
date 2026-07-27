@@ -1206,6 +1206,789 @@ export type Database = {
           },
         ]
       }
+      jira_accounts: {
+        Row: {
+          account_id: string
+          active: boolean
+          avatar: string | null
+          created_at: string
+          display_name: string
+          email: string | null
+          id: string
+          linked_employee_id: string | null
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          active?: boolean
+          avatar?: string | null
+          created_at?: string
+          display_name: string
+          email?: string | null
+          id?: string
+          linked_employee_id?: string | null
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          active?: boolean
+          avatar?: string | null
+          created_at?: string
+          display_name?: string
+          email?: string | null
+          id?: string
+          linked_employee_id?: string | null
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_accounts_linked_employee_id_fkey"
+            columns: ["linked_employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_boards: {
+        Row: {
+          board_type: string | null
+          created_at: string
+          id: string
+          jira_id: number
+          name: string
+          organization_id: string
+          project_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          board_type?: string | null
+          created_at?: string
+          id?: string
+          jira_id: number
+          name: string
+          organization_id: string
+          project_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          board_type?: string | null
+          created_at?: string
+          id?: string
+          jira_id?: number
+          name?: string
+          organization_id?: string
+          project_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_boards_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_boards_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "jira_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_comments: {
+        Row: {
+          author_account_id: string | null
+          author_name: string | null
+          body: string | null
+          comment_created_at: string
+          comment_updated_at: string | null
+          created_at: string
+          id: string
+          issue_id: string
+          jira_id: string
+          organization_id: string
+        }
+        Insert: {
+          author_account_id?: string | null
+          author_name?: string | null
+          body?: string | null
+          comment_created_at?: string
+          comment_updated_at?: string | null
+          created_at?: string
+          id?: string
+          issue_id: string
+          jira_id: string
+          organization_id: string
+        }
+        Update: {
+          author_account_id?: string | null
+          author_name?: string | null
+          body?: string | null
+          comment_created_at?: string
+          comment_updated_at?: string | null
+          created_at?: string
+          id?: string
+          issue_id?: string
+          jira_id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_comments_author_account_id_fkey"
+            columns: ["author_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_comments_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "jira_issues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_comments_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_connections: {
+        Row: {
+          access_token_ciphertext: string
+          auto_sync: boolean
+          avatar: string | null
+          cloud_id: string
+          connected_by: string | null
+          created_at: string
+          id: string
+          last_sync_at: string | null
+          last_sync_status:
+            | Database["public"]["Enums"]["jira_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext: string | null
+          scope: string | null
+          site_name: string
+          site_url: string
+          token_expires_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_ciphertext: string
+          auto_sync?: boolean
+          avatar?: string | null
+          cloud_id: string
+          connected_by?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["jira_sync_status"]
+            | null
+          organization_id: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          site_name: string
+          site_url: string
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_ciphertext?: string
+          auto_sync?: boolean
+          avatar?: string | null
+          cloud_id?: string
+          connected_by?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          last_sync_status?:
+            | Database["public"]["Enums"]["jira_sync_status"]
+            | null
+          organization_id?: string
+          refresh_token_ciphertext?: string | null
+          scope?: string | null
+          site_name?: string
+          site_url?: string
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_connections_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_epics: {
+        Row: {
+          created_at: string
+          description: string | null
+          epic_key: string
+          id: string
+          jira_id: string
+          name: string
+          organization_id: string
+          owner_account_id: string | null
+          owner_name: string | null
+          progress: number
+          project_id: string | null
+          status: string | null
+          status_category: Database["public"]["Enums"]["jira_status_category"]
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          epic_key: string
+          id?: string
+          jira_id: string
+          name: string
+          organization_id: string
+          owner_account_id?: string | null
+          owner_name?: string | null
+          progress?: number
+          project_id?: string | null
+          status?: string | null
+          status_category?: Database["public"]["Enums"]["jira_status_category"]
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          epic_key?: string
+          id?: string
+          jira_id?: string
+          name?: string
+          organization_id?: string
+          owner_account_id?: string | null
+          owner_name?: string | null
+          progress?: number
+          project_id?: string | null
+          status?: string | null
+          status_category?: Database["public"]["Enums"]["jira_status_category"]
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_epics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_epics_owner_account_id_fkey"
+            columns: ["owner_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_epics_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "jira_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_issues: {
+        Row: {
+          assignee_account_id: string | null
+          assignee_name: string | null
+          blocked: boolean
+          comment_count: number
+          created_at: string
+          description: string | null
+          epic_id: string | null
+          id: string
+          issue_created_at: string
+          issue_key: string
+          issue_kind: Database["public"]["Enums"]["jira_issue_kind"]
+          issue_type: string | null
+          issue_updated_at: string | null
+          jira_id: string
+          labels: Json
+          organization_id: string
+          original_estimate_seconds: number
+          parent_key: string | null
+          priority: string | null
+          project_id: string | null
+          remaining_estimate_seconds: number
+          reporter_account_id: string | null
+          reporter_name: string | null
+          resolution: string | null
+          resolved_at: string | null
+          sprint_id: string | null
+          status: string | null
+          status_category: Database["public"]["Enums"]["jira_status_category"]
+          story_points: number | null
+          summary: string
+          time_spent_seconds: number
+          updated_at: string
+        }
+        Insert: {
+          assignee_account_id?: string | null
+          assignee_name?: string | null
+          blocked?: boolean
+          comment_count?: number
+          created_at?: string
+          description?: string | null
+          epic_id?: string | null
+          id?: string
+          issue_created_at?: string
+          issue_key: string
+          issue_kind?: Database["public"]["Enums"]["jira_issue_kind"]
+          issue_type?: string | null
+          issue_updated_at?: string | null
+          jira_id: string
+          labels?: Json
+          organization_id: string
+          original_estimate_seconds?: number
+          parent_key?: string | null
+          priority?: string | null
+          project_id?: string | null
+          remaining_estimate_seconds?: number
+          reporter_account_id?: string | null
+          reporter_name?: string | null
+          resolution?: string | null
+          resolved_at?: string | null
+          sprint_id?: string | null
+          status?: string | null
+          status_category?: Database["public"]["Enums"]["jira_status_category"]
+          story_points?: number | null
+          summary: string
+          time_spent_seconds?: number
+          updated_at?: string
+        }
+        Update: {
+          assignee_account_id?: string | null
+          assignee_name?: string | null
+          blocked?: boolean
+          comment_count?: number
+          created_at?: string
+          description?: string | null
+          epic_id?: string | null
+          id?: string
+          issue_created_at?: string
+          issue_key?: string
+          issue_kind?: Database["public"]["Enums"]["jira_issue_kind"]
+          issue_type?: string | null
+          issue_updated_at?: string | null
+          jira_id?: string
+          labels?: Json
+          organization_id?: string
+          original_estimate_seconds?: number
+          parent_key?: string | null
+          priority?: string | null
+          project_id?: string | null
+          remaining_estimate_seconds?: number
+          reporter_account_id?: string | null
+          reporter_name?: string | null
+          resolution?: string | null
+          resolved_at?: string | null
+          sprint_id?: string | null
+          status?: string | null
+          status_category?: Database["public"]["Enums"]["jira_status_category"]
+          story_points?: number | null
+          summary?: string
+          time_spent_seconds?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_issues_assignee_account_id_fkey"
+            columns: ["assignee_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_issues_epic_id_fkey"
+            columns: ["epic_id"]
+            isOneToOne: false
+            referencedRelation: "jira_epics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_issues_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_issues_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "jira_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_issues_reporter_account_id_fkey"
+            columns: ["reporter_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_issues_sprint_id_fkey"
+            columns: ["sprint_id"]
+            isOneToOne: false
+            referencedRelation: "jira_sprints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          organization_id: string
+          redirect_to: string | null
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          organization_id: string
+          redirect_to?: string | null
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          organization_id?: string
+          redirect_to?: string | null
+          state?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      jira_projects: {
+        Row: {
+          archived: boolean
+          avatar: string | null
+          connection_id: string
+          created_at: string
+          description: string | null
+          id: string
+          jira_id: string
+          last_synced_at: string | null
+          lead_account_id: string | null
+          lead_name: string | null
+          name: string
+          organization_id: string
+          project_category: string | null
+          project_created_at: string | null
+          project_key: string
+          project_type: string | null
+          status: string
+          tracked: boolean
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          avatar?: string | null
+          connection_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          jira_id: string
+          last_synced_at?: string | null
+          lead_account_id?: string | null
+          lead_name?: string | null
+          name: string
+          organization_id: string
+          project_category?: string | null
+          project_created_at?: string | null
+          project_key: string
+          project_type?: string | null
+          status?: string
+          tracked?: boolean
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          avatar?: string | null
+          connection_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          jira_id?: string
+          last_synced_at?: string | null
+          lead_account_id?: string | null
+          lead_name?: string | null
+          name?: string
+          organization_id?: string
+          project_category?: string | null
+          project_created_at?: string | null
+          project_key?: string
+          project_type?: string | null
+          status?: string
+          tracked?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_projects_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "jira_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_projects_lead_account_id_fkey"
+            columns: ["lead_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_sprints: {
+        Row: {
+          board_id: string | null
+          committed_points: number
+          complete_date: string | null
+          completed_points: number
+          created_at: string
+          end_date: string | null
+          goal: string | null
+          id: string
+          jira_id: number
+          name: string
+          organization_id: string
+          project_id: string | null
+          remaining_points: number
+          start_date: string | null
+          state: Database["public"]["Enums"]["jira_sprint_state"]
+          updated_at: string
+        }
+        Insert: {
+          board_id?: string | null
+          committed_points?: number
+          complete_date?: string | null
+          completed_points?: number
+          created_at?: string
+          end_date?: string | null
+          goal?: string | null
+          id?: string
+          jira_id: number
+          name: string
+          organization_id: string
+          project_id?: string | null
+          remaining_points?: number
+          start_date?: string | null
+          state?: Database["public"]["Enums"]["jira_sprint_state"]
+          updated_at?: string
+        }
+        Update: {
+          board_id?: string | null
+          committed_points?: number
+          complete_date?: string | null
+          completed_points?: number
+          created_at?: string
+          end_date?: string | null
+          goal?: string | null
+          id?: string
+          jira_id?: number
+          name?: string
+          organization_id?: string
+          project_id?: string | null
+          remaining_points?: number
+          start_date?: string | null
+          state?: Database["public"]["Enums"]["jira_sprint_state"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_sprints_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "jira_boards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_sprints_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_sprints_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "jira_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_sync_logs: {
+        Row: {
+          connection_id: string | null
+          created_at: string
+          duration_ms: number | null
+          finished_at: string | null
+          id: string
+          kind: Database["public"]["Enums"]["jira_sync_kind"]
+          message: string | null
+          organization_id: string
+          project_id: string | null
+          started_at: string
+          stats: Json
+          status: Database["public"]["Enums"]["jira_sync_status"]
+          triggered_by: string | null
+        }
+        Insert: {
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["jira_sync_kind"]
+          message?: string | null
+          organization_id: string
+          project_id?: string | null
+          started_at?: string
+          stats?: Json
+          status: Database["public"]["Enums"]["jira_sync_status"]
+          triggered_by?: string | null
+        }
+        Update: {
+          connection_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          finished_at?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["jira_sync_kind"]
+          message?: string | null
+          organization_id?: string
+          project_id?: string | null
+          started_at?: string
+          stats?: Json
+          status?: Database["public"]["Enums"]["jira_sync_status"]
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_sync_logs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "jira_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_sync_logs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_sync_logs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "jira_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jira_worklogs: {
+        Row: {
+          author_account_id: string | null
+          author_name: string | null
+          created_at: string
+          description: string | null
+          id: string
+          issue_id: string
+          jira_id: string
+          organization_id: string
+          started_at: string
+          time_spent_seconds: number
+        }
+        Insert: {
+          author_account_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          issue_id: string
+          jira_id: string
+          organization_id: string
+          started_at?: string
+          time_spent_seconds?: number
+        }
+        Update: {
+          author_account_id?: string | null
+          author_name?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          issue_id?: string
+          jira_id?: string
+          organization_id?: string
+          started_at?: string
+          time_spent_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jira_worklogs_author_account_id_fkey"
+            columns: ["author_account_id"]
+            isOneToOne: false
+            referencedRelation: "jira_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_worklogs_issue_id_fkey"
+            columns: ["issue_id"]
+            isOneToOne: false
+            referencedRelation: "jira_issues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jira_worklogs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_settings: {
         Row: {
           brand_color: string | null
@@ -1725,6 +2508,15 @@ export type Database = {
         | "background"
       github_sync_status: "running" | "success" | "partial" | "failed"
       invitation_status: "pending" | "accepted" | "expired" | "revoked"
+      jira_issue_kind: "story" | "task" | "bug" | "epic" | "subtask" | "other"
+      jira_sprint_state: "future" | "active" | "closed"
+      jira_status_category: "todo" | "in_progress" | "done" | "unknown"
+      jira_sync_kind:
+        | "manual_full"
+        | "manual_incremental"
+        | "auto_incremental"
+        | "background"
+      jira_sync_status: "running" | "success" | "partial" | "failed"
       org_status: "active" | "trialing" | "suspended" | "archived"
       proficiency_level: "beginner" | "intermediate" | "advanced" | "expert"
       project_status:
@@ -1906,6 +2698,16 @@ export const Constants = {
       ],
       github_sync_status: ["running", "success", "partial", "failed"],
       invitation_status: ["pending", "accepted", "expired", "revoked"],
+      jira_issue_kind: ["story", "task", "bug", "epic", "subtask", "other"],
+      jira_sprint_state: ["future", "active", "closed"],
+      jira_status_category: ["todo", "in_progress", "done", "unknown"],
+      jira_sync_kind: [
+        "manual_full",
+        "manual_incremental",
+        "auto_incremental",
+        "background",
+      ],
+      jira_sync_status: ["running", "success", "partial", "failed"],
       org_status: ["active", "trialing", "suspended", "archived"],
       proficiency_level: ["beginner", "intermediate", "advanced", "expert"],
       project_status: [
