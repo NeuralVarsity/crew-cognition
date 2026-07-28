@@ -3422,6 +3422,217 @@ export type Database = {
           },
         ]
       }
+      talent_match_settings: {
+        Row: {
+          created_at: string
+          organization_id: string
+          role_templates: Json
+          rules: Json
+          skill_categories: Json
+          updated_at: string
+          updated_by: string | null
+          weights: Json
+        }
+        Insert: {
+          created_at?: string
+          organization_id: string
+          role_templates?: Json
+          rules?: Json
+          skill_categories?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Update: {
+          created_at?: string
+          organization_id?: string
+          role_templates?: Json
+          rules?: Json
+          skill_categories?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talent_match_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_match_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      talent_messages: {
+        Row: {
+          client_message_id: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          parts: Json
+          role: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          client_message_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          parts?: Json
+          role: string
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          client_message_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          parts?: Json
+          role?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talent_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "talent_threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      talent_recommendations: {
+        Row: {
+          candidate_count: number
+          created_at: string
+          id: string
+          kind: string
+          organization_id: string
+          query: string
+          requirements: Json
+          results: Json
+          source_name: string | null
+          summary: Json
+          top_score: number | null
+          user_id: string | null
+          user_name: string | null
+        }
+        Insert: {
+          candidate_count?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          organization_id: string
+          query: string
+          requirements?: Json
+          results?: Json
+          source_name?: string | null
+          summary?: Json
+          top_score?: number | null
+          user_id?: string | null
+          user_name?: string | null
+        }
+        Update: {
+          candidate_count?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          organization_id?: string
+          query?: string
+          requirements?: Json
+          results?: Json
+          source_name?: string | null
+          summary?: Json
+          top_score?: number | null
+          user_id?: string | null
+          user_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talent_recommendations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_recommendations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      talent_threads: {
+        Row: {
+          archived: boolean
+          created_at: string
+          id: string
+          organization_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          id?: string
+          organization_id: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          id?: string
+          organization_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "talent_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "talent_threads_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       teams: {
         Row: {
           created_at: string
