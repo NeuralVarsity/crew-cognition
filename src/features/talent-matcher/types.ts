@@ -260,7 +260,12 @@ export type RecommendationRecord = {
   sourceName: string | null;
   requirements: RoleRequirement;
   results: CandidateMatch[];
-  summary: Record<string, unknown>;
+  summary: {
+    executiveSummary?: string[];
+    skillGaps?: SkillGap[];
+    prediction?: ProjectPrediction | null;
+    team?: TeamSlot[];
+  };
   candidateCount: number;
   topScore: number | null;
   userName: string | null;
