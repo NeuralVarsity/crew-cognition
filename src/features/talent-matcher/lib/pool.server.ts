@@ -7,6 +7,7 @@ const TEXT_CAP = 6000;
 
 export type CandidateEvidence = {
   employeeId: string;
+  tenureYears: number;
   skills: { name: string; category: string; proficiency: string; years: number }[];
   languages: Record<string, number>;
   repositories: string[];
@@ -34,6 +35,7 @@ export async function buildTalentPool(
 
   const [
     skillsRes,
+    employeesRes,
     empProjectsRes,
     projectsRes,
     ghContribRes,
@@ -50,6 +52,7 @@ export async function buildTalentPool(
       .from("employee_skills")
       .select("employee_id, proficiency, years_experience, skills(name, category)")
       .limit(LIMIT),
+    supabase.from("employees").select("id, joining_date").is("deleted_at", null).limit(LIMIT),
     supabase.from("employee_projects").select("employee_id, project_id, role, allocation_percent").limit(LIMIT),
     supabase.from("projects").select("id, name, description, status").is("deleted_at", null).limit(LIMIT),
     supabase.from("github_contributors").select("id, linked_employee_id").limit(LIMIT),
@@ -77,6 +80,7 @@ export async function buildTalentPool(
     if (!entry) {
       entry = {
         employeeId: id,
+        tenureYears: 0,
         skills: [],
         languages: {},
         repositories: [],
@@ -89,6 +93,13 @@ export async function buildTalentPool(
     return entry;
   };
   for (const score of intelligence.employees) ensure(score.id);
+
+  for (const row of employeesRes.data ?? []) {
+    const r = row as { id: string; joining_date: string | null };
+    if (!evidence.has(r.id) || !r.joining_date) continue;
+    const ms = Date.now() - new Date(r.joining_date).getTime();
+    if (ms > 0) ensure(r.id).tenureYears = Math.round((ms / (365.25 * 24 * 3600 * 1000)) * 10) / 10;
+  }
 
   for (const row of skillsRes.data ?? []) {
     const r = row as {
