@@ -212,6 +212,6 @@ export async function loadThreadMessages(supabase: SupabaseClient, threadId: str
   return ((data ?? []) as Record<string, unknown>[]).map((row) => ({
     id: String(row.client_message_id ?? row.id),
     role: (row.role === "user" ? "user" : "assistant") as "user" | "assistant",
-    parts: Array.isArray(row.parts) ? (row.parts as unknown[]) : [],
+    parts: (Array.isArray(row.parts) ? row.parts : []) as { type: string; text?: string }[],
   }));
 }
