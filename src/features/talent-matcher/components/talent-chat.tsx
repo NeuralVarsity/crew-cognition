@@ -99,11 +99,11 @@ export function TalentChat({ threadId }: { threadId?: string }) {
       if (status !== "ready") return;
 
       let activeThread = threadId;
+      const isNewThread = !activeThread;
       if (!activeThread) {
         const thread = await create.mutateAsync(text.slice(0, 80) || docs[0]?.name);
         activeThread = thread.id;
         ownThreadRef.current = thread.id;
-        navigate({ to: "/talent/chat/$threadId", params: { threadId: thread.id } });
       }
 
       const attachedText = docs.map((d) => `--- ${d.name} ---\n${d.text}`).join("\n\n");
@@ -148,6 +148,11 @@ export function TalentChat({ threadId }: { threadId?: string }) {
         setStatus("ready");
         setStatusText("");
         textareaRef.current?.focus();
+        if (isNewThread && activeThread) {
+          // Navigate only once the answer is persisted: the thread route mounts a
+          // fresh chat that restores the saved transcript.
+          navigate({ to: "/talent/chat/$threadId", params: { threadId: activeThread } });
+        }
       }
     },
     [create, docs, navigate, status, threadId],
