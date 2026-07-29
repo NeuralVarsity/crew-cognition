@@ -10,6 +10,7 @@ import {
   FileSpreadsheet,
   BarChart3,
   Brain,
+  Sparkles,
   FileText,
   Bell,
   Settings,
@@ -38,6 +39,7 @@ export const navigation: NavItem[] = [
   { title: "Excel Upload", url: "/excel-upload", icon: FileSpreadsheet, group: "Integrations" },
 
   { title: "AI Intelligence", url: "/ai-intelligence", icon: Brain, group: "Insights" },
+  { title: "Talent Matcher", url: "/talent", icon: Sparkles, group: "Insights" },
   { title: "Analytics", url: "/analytics", icon: BarChart3, group: "Insights", badge: "Soon" },
   { title: "Reports", url: "/reports", icon: FileText, group: "Insights", badge: "Soon" },
   { title: "Notifications", url: "/notifications", icon: Bell, group: "Insights" },

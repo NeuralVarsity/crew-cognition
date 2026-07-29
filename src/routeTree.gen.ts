@@ -30,8 +30,13 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TalentIndexRouteImport } from './routes/talent.index'
+import { Route as TalentJobMatcherRouteImport } from './routes/talent.job-matcher'
+import { Route as TalentCompareRouteImport } from './routes/talent.compare'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
+import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
+import { Route as TalentChatThreadIdRouteImport } from './routes/talent.chat.$threadId'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
@@ -141,6 +146,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentIndexRoute = TalentIndexRouteImport.update({
+  id: '/talent/',
+  path: '/talent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentJobMatcherRoute = TalentJobMatcherRouteImport.update({
+  id: '/talent/job-matcher',
+  path: '/talent/job-matcher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentCompareRoute = TalentCompareRouteImport.update({
+  id: '/talent/compare',
+  path: '/talent/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -150,6 +170,16 @@ const DepartmentsIdRoute = DepartmentsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => DepartmentsRoute,
+} as any)
+const ApiTalentChatRoute = ApiTalentChatRouteImport.update({
+  id: '/api/talent-chat',
+  path: '/api/talent-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentChatThreadIdRoute = TalentChatThreadIdRouteImport.update({
+  id: '/talent/chat/$threadId',
+  path: '/talent/chat/$threadId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
   id: '/api/public/jira/callback',
@@ -190,8 +220,13 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
+  '/talent/job-matcher': typeof TalentJobMatcherRoute
+  '/talent/': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -218,8 +253,13 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
+  '/talent/job-matcher': typeof TalentJobMatcherRoute
+  '/talent': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -247,8 +287,13 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
+  '/talent/job-matcher': typeof TalentJobMatcherRoute
+  '/talent/': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -277,8 +322,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
+    | '/talent/job-matcher'
+    | '/talent/'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -305,8 +355,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
+    | '/talent/job-matcher'
+    | '/talent'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -333,8 +388,13 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
+    | '/talent/job-matcher'
+    | '/talent/'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -362,6 +422,11 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  ApiTalentChatRoute: typeof ApiTalentChatRoute
+  TalentCompareRoute: typeof TalentCompareRoute
+  TalentJobMatcherRoute: typeof TalentJobMatcherRoute
+  TalentIndexRoute: typeof TalentIndexRoute
+  TalentChatThreadIdRoute: typeof TalentChatThreadIdRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -516,6 +581,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent/': {
+      id: '/talent/'
+      path: '/talent'
+      fullPath: '/talent/'
+      preLoaderRoute: typeof TalentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent/job-matcher': {
+      id: '/talent/job-matcher'
+      path: '/talent/job-matcher'
+      fullPath: '/talent/job-matcher'
+      preLoaderRoute: typeof TalentJobMatcherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent/compare': {
+      id: '/talent/compare'
+      path: '/talent/compare'
+      fullPath: '/talent/compare'
+      preLoaderRoute: typeof TalentCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$id': {
       id: '/employees/$id'
       path: '/$id'
@@ -529,6 +615,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/departments/$id'
       preLoaderRoute: typeof DepartmentsIdRouteImport
       parentRoute: typeof DepartmentsRoute
+    }
+    '/api/talent-chat': {
+      id: '/api/talent-chat'
+      path: '/api/talent-chat'
+      fullPath: '/api/talent-chat'
+      preLoaderRoute: typeof ApiTalentChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent/chat/$threadId': {
+      id: '/talent/chat/$threadId'
+      path: '/talent/chat/$threadId'
+      fullPath: '/talent/chat/$threadId'
+      preLoaderRoute: typeof TalentChatThreadIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/jira/callback': {
       id: '/api/public/jira/callback'
@@ -600,6 +700,11 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  ApiTalentChatRoute: ApiTalentChatRoute,
+  TalentCompareRoute: TalentCompareRoute,
+  TalentJobMatcherRoute: TalentJobMatcherRoute,
+  TalentIndexRoute: TalentIndexRoute,
+  TalentChatThreadIdRoute: TalentChatThreadIdRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
