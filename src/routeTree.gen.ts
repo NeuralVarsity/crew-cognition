@@ -31,6 +31,7 @@ import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TalentIndexRouteImport } from './routes/talent.index'
+import { Route as TalentCompareRouteImport } from './routes/talent.compare'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
@@ -149,6 +150,11 @@ const TalentIndexRoute = TalentIndexRouteImport.update({
   path: '/talent/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentCompareRoute = TalentCompareRouteImport.update({
+  id: '/talent/compare',
+  path: '/talent/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
   '/talent/': typeof TalentIndexRoute
   '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
   '/talent': typeof TalentIndexRoute
   '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/compare': typeof TalentCompareRoute
   '/talent/': typeof TalentIndexRoute
   '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
     | '/talent/'
     | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
     | '/talent'
     | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/compare'
     | '/talent/'
     | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
@@ -399,6 +411,7 @@ export interface RootRouteChildren {
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
+  TalentCompareRoute: typeof TalentCompareRoute
   TalentIndexRoute: typeof TalentIndexRoute
   TalentChatThreadIdRoute: typeof TalentChatThreadIdRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
@@ -562,6 +575,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TalentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent/compare': {
+      id: '/talent/compare'
+      path: '/talent/compare'
+      fullPath: '/talent/compare'
+      preLoaderRoute: typeof TalentCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$id': {
       id: '/employees/$id'
       path: '/$id'
@@ -661,6 +681,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
+  TalentCompareRoute: TalentCompareRoute,
   TalentIndexRoute: TalentIndexRoute,
   TalentChatThreadIdRoute: TalentChatThreadIdRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
