@@ -26,9 +26,15 @@ async function readPdf(file: File): Promise<string> {
   return pages.join("\n\n");
 }
 
+type MammothLike = {
+  extractRawText: (input: { arrayBuffer: ArrayBuffer }) => Promise<{ value: string }>;
+};
+
 async function readDocx(file: File): Promise<string> {
-  const mammoth = await import("mammoth/mammoth.browser.js");
-  const api = (mammoth as unknown as { default?: typeof mammoth }).default ?? mammoth;
+  const mod = (await import(/* @vite-ignore */ "mammoth/mammoth.browser.js")) as unknown as
+    | MammothLike
+    | { default: MammothLike };
+  const api = "extractRawText" in mod ? mod : mod.default;
   const { value } = await api.extractRawText({ arrayBuffer: await file.arrayBuffer() });
   return value;
 }
