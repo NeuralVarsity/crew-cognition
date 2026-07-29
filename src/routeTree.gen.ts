@@ -32,6 +32,7 @@ import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
+import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
@@ -151,6 +152,11 @@ const DepartmentsIdRoute = DepartmentsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DepartmentsRoute,
 } as any)
+const ApiTalentChatRoute = ApiTalentChatRouteImport.update({
+  id: '/api/talent-chat',
+  path: '/api/talent-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
   id: '/api/public/jira/callback',
   path: '/api/public/jira/callback',
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/clickup/callback'
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/clickup/callback'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
     | '/api/public/clickup/callback'
@@ -362,6 +374,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  ApiTalentChatRoute: typeof ApiTalentChatRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -530,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentsIdRouteImport
       parentRoute: typeof DepartmentsRoute
     }
+    '/api/talent-chat': {
+      id: '/api/talent-chat'
+      path: '/api/talent-chat'
+      fullPath: '/api/talent-chat'
+      preLoaderRoute: typeof ApiTalentChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jira/callback': {
       id: '/api/public/jira/callback'
       path: '/api/public/jira/callback'
@@ -600,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  ApiTalentChatRoute: ApiTalentChatRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
@@ -607,13 +628,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
