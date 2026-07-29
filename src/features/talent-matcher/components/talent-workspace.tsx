@@ -38,7 +38,7 @@ export function TalentWorkspace({ threadId }: { threadId?: string }) {
             </Button>
           </div>
         </div>
-        <TalentChat key={threadId ?? "new"} threadId={threadId} />
+        <TalentChat threadId={threadId} />
       </div>
     </div>
   );
