@@ -34,6 +34,7 @@ import { Route as TalentIndexRouteImport } from './routes/talent.index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
+import { Route as TalentChatThreadIdRouteImport } from './routes/talent.chat.$threadId'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
@@ -163,6 +164,11 @@ const ApiTalentChatRoute = ApiTalentChatRouteImport.update({
   path: '/api/talent-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentChatThreadIdRoute = TalentChatThreadIdRouteImport.update({
+  id: '/talent/chat/$threadId',
+  path: '/talent/chat/$threadId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
   id: '/api/public/jira/callback',
   path: '/api/public/jira/callback',
@@ -206,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/talent/': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/talent': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/talent/': typeof TalentIndexRoute
+  '/talent/chat/$threadId': typeof TalentChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/talent/'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/talent'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/departments/$id'
     | '/employees/$id'
     | '/talent/'
+    | '/talent/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -388,6 +400,7 @@ export interface RootRouteChildren {
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
   TalentIndexRoute: typeof TalentIndexRoute
+  TalentChatThreadIdRoute: typeof TalentChatThreadIdRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -570,6 +583,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTalentChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent/chat/$threadId': {
+      id: '/talent/chat/$threadId'
+      path: '/talent/chat/$threadId'
+      fullPath: '/talent/chat/$threadId'
+      preLoaderRoute: typeof TalentChatThreadIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/jira/callback': {
       id: '/api/public/jira/callback'
       path: '/api/public/jira/callback'
@@ -642,6 +662,7 @@ const rootRouteChildren: RootRouteChildren = {
   UnauthorizedRoute: UnauthorizedRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
   TalentIndexRoute: TalentIndexRoute,
+  TalentChatThreadIdRoute: TalentChatThreadIdRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
