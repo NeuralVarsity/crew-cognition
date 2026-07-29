@@ -51,9 +51,14 @@ export function TalentChat({ threadId }: { threadId?: string }) {
   const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  /** Thread created by this component during a send — its route change must not reset local state. */
+  const ownThreadRef = useRef<string | undefined>(threadId);
+  const messageCountRef = useRef(0);
+  messageCountRef.current = messages.length;
 
   useEffect(() => {
-    if (!persisted) return;
+    if (!persisted?.length) return;
+    if (messageCountRef.current > 0) return;
     setMessages(
       persisted.map((m, index) => {
         const parts = m.parts as { type: string; text?: string; result?: MatchResult }[];
@@ -68,7 +73,10 @@ export function TalentChat({ threadId }: { threadId?: string }) {
   }, [persisted, threadId]);
 
   useEffect(() => {
-    if (!threadId) setMessages([]);
+    if (threadId !== ownThreadRef.current) {
+      ownThreadRef.current = threadId;
+      setMessages([]);
+    }
     textareaRef.current?.focus();
   }, [threadId]);
 
@@ -94,6 +102,7 @@ export function TalentChat({ threadId }: { threadId?: string }) {
       if (!activeThread) {
         const thread = await create.mutateAsync(text.slice(0, 80) || docs[0]?.name);
         activeThread = thread.id;
+        ownThreadRef.current = thread.id;
         navigate({ to: "/talent/chat/$threadId", params: { threadId: thread.id } });
       }
 
