@@ -30,6 +30,7 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TalentIndexRouteImport } from './routes/talent.index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
@@ -142,6 +143,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentIndexRoute = TalentIndexRouteImport.update({
+  id: '/talent/',
+  path: '/talent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/': typeof TalentIndexRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent': typeof TalentIndexRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
+  '/talent/': typeof TalentIndexRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -289,6 +298,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -318,6 +328,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
+    | '/talent/'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -375,6 +387,7 @@ export interface RootRouteChildren {
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
+  TalentIndexRoute: typeof TalentIndexRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent/': {
+      id: '/talent/'
+      path: '/talent'
+      fullPath: '/talent/'
+      preLoaderRoute: typeof TalentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$id': {
       id: '/employees/$id'
       path: '/$id'
@@ -621,6 +641,7 @@ const rootRouteChildren: RootRouteChildren = {
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
+  TalentIndexRoute: TalentIndexRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,
