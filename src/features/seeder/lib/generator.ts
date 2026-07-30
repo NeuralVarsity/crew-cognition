@@ -306,7 +306,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
       const completed = state === "closed" ? int(r, 12, committed) : int(r, 3, committed - 5);
       return {
         id: uuid(), organization_id: org, board_id: b.id, project_id: b.project_id,
-        jira_id: 3000 + bi * 10 + si, name: `${b.name.split(" ")[0]} Sprint ${si + 1}`,
+        jira_id: 3000 + bi * 100 + si, name: `${b.name.split(" ")[0]} Sprint ${si + 1}`,
         goal: "Deliver committed scope and reduce defect backlog.",
         state, start_date: iso(start), end_date: iso(new Date(start.getTime() + 14 * 86400000)),
         complete_date: state === "closed" ? iso(new Date(start.getTime() + 14 * 86400000)) : null,
