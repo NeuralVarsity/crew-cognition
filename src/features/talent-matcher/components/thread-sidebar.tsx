@@ -65,7 +65,7 @@ export function ThreadSidebar({
               )}
             >
               <Link
-                to="/talent/chat/$threadId"
+                to="/my-dashboard/chat/$threadId"
                 params={{ threadId: thread.id }}
                 className="flex min-w-0 flex-1 items-center gap-2 py-2 text-sm"
               >
