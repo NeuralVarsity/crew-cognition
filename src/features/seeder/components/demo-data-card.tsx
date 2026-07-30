@@ -1,7 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Database, Loader2, Trash2 } from "lucide-react";
+import { Database, Loader2, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ export function DemoDataCard() {
   const runSeed = useServerFn(seedDemoData);
   const runClear = useServerFn(clearDemoData);
   const seedMutation = useMutation({
-    mutationFn: () => runSeed({ data: { reset: true } }),
+    mutationFn: (vars: { seed?: number } = {}) => runSeed({ data: { reset: true, seed: vars.seed } }),
     onSuccess: (res) => {
       queryClient.invalidateQueries();
       toast.success(`Seeded ${res.totalRows.toLocaleString()} demo rows in ${(res.durationMs / 1000).toFixed(1)}s`);
@@ -33,11 +32,16 @@ export function DemoDataCard() {
 
   const busy = seedMutation.isPending || clearMutation.isPending;
 
+  const refreshScores = () => {
+    queryClient.invalidateQueries();
+    toast.success("AI scores and analytics refreshed from the latest data");
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
-          <Database className="h-4 w-4" /> Demo data
+          <Database className="h-4 w-4" /> Demo mode
         </CardTitle>
         <CardDescription>
           Generate a realistic, fully interconnected demo workspace — employees, departments, teams,
@@ -51,7 +55,7 @@ export function DemoDataCard() {
           description="This deletes every existing record in this organization and replaces it with generated demo data. This cannot be undone."
           confirmLabel="Seed"
           destructive
-          onConfirm={() => seedMutation.mutate()}
+          onConfirm={() => seedMutation.mutate({})}
           trigger={
             <Button size="sm" disabled={busy}>
               {seedMutation.isPending ? (
@@ -59,7 +63,19 @@ export function DemoDataCard() {
               ) : (
                 <Database className="mr-2 h-4 w-4" />
               )}
-              Seed demo data
+              Generate demo data
+            </Button>
+          }
+        />
+        <ConfirmDialog
+          title="Reset demo data?"
+          description="Clears the organization and regenerates a brand new randomized demo dataset."
+          confirmLabel="Reset"
+          destructive
+          onConfirm={() => seedMutation.mutate({ seed: Math.floor(Math.random() * 1_000_000) })}
+          trigger={
+            <Button size="sm" variant="secondary" disabled={busy}>
+              <RotateCcw className="mr-2 h-4 w-4" /> Reset demo data
             </Button>
           }
         />
@@ -80,6 +96,9 @@ export function DemoDataCard() {
             </Button>
           }
         />
+        <Button size="sm" variant="ghost" disabled={busy} onClick={refreshScores}>
+          <RefreshCw className="mr-2 h-4 w-4" /> Refresh AI scores
+        </Button>
       </CardContent>
     </Card>
   );

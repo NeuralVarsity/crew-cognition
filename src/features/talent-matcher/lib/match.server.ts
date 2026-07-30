@@ -478,6 +478,15 @@ function buildSummary(
   poolSize: number,
 ): string[] {
   const lines: string[] = [];
+  if (poolSize === 0) {
+    lines.push(
+      `No employee data is available yet, so no candidates could be evaluated for "${requirement.title}".`,
+    );
+    lines.push(
+      "Sync GitHub, Jira or ClickUp, import employees from Excel, or enable Demo mode in Administration to generate a full sample workforce.",
+    );
+    return lines;
+  }
   lines.push(
     `Evaluated ${poolSize} employees against "${requirement.title}" and shortlisted ${candidates.length} candidates.`,
   );
