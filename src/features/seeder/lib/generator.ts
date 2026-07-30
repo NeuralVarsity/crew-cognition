@@ -99,10 +99,6 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     for (const m of members.slice(1)) m.manager_id = lead.id;
   }
   push("employees", employees);
-  for (const d of departments) {
-    const lead = employees.find((e) => e.department_id === d.id);
-    if (lead) (d as Record<string, unknown>).manager_id = lead.id;
-  }
 
   // ---------- Employee skills ----------
   const employeeSkills = employees.flatMap((e) =>
