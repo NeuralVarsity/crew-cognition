@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "seed": "bun run scripts/seed.ts",
-    "reset-db": "bun run scripts/seed.ts --clear"
+    "reset-db": "bun run scripts/seed.ts --clear",
+    "demo": "bun run scripts/seed.ts"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^3.0.14",
