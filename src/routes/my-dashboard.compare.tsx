@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EmployeeCompare } from "@/features/talent-matcher/components/employee-compare";
 
-export const Route = createFileRoute("/talent/compare")({
+export const Route = createFileRoute("/my-dashboard/compare")({
   head: () => ({
     meta: [
       { title: "Compare employees — TalentAI Enterprise" },
