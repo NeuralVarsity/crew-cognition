@@ -1,0 +1,24 @@
+-- Demo data seeding entry point.
+--
+-- The dataset is generated programmatically (deterministic PRNG, ~10k
+-- interconnected rows) rather than written as static SQL, so run one of:
+--
+--   bun run seed        -- CLI, needs SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY
+--   Administration page -> "Seed demo data"   (recommended on Lovable Cloud)
+--
+-- Generator:  src/features/seeder/lib/generator.ts
+-- Insert engine: src/features/seeder/lib/seed-engine.server.ts
+--
+-- What gets created for the target organization:
+--   10 departments, 20 teams, 100 employees, 40 skills, ~600 employee skills,
+--   40 projects, ~180 assignments,
+--   GitHub: 25 repos, 100 contributors, 1500 commits, 300 PRs, 400 reviews, 300 issues,
+--   Jira: 10 projects, 10 boards, 40 sprints, 30 epics, 400 issues, 400 comments, 500 worklogs,
+--   ClickUp: 5 spaces, 10 folders, 25 lists, 1000 tasks, 600 time entries, 300 comments,
+--   HR: 150 certifications, 250 trainings, 200 reviews, 60 promotions, ~1400 attendance days, 200 leaves,
+--   Analytics: 600 productivity rows, 600 AI score rows, 6 leaderboards,
+--   Workspace: 25 proposals, 20 reports, 60 notifications, 15 imports, 140 log entries.
+--
+-- Seeding always clears the organization first (see clear-demo-data.sql).
+
+SELECT 'Run "bun run seed" or use Administration -> Seed demo data' AS instructions;
