@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -14,9 +13,6 @@ export function DemoDataCard() {
   const queryClient = useQueryClient();
   const runSeed = useServerFn(seedDemoData);
   const runClear = useServerFn(clearDemoData);
-  const [confirmSeed, setConfirmSeed] = useState(false);
-  const [confirmClear, setConfirmClear] = useState(false);
-
   const seedMutation = useMutation({
     mutationFn: () => runSeed({ data: { reset: true } }),
     onSuccess: (res) => {
@@ -50,40 +46,41 @@ export function DemoDataCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-2">
-        <Button size="sm" disabled={busy} onClick={() => setConfirmSeed(true)}>
-          {seedMutation.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Database className="mr-2 h-4 w-4" />
-          )}
-          Seed demo data
-        </Button>
-        <Button size="sm" variant="outline" disabled={busy} onClick={() => setConfirmClear(true)}>
-          {clearMutation.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Trash2 className="mr-2 h-4 w-4" />
-          )}
-          Clear demo data
-        </Button>
+        <ConfirmDialog
+          title="Seed demo data?"
+          description="This deletes every existing record in this organization and replaces it with generated demo data. This cannot be undone."
+          confirmLabel="Seed"
+          destructive
+          onConfirm={() => seedMutation.mutate()}
+          trigger={
+            <Button size="sm" disabled={busy}>
+              {seedMutation.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Database className="mr-2 h-4 w-4" />
+              )}
+              Seed demo data
+            </Button>
+          }
+        />
+        <ConfirmDialog
+          title="Clear all data?"
+          description="This permanently deletes all workforce, integration and analytics records in this organization."
+          confirmLabel="Clear"
+          destructive
+          onConfirm={() => clearMutation.mutate()}
+          trigger={
+            <Button size="sm" variant="outline" disabled={busy}>
+              {clearMutation.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
+              Clear demo data
+            </Button>
+          }
+        />
       </CardContent>
-
-      <ConfirmDialog
-        open={confirmSeed}
-        onOpenChange={setConfirmSeed}
-        title="Seed demo data?"
-        description="This deletes every existing record in this organization and replaces it with generated demo data. This cannot be undone."
-        confirmLabel="Seed"
-        onConfirm={() => seedMutation.mutate()}
-      />
-      <ConfirmDialog
-        open={confirmClear}
-        onOpenChange={setConfirmClear}
-        title="Clear all data?"
-        description="This permanently deletes all workforce, integration and analytics records in this organization."
-        confirmLabel="Clear"
-        onConfirm={() => clearMutation.mutate()}
-      />
     </Card>
   );
 }
