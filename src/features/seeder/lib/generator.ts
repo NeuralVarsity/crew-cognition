@@ -1,0 +1,684 @@
+import { chance, float, int, iso, isoDate, makeRng, monthStart, pick, pickMany, type Rng } from "./random";
+
+export type SeedBatch = { table: string; rows: Record<string, unknown>[] };
+
+const uuid = () => crypto.randomUUID();
+
+const FIRST = ["Aarav","Priya","Liam","Sofia","Noah","Mia","Ethan","Ava","Kabir","Isha","Lucas","Emma","Rohan","Nina","Diego","Yuki","Omar","Zara","Elena","Marcus","Chloe","Arjun","Hana","Tomas","Layla","Felix","Anika","Jonas","Maya","Ravi","Clara","Dmitri","Farah","Leo","Sana","Victor","Amara","Kenji","Julia","Samir"];
+const LAST = ["Sharma","Nguyen","Okafor","Rossi","Kim","Silva","Novak","Haddad","Fischer","Costa","Patel","Larsen","Moreau","Tanaka","Duarte","Ivanov","Mensah","Klein","Bianchi","Reyes","Petrov","Ahmed","Weber","Santos","Cohen","Dubois","Lindqvist","Mbeki","Kowalski","Ferrari"];
+const DEPARTMENTS = [
+  ["Engineering","ENG","#6366f1"],["Product","PRD","#0ea5e9"],["Design","DSN","#ec4899"],
+  ["Quality Assurance","QAA","#f59e0b"],["Data & AI","DAI","#8b5cf6"],["DevOps","OPS","#10b981"],
+  ["Human Resources","HRD","#f43f5e"],["Sales","SLS","#22c55e"],["Marketing","MKT","#eab308"],
+  ["Finance","FIN","#64748b"],
+] as const;
+const DESIGNATIONS = ["Software Engineer","Senior Software Engineer","Staff Engineer","Engineering Manager","Product Manager","Product Designer","QA Engineer","Data Scientist","ML Engineer","DevOps Engineer","Site Reliability Engineer","Technical Lead","Business Analyst","Scrum Master","HR Business Partner","Account Executive","Marketing Specialist","Financial Analyst"];
+const LOCATIONS = ["Bengaluru, IN","Austin, TX","Berlin, DE","London, UK","Toronto, CA","Singapore, SG","Lisbon, PT","Remote"];
+const SKILLS: [string, string][] = [
+  ["TypeScript","programming"],["React","programming"],["Node.js","programming"],["Python","programming"],["Go","programming"],["Rust","programming"],["Java","programming"],["Kotlin","programming"],["Swift","programming"],["GraphQL","programming"],
+  ["AWS","cloud"],["Azure","cloud"],["GCP","cloud"],["Kubernetes","cloud"],["Terraform","cloud"],["Docker","cloud"],
+  ["PostgreSQL","database"],["MongoDB","database"],["Redis","database"],["Snowflake","database"],["ClickHouse","database"],
+  ["LLM Fine-tuning","ai"],["PyTorch","ai"],["LangChain","ai"],["Computer Vision","ai"],["MLOps","ai"],["Prompt Engineering","ai"],
+  ["Team Leadership","leadership"],["Mentoring","leadership"],["Stakeholder Management","leadership"],["Hiring","leadership"],
+  ["Communication","soft_skills"],["Problem Solving","soft_skills"],["Ownership","soft_skills"],["Collaboration","soft_skills"],
+  ["Figma","other"],["Cypress","other"],["Playwright","other"],["Jira Administration","other"],["Technical Writing","other"],
+];
+const PROJECT_NAMES = ["Atlas Platform","Orion Billing","Nimbus Data Lake","Helios CRM","Vertex Mobile App","Quantum Search","Beacon Analytics","Falcon Payments","Aurora Design System","Pulse Monitoring","Comet Onboarding","Zenith Marketplace","Nova Identity","Titan Warehouse","Echo Support Bot","Lumen Reporting","Cobalt Gateway","Delta Migration","Sierra Compliance","Kestrel Insights"];
+const LANGS = ["TypeScript","Python","Go","Java","Rust","Kotlin","Ruby"];
+const COMMIT_MSGS = ["fix: handle null response from billing API","feat: add candidate ranking endpoint","chore: bump dependencies","refactor: extract sync engine","perf: batch database writes","test: cover edge cases in mapper","docs: update integration guide","fix: race condition in token refresh","feat: streaming chat responses","style: align table spacing"];
+const PR_TITLES = ["Add explainable score breakdown","Migrate sync engine to batched writes","Improve OAuth token refresh","Introduce workload heuristics","Fix pagination on employees table","Add PDF export for reports","Harden RLS policies","Cache leaderboard queries"];
+const ISSUE_TITLES = ["Dashboard charts flicker on refresh","Sync fails for archived repositories","Slow query on employee search","Timezone mismatch in attendance","Duplicate rows after import","Add filter by department","Improve error toast copy","Support incremental Jira sync"];
+const TASK_NAMES = ["Design onboarding flow","Write API contract","Implement retry logic","Prepare sprint demo","Review security checklist","Update customer docs","Refine dashboard layout","Automate release notes","Investigate flaky test","Plan data migration"];
+const CERTS = [["AWS Solutions Architect","Amazon"],["CKA","CNCF"],["Google Professional Data Engineer","Google"],["Azure DevOps Engineer","Microsoft"],["Certified ScrumMaster","Scrum Alliance"],["TensorFlow Developer","Google"],["PMP","PMI"],["Security+","CompTIA"]];
+const COURSES = [["Advanced React Patterns","Frontend Masters","engineering"],["Distributed Systems","Coursera","engineering"],["Leadership Essentials","LinkedIn Learning","leadership"],["Applied Machine Learning","Udacity","ai"],["Secure Coding","Pluralsight","security"],["Effective Communication","Internal Academy","soft_skills"]];
+const INDUSTRIES = ["Fintech","Healthcare","Retail","Logistics","Telecom","Energy","EdTech","Insurance"];
+const CLIENTS = ["Northwind Bank","Helia Health","Marlow Retail","TransGrid","Orbit Telecom","Brightpath Energy","Scholaris","Anvil Insurance"];
+
+export type SeedSummary = Record<string, number>;
+
+/** Builds the full interconnected demo dataset for one organization. */
+export function generateDemoData(organizationId: string, seed = 20260101): SeedBatch[] {
+  const r: Rng = makeRng(seed);
+  const org = organizationId;
+  const batches: SeedBatch[] = [];
+  const push = (table: string, rows: Record<string, unknown>[]) => batches.push({ table, rows });
+
+  // ---------- Departments ----------
+  const departments = DEPARTMENTS.map(([name, code, color], i) => ({
+    id: uuid(), organization_id: org, name, department_code: `${code}`, color,
+    description: `${name} organisation unit`, status: "active",
+    email: `${code.toLowerCase()}@demo-corp.io`, phone: `+1 555 01${(10 + i).toString()}`,
+    location: LOCATIONS[i % LOCATIONS.length], budget: int(r, 250, 4000) * 1000,
+  }));
+  push("departments", departments);
+
+  // ---------- Teams ----------
+  const teams = Array.from({ length: 20 }, (_, i) => {
+    const dept = departments[i % departments.length];
+    return {
+      id: uuid(), organization_id: org, department_id: dept.id,
+      name: `${dept.name.split(" ")[0]} Squad ${String.fromCharCode(65 + Math.floor(i / departments.length))}${(i % departments.length) + 1}`,
+      description: `Cross-functional squad inside ${dept.name}`,
+    };
+  });
+  push("teams", teams);
+
+  // ---------- Skills ----------
+  const skills = SKILLS.map(([name, category]) => ({ id: uuid(), organization_id: org, name, category }));
+  push("skills", skills);
+
+  // ---------- Employees ----------
+  const employees = Array.from({ length: 100 }, (_, i) => {
+    const first = FIRST[i % FIRST.length];
+    const last = LAST[(i * 7) % LAST.length];
+    const team = teams[i % teams.length];
+    const dept = departments.find((d) => d.id === team.department_id)!;
+    const designation = pick(r, DESIGNATIONS);
+    const joined = new Date(Date.now() - int(r, 90, 2200) * 86400000);
+    return {
+      id: uuid(), organization_id: org, employee_code: `EMP-${String(1001 + i)}`,
+      full_name: `${first} ${last}`, first_name: first, last_name: last,
+      email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@demo-corp.io`,
+      phone: `+1 555 ${int(r, 1000, 9999)}`,
+      dob: isoDate(new Date(Date.now() - int(r, 8500, 16000) * 86400000)),
+      designation, department_id: dept.id, team_id: team.id, manager_id: null as string | null,
+      joining_date: isoDate(joined),
+      employment_type: chance(r, 0.82) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
+      status: chance(r, 0.88) ? "active" : pick(r, ["on_leave", "probation", "terminated"]),
+      location: pick(r, LOCATIONS), work_location: chance(r, 0.5) ? "remote" : "onsite",
+      office_location: pick(r, LOCATIONS), salary: int(r, 45, 210) * 1000,
+      notes: null,
+    };
+  });
+  // managers: first employee of each department leads it
+  for (const dept of departments) {
+    const members = employees.filter((e) => e.department_id === dept.id);
+    if (!members.length) continue;
+    const lead = members[0];
+    lead.designation = "Engineering Manager";
+    for (const m of members.slice(1)) m.manager_id = lead.id;
+  }
+  push("employees", employees);
+  for (const d of departments) {
+    const lead = employees.find((e) => e.department_id === d.id);
+    if (lead) (d as Record<string, unknown>).manager_id = lead.id;
+  }
+
+  // ---------- Employee skills ----------
+  const employeeSkills = employees.flatMap((e) =>
+    pickMany(r, skills, int(r, 4, 8)).map((s) => ({
+      id: uuid(), employee_id: e.id, skill_id: s.id,
+      proficiency: pick(r, ["beginner", "intermediate", "advanced", "expert"]),
+      years_experience: float(r, 0.5, 12, 1),
+    })),
+  );
+  push("employee_skills", employeeSkills);
+
+  // ---------- Projects ----------
+  const projects = Array.from({ length: 40 }, (_, i) => {
+    const dept = departments[i % departments.length];
+    const start = new Date(Date.now() - int(r, 30, 900) * 86400000);
+    return {
+      id: uuid(), organization_id: org, department_id: dept.id,
+      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${i >= PROJECT_NAMES.length ? " II" : ""}`,
+      description: `Strategic initiative owned by ${dept.name}.`,
+      status: pick(r, ["planning", "active", "active", "on_hold", "completed", "archived"]),
+      start_date: isoDate(start),
+      end_date: isoDate(new Date(start.getTime() + int(r, 60, 500) * 86400000)),
+    };
+  });
+  push("projects", projects);
+
+  const employeeProjects = projects.flatMap((p) =>
+    pickMany(r, employees, int(r, 3, 6)).map((e) => ({
+      id: uuid(), project_id: p.id, employee_id: e.id,
+      role: pick(r, ["Contributor", "Tech Lead", "Reviewer", "QA", "Analyst"]),
+      allocation_percent: pick(r, [20, 30, 50, 60, 80, 100]),
+    })),
+  );
+  push("employee_projects", employeeProjects);
+
+  // ---------- GitHub ----------
+  const ghConnection = {
+    id: uuid(), organization_id: org, github_login: "demo-corp", github_account_id: 90000001,
+    account_type: "organization", avatar: null, scope: "repo,read:org",
+    access_token_ciphertext: "demo-seeded", auto_sync: true,
+    last_sync_at: iso(new Date()), last_sync_status: "success",
+  };
+  push("github_connections", [ghConnection]);
+
+  const contributors = employees.map((e, i) => ({
+    id: uuid(), organization_id: org, github_id: 5000000 + i,
+    login: e.email.split("@")[0].replace(".", "-"), name: e.full_name, email: e.email,
+    followers: int(r, 0, 400), following: int(r, 0, 200), public_repos: int(r, 0, 40),
+    location: e.location, company: "Demo Corp", linked_employee_id: e.id,
+  }));
+  push("github_contributors", contributors);
+
+  const repos = Array.from({ length: 25 }, (_, i) => {
+    const name = `${pick(r, ["atlas", "orion", "nimbus", "helios", "vertex", "pulse", "nova", "cobalt"])}-${pick(r, ["api", "web", "worker", "infra", "sdk", "docs"])}-${i}`;
+    return {
+      id: uuid(), organization_id: org, connection_id: ghConnection.id, github_id: 7000000 + i,
+      owner: "demo-corp", name, full_name: `demo-corp/${name}`,
+      description: "Demo repository generated for the seeded workspace.",
+      visibility: chance(r, 0.7) ? "private" : "public", language: pick(r, LANGS),
+      default_branch: "main", stars: int(r, 0, 900), forks: int(r, 0, 120),
+      open_issues: int(r, 0, 40), watchers: int(r, 0, 300), size_kb: int(r, 200, 90000),
+      pushed_at: iso(new Date(Date.now() - int(r, 0, 40) * 86400000)),
+      repo_created_at: iso(new Date(Date.now() - int(r, 200, 2000) * 86400000)),
+      archived: chance(r, 0.08), disabled: false, tracked: true,
+      last_synced_at: iso(new Date()),
+    };
+  });
+  push("github_repositories", repos);
+
+  push("github_repo_contributors", repos.flatMap((repo) =>
+    pickMany(r, contributors, int(r, 3, 8)).map((c) => ({
+      id: uuid(), organization_id: org, repository_id: repo.id, contributor_id: c.id,
+      contributions: int(r, 5, 800),
+    })),
+  ));
+
+  const commits = Array.from({ length: 1500 }, (_, i) => {
+    const repo = pick(r, repos);
+    const c = pick(r, contributors);
+    return {
+      id: uuid(), organization_id: org, repository_id: repo.id, sha: `${(i + 1).toString(16).padStart(8, "0")}${uuid().replace(/-/g, "").slice(0, 32)}`,
+      author_contributor_id: c.id, author_login: c.login, author_email: c.email,
+      message: pick(r, COMMIT_MSGS), branch: chance(r, 0.6) ? "main" : `feature/${pick(r, ["auth", "sync", "ui", "perf"])}-${int(r, 10, 99)}`,
+      committed_at: iso(new Date(Date.now() - int(r, 0, 180) * 86400000 - int(r, 0, 86400) * 1000)),
+      additions: int(r, 1, 700), deletions: int(r, 0, 400), changed_files: int(r, 1, 25),
+    };
+  });
+  push("github_commits", commits);
+
+  const prs = Array.from({ length: 300 }, (_, i) => {
+    const repo = pick(r, repos);
+    const c = pick(r, contributors);
+    const created = new Date(Date.now() - int(r, 1, 180) * 86400000);
+    const merged = chance(r, 0.68);
+    const closed = merged || chance(r, 0.15);
+    return {
+      id: uuid(), organization_id: org, repository_id: repo.id, github_id: 8000000 + i,
+      number: i + 1, title: pick(r, PR_TITLES), body: "Seeded pull request for the demo workspace.",
+      state: merged ? "merged" : closed ? "closed" : "open", merged, draft: !closed && chance(r, 0.12),
+      author_contributor_id: c.id, author_login: c.login,
+      base_branch: "main", head_branch: `feature/${int(r, 100, 999)}`,
+      additions: int(r, 5, 900), deletions: int(r, 0, 500), changed_files: int(r, 1, 30),
+      review_count: int(r, 0, 5), comment_count: int(r, 0, 12),
+      pr_created_at: iso(created),
+      merged_at: merged ? iso(new Date(created.getTime() + int(r, 1, 96) * 3600000)) : null,
+      closed_at: closed ? iso(new Date(created.getTime() + int(r, 1, 120) * 3600000)) : null,
+    };
+  });
+  push("github_pull_requests", prs);
+
+  push("github_reviews", Array.from({ length: 400 }, (_, i) => {
+    const pr = pick(r, prs);
+    const c = pick(r, contributors);
+    return {
+      id: uuid(), organization_id: org, pull_request_id: pr.id, github_id: 8500000 + i,
+      reviewer_contributor_id: c.id, reviewer_login: c.login,
+      state: pick(r, ["approved", "approved", "changes_requested", "commented", "dismissed"]),
+      body: "Looks good overall, minor comments inline.",
+      submitted_at: iso(new Date(Date.now() - int(r, 0, 170) * 86400000)),
+    };
+  }));
+
+  push("github_issues", Array.from({ length: 300 }, (_, i) => {
+    const repo = pick(r, repos);
+    const author = pick(r, contributors);
+    const assignee = pick(r, contributors);
+    const created = new Date(Date.now() - int(r, 1, 200) * 86400000);
+    const closed = chance(r, 0.6);
+    return {
+      id: uuid(), organization_id: org, repository_id: repo.id, github_id: 9000000 + i,
+      number: i + 1, title: pick(r, ISSUE_TITLES), body: "Seeded issue for the demo workspace.",
+      state: closed ? "closed" : "open",
+      labels: pickMany(r, ["bug", "enhancement", "docs", "p1", "p2", "tech-debt"], int(r, 1, 3)),
+      author_contributor_id: author.id, author_login: author.login,
+      assignee_contributor_id: assignee.id, assignee_login: assignee.login,
+      comment_count: int(r, 0, 15), issue_created_at: iso(created),
+      closed_at: closed ? iso(new Date(created.getTime() + int(r, 1, 40) * 86400000)) : null,
+    };
+  }));
+
+  // ---------- Jira ----------
+  const jiraConnection = {
+    id: uuid(), organization_id: org, cloud_id: "demo-cloud-id", site_name: "Demo Corp",
+    site_url: "https://demo-corp.atlassian.net", scope: "read:jira-work",
+    access_token_ciphertext: "demo-seeded", auto_sync: true,
+    last_sync_at: iso(new Date()), last_sync_status: "success",
+  };
+  push("jira_connections", [jiraConnection]);
+
+  const jiraAccounts = employees.map((e, i) => ({
+    id: uuid(), organization_id: org, account_id: `acc-${1000 + i}`, display_name: e.full_name,
+    email: e.email, active: true, linked_employee_id: e.id,
+  }));
+  push("jira_accounts", jiraAccounts);
+
+  const jiraProjects = Array.from({ length: 10 }, (_, i) => {
+    const lead = pick(r, jiraAccounts);
+    return {
+      id: uuid(), organization_id: org, connection_id: jiraConnection.id, jira_id: `10${i}`,
+      project_key: `PRJ${i + 1}`, name: PROJECT_NAMES[i], project_type: "software",
+      project_category: pick(r, ["Platform", "Growth", "Internal"]),
+      description: "Seeded Jira project.", lead_account_id: lead.id, lead_name: lead.display_name,
+      status: "active", archived: false, tracked: true, last_synced_at: iso(new Date()),
+    };
+  });
+  push("jira_projects", jiraProjects);
+
+  const boards = jiraProjects.map((p, i) => ({
+    id: uuid(), organization_id: org, project_id: p.id, jira_id: 200 + i,
+    name: `${p.name} Board`, board_type: "scrum",
+  }));
+  push("jira_boards", boards);
+
+  const sprints = boards.flatMap((b, bi) =>
+    Array.from({ length: 4 }, (_, si) => {
+      const start = new Date(Date.now() - (4 - si) * 14 * 86400000);
+      const state = si === 3 ? "active" : "closed";
+      const committed = int(r, 20, 60);
+      const completed = state === "closed" ? int(r, 12, committed) : int(r, 3, committed - 5);
+      return {
+        id: uuid(), organization_id: org, board_id: b.id, project_id: b.project_id,
+        jira_id: 3000 + bi * 10 + si, name: `${b.name.split(" ")[0]} Sprint ${si + 1}`,
+        goal: "Deliver committed scope and reduce defect backlog.",
+        state, start_date: iso(start), end_date: iso(new Date(start.getTime() + 14 * 86400000)),
+        complete_date: state === "closed" ? iso(new Date(start.getTime() + 14 * 86400000)) : null,
+        committed_points: committed, completed_points: completed,
+        remaining_points: Math.max(0, committed - completed),
+      };
+    }),
+  );
+  push("jira_sprints", sprints);
+
+  const epics = Array.from({ length: 30 }, (_, i) => {
+    const p = pick(r, jiraProjects);
+    const owner = pick(r, jiraAccounts);
+    return {
+      id: uuid(), organization_id: org, project_id: p.id, jira_id: `40${i}`,
+      epic_key: `${p.project_key}-E${i + 1}`, name: `${pick(r, ["Onboarding", "Billing", "Search", "Reporting", "Mobile", "Security"])} Epic ${i + 1}`,
+      summary: "Seeded epic covering a slice of the roadmap.",
+      status: pick(r, ["To Do", "In Progress", "Done"]),
+      status_category: pick(r, ["todo", "in_progress", "done"]),
+      progress: float(r, 0, 100, 0), owner_account_id: owner.id, owner_name: owner.display_name,
+    };
+  });
+  push("jira_epics", epics);
+
+  const jiraIssues = Array.from({ length: 400 }, (_, i) => {
+    const p = pick(r, jiraProjects);
+    const sprint = pick(r, sprints.filter((s) => s.project_id === p.id));
+    const epic = pick(r, epics.filter((e) => e.project_id === p.id));
+    const assignee = pick(r, jiraAccounts);
+    const reporter = pick(r, jiraAccounts);
+    const cat = pick(r, ["todo", "in_progress", "done", "done"]);
+    const created = new Date(Date.now() - int(r, 1, 180) * 86400000);
+    return {
+      id: uuid(), organization_id: org, project_id: p.id, sprint_id: sprint?.id ?? null,
+      epic_id: epic?.id ?? null, jira_id: `50${i}`, issue_key: `${p.project_key}-${i + 1}`,
+      issue_type: pick(r, ["Story", "Task", "Bug", "Sub-task"]),
+      issue_kind: pick(r, ["story", "task", "bug", "subtask"]),
+      summary: pick(r, ISSUE_TITLES), description: "Seeded Jira issue.",
+      priority: pick(r, ["Highest", "High", "Medium", "Low"]),
+      status: cat === "done" ? "Done" : cat === "in_progress" ? "In Progress" : "To Do",
+      status_category: cat, resolution: cat === "done" ? "Done" : null,
+      reporter_account_id: reporter.id, reporter_name: reporter.display_name,
+      assignee_account_id: assignee.id, assignee_name: assignee.display_name,
+      labels: pickMany(r, ["frontend", "backend", "infra", "ux", "urgent"], int(r, 0, 2)),
+      story_points: pick(r, [1, 2, 3, 5, 8, 13]),
+      original_estimate_seconds: int(r, 2, 40) * 3600,
+      remaining_estimate_seconds: cat === "done" ? 0 : int(r, 0, 20) * 3600,
+      time_spent_seconds: int(r, 1, 36) * 3600,
+      blocked: chance(r, 0.08), comment_count: int(r, 0, 8),
+      issue_created_at: iso(created),
+      issue_updated_at: iso(new Date(created.getTime() + int(r, 1, 30) * 86400000)),
+      resolved_at: cat === "done" ? iso(new Date(created.getTime() + int(r, 1, 25) * 86400000)) : null,
+    };
+  });
+  push("jira_issues", jiraIssues);
+
+  push("jira_comments", Array.from({ length: 400 }, (_, i) => {
+    const issue = pick(r, jiraIssues);
+    const a = pick(r, jiraAccounts);
+    return {
+      id: uuid(), organization_id: org, issue_id: issue.id, jira_id: `c${i}`,
+      author_account_id: a.id, author_name: a.display_name,
+      body: pick(r, ["Picked this up today.", "Blocked on the API contract.", "Deployed to staging.", "Needs one more review.", "Reproduced on the latest build."]),
+      comment_created_at: iso(new Date(Date.now() - int(r, 0, 120) * 86400000)),
+    };
+  }));
+
+  push("jira_worklogs", Array.from({ length: 500 }, (_, i) => {
+    const issue = pick(r, jiraIssues);
+    const a = pick(r, jiraAccounts);
+    return {
+      id: uuid(), organization_id: org, issue_id: issue.id, jira_id: `w${i}`,
+      author_account_id: a.id, author_name: a.display_name,
+      time_spent_seconds: int(r, 1, 8) * 3600,
+      started_at: iso(new Date(Date.now() - int(r, 0, 120) * 86400000)),
+      description: "Implementation and testing.",
+    };
+  }));
+
+  // ---------- ClickUp ----------
+  const cuConnection = {
+    id: uuid(), organization_id: org, workspace_id: "ws-demo", workspace_name: "Demo Corp Workspace",
+    workspace_color: "#7b68ee", scope: "read", access_token_ciphertext: "demo-seeded",
+    auto_sync: true, connected_user_name: "Demo Admin", last_sync_at: iso(new Date()),
+    last_sync_status: "success",
+  };
+  push("clickup_connections", [cuConnection]);
+
+  const cuMembers = employees.map((e, i) => ({
+    id: uuid(), organization_id: org, connection_id: cuConnection.id, member_id: `m${1000 + i}`,
+    username: e.full_name, email: e.email, role: chance(r, 0.15) ? "admin" : "member",
+    role_key: 3, active: true, linked_employee_id: e.id,
+  }));
+  push("clickup_members", cuMembers);
+
+  const spaces = Array.from({ length: 5 }, (_, i) => ({
+    id: uuid(), organization_id: org, connection_id: cuConnection.id, space_id: `s${i}`,
+    name: pick(r, ["Delivery", "Platform", "Growth", "Support", "Design"]) + ` ${i + 1}`,
+    description: "Seeded ClickUp space.", private: false, archived: false,
+    color: "#7b68ee", statuses: [], last_synced_at: iso(new Date()),
+  }));
+  push("clickup_spaces", spaces);
+
+  const folders = Array.from({ length: 10 }, (_, i) => ({
+    id: uuid(), organization_id: org, space_id: spaces[i % spaces.length].id, folder_id: `f${i}`,
+    name: `Folder ${i + 1}`, hidden: false, archived: false, task_count: int(r, 10, 120),
+  }));
+  push("clickup_folders", folders);
+
+  const lists = Array.from({ length: 25 }, (_, i) => {
+    const folder = folders[i % folders.length];
+    return {
+      id: uuid(), organization_id: org, space_id: folder.space_id, folder_id: folder.id,
+      list_id: `l${i}`, name: `${pick(r, ["Backlog", "Sprint", "Bugs", "Discovery", "Ops"])} ${i + 1}`,
+      content: "Seeded list.", status: "active", archived: false, task_count: int(r, 5, 90),
+    };
+  });
+  push("clickup_lists", lists);
+
+  const cuTasks = Array.from({ length: 1000 }, (_, i) => {
+    const list = pick(r, lists);
+    const assignee = pick(r, cuMembers);
+    const creator = pick(r, cuMembers);
+    const state = pick(r, ["open", "in_progress", "done", "done", "blocked", "cancelled"]);
+    const created = new Date(Date.now() - int(r, 1, 180) * 86400000);
+    return {
+      id: uuid(), organization_id: org, space_id: list.space_id, folder_id: list.folder_id,
+      list_id: list.id, task_id: `t${i}`, name: pick(r, TASK_NAMES),
+      description: "Seeded ClickUp task.", url: `https://app.clickup.com/t/t${i}`,
+      status: state === "done" ? "complete" : state === "in_progress" ? "in progress" : "to do",
+      status_type: state === "done" ? "closed" : "custom", task_state: state,
+      priority: pick(r, ["urgent", "high", "normal", "low"]), priority_order: int(r, 1, 4),
+      tags: pickMany(r, ["frontend", "backend", "design", "ops"], int(r, 0, 2)),
+      assignees: [{ id: assignee.member_id, username: assignee.username }],
+      primary_assignee_id: assignee.id, primary_assignee_name: assignee.username,
+      creator_member_id: creator.id, creator_name: creator.username, watchers: [],
+      due_date: iso(new Date(created.getTime() + int(r, 3, 45) * 86400000)),
+      start_date: iso(created),
+      completed_at: state === "done" ? iso(new Date(created.getTime() + int(r, 1, 30) * 86400000)) : null,
+      time_estimate_ms: int(r, 1, 16) * 3600000, time_spent_ms: int(r, 0, 14) * 3600000,
+      comment_count: int(r, 0, 6), archived: false,
+      task_created_at: iso(created),
+      task_updated_at: iso(new Date(created.getTime() + int(r, 1, 40) * 86400000)),
+    };
+  });
+  push("clickup_tasks", cuTasks);
+
+  push("clickup_time_entries", Array.from({ length: 600 }, (_, i) => {
+    const task = pick(r, cuTasks);
+    const m = pick(r, cuMembers);
+    const started = new Date(Date.now() - int(r, 0, 120) * 86400000);
+    const duration = int(r, 1, 7) * 3600000;
+    return {
+      id: uuid(), organization_id: org, task_id: task.id, entry_id: `te${i}`,
+      member_id: m.id, member_name: m.username, duration_ms: duration,
+      billable: chance(r, 0.7), description: "Focused work session.",
+      started_at: iso(started), ended_at: iso(new Date(started.getTime() + duration)),
+    };
+  }));
+
+  push("clickup_task_comments", Array.from({ length: 300 }, (_, i) => {
+    const task = pick(r, cuTasks);
+    const m = pick(r, cuMembers);
+    return {
+      id: uuid(), organization_id: org, task_id: task.id, comment_id: `cc${i}`,
+      author_member_id: m.id, author_name: m.username,
+      body: pick(r, ["Started on this.", "Waiting on design.", "Ready for QA.", "Shipped."]),
+      resolved: chance(r, 0.4),
+      comment_created_at: iso(new Date(Date.now() - int(r, 0, 120) * 86400000)),
+    };
+  }));
+
+  // ---------- HR history ----------
+  push("employee_certifications", Array.from({ length: 150 }, () => {
+    const e = pick(r, employees);
+    const [name, issuer] = pick(r, CERTS);
+    const issued = new Date(Date.now() - int(r, 60, 1400) * 86400000);
+    return {
+      id: uuid(), organization_id: org, employee_id: e.id, name, issuer,
+      credential_id: `CRED-${int(r, 100000, 999999)}`, issue_date: isoDate(issued),
+      expiry_date: isoDate(new Date(issued.getTime() + 730 * 86400000)),
+    };
+  }));
+
+  push("training_records", Array.from({ length: 250 }, () => {
+    const e = pick(r, employees);
+    const [course, provider, category] = pick(r, COURSES);
+    const started = new Date(Date.now() - int(r, 30, 700) * 86400000);
+    const done = chance(r, 0.75);
+    return {
+      id: uuid(), organization_id: org, employee_id: e.id, course_name: course, provider, category,
+      hours: int(r, 4, 40), status: done ? "completed" : pick(r, ["in_progress", "enrolled"]),
+      score: done ? int(r, 60, 100) : null, started_on: isoDate(started),
+      completed_on: done ? isoDate(new Date(started.getTime() + int(r, 5, 90) * 86400000)) : null,
+    };
+  }));
+
+  push("performance_reviews", Array.from({ length: 200 }, () => {
+    const e = pick(r, employees);
+    const reviewer = employees.find((x) => x.id === e.manager_id) ?? pick(r, employees);
+    const cycle = pick(r, ["H1 2025", "H2 2025", "H1 2026"]);
+    return {
+      id: uuid(), organization_id: org, employee_id: e.id, reviewer_employee_id: reviewer.id,
+      period_label: cycle, overall_rating: float(r, 2.5, 5, 1),
+      delivery_rating: float(r, 2, 5, 1), collaboration_rating: float(r, 2, 5, 1),
+      leadership_rating: float(r, 1.5, 5, 1), communication_rating: float(r, 2, 5, 1),
+      strengths: "Strong ownership and consistent delivery.",
+      improvements: "Could share context earlier with stakeholders.",
+      comments: "Solid cycle overall.", status: "submitted",
+    };
+  }));
+
+  push("promotions", Array.from({ length: 60 }, () => {
+    const e = pick(r, employees);
+    const salary = Number(e.salary);
+    return {
+      id: uuid(), organization_id: org, employee_id: e.id,
+      previous_designation: "Software Engineer", new_designation: e.designation,
+      previous_level: pick(r, ["L2", "L3", "L4"]), new_level: pick(r, ["L3", "L4", "L5"]),
+      previous_salary: Math.round(salary * 0.85), new_salary: salary,
+      effective_date: isoDate(new Date(Date.now() - int(r, 30, 900) * 86400000)),
+      reason: "Sustained impact and scope growth.",
+      approved_by_employee_id: e.manager_id,
+    };
+  }));
+
+  const attendance: Record<string, unknown>[] = [];
+  for (const e of employees) {
+    for (let d = 1; d <= 20; d++) {
+      const day = new Date(Date.now() - d * 86400000);
+      if (day.getUTCDay() === 0 || day.getUTCDay() === 6) continue;
+      const status = chance(r, 0.9) ? "present" : pick(r, ["leave", "absent", "holiday"]);
+      const checkIn = new Date(day); checkIn.setUTCHours(9, int(r, 0, 50), 0, 0);
+      const hours = status === "present" ? float(r, 6.5, 9.5, 1) : 0;
+      attendance.push({
+        id: uuid(), organization_id: org, employee_id: e.id, work_date: isoDate(day), status,
+        check_in: status === "present" ? iso(checkIn) : null,
+        check_out: status === "present" ? iso(new Date(checkIn.getTime() + hours * 3600000)) : null,
+        hours_worked: hours, is_remote: chance(r, 0.45),
+      });
+    }
+  }
+  push("attendance_records", attendance);
+
+  push("leave_records", Array.from({ length: 200 }, () => {
+    const e = pick(r, employees);
+    const start = new Date(Date.now() - int(r, -30, 300) * 86400000);
+    const days = int(r, 1, 8);
+    return {
+      id: uuid(), organization_id: org, employee_id: e.id,
+      leave_type: pick(r, ["annual", "sick", "parental", "unpaid", "comp_off"]),
+      start_date: isoDate(start), end_date: isoDate(new Date(start.getTime() + days * 86400000)),
+      days, status: pick(r, ["approved", "approved", "pending", "rejected"]),
+      reason: "Planned time off.", approved_by_employee_id: e.manager_id,
+    };
+  }));
+
+  const productivity: Record<string, unknown>[] = [];
+  const aiScores: Record<string, unknown>[] = [];
+  for (const e of employees) {
+    const base = int(r, 45, 92);
+    for (let m = 5; m >= 0; m--) {
+      const month = isoDate(monthStart(m));
+      const drift = int(r, -8, 8);
+      const score = Math.max(20, Math.min(99, base + drift));
+      productivity.push({
+        id: uuid(), organization_id: org, employee_id: e.id, period_month: month,
+        commits: int(r, 5, 90), pull_requests: int(r, 0, 18), reviews: int(r, 0, 25),
+        issues_closed: int(r, 0, 20), story_points: int(r, 5, 45), tasks_completed: int(r, 3, 40),
+        hours_logged: int(r, 90, 180), productivity_score: score,
+      });
+      const flags: string[] = [];
+      if (score < 45) flags.push("attrition_risk");
+      if (chance(r, 0.08)) flags.push("burnout_risk");
+      aiScores.push({
+        id: uuid(), organization_id: org, employee_id: e.id, period_month: month,
+        github_score: Math.min(99, score + int(r, -10, 10)),
+        jira_score: Math.min(99, score + int(r, -12, 12)),
+        clickup_score: Math.min(99, score + int(r, -12, 12)),
+        productivity_score: score,
+        collaboration_score: Math.min(99, score + int(r, -15, 12)),
+        leadership_score: Math.min(99, score + int(r, -20, 10)),
+        communication_score: Math.min(99, score + int(r, -14, 12)),
+        innovation_score: Math.min(99, score + int(r, -18, 14)),
+        learning_score: Math.min(99, score + int(r, -16, 16)),
+        consistency_score: Math.min(99, score + int(r, -10, 8)),
+        workload_score: int(r, 35, 98), quality_score: Math.min(99, score + int(r, -8, 10)),
+        overall_score: score, risk_flags: flags,
+      });
+    }
+  }
+  push("productivity_history", productivity);
+  push("ai_score_history", aiScores);
+
+  const latest = aiScores.filter((s) => s.period_month === isoDate(monthStart(0)));
+  const board = (category: string, key: string) => ({
+    id: uuid(), organization_id: org, category, period_label: "Last 30 days",
+    period_month: isoDate(monthStart(0)),
+    entries: [...latest]
+      .sort((a, b) => Number(b[key]) - Number(a[key]))
+      .slice(0, 10)
+      .map((s, i) => {
+        const e = employees.find((x) => x.id === s.employee_id)!;
+        return { rank: i + 1, employee_id: e.id, name: e.full_name, designation: e.designation, score: s[key] };
+      }),
+  });
+  push("leaderboard_snapshots", [
+    board("overall", "overall_score"), board("productivity", "productivity_score"),
+    board("quality", "quality_score"), board("collaboration", "collaboration_score"),
+    board("innovation", "innovation_score"), board("learning", "learning_score"),
+  ]);
+
+  // ---------- Workspace activity ----------
+  push("project_proposals", Array.from({ length: 25 }, (_, i) => {
+    const stack = pickMany(r, ["React", "Node.js", "PostgreSQL", "AWS", "Kubernetes", "Python", "Kafka"], int(r, 3, 5));
+    const team = pickMany(r, employees, int(r, 3, 6));
+    return {
+      id: uuid(), organization_id: org,
+      title: `${pick(r, ["Platform Modernisation", "Data Migration", "Mobile Revamp", "AI Assistant", "Compliance Portal"])} — Phase ${int(r, 1, 3)}`,
+      client_name: CLIENTS[i % CLIENTS.length], industry: pick(r, INDUSTRIES),
+      summary: "Seeded proposal generated from workforce capability data.",
+      budget: int(r, 60, 900) * 1000, timeline_weeks: int(r, 6, 40),
+      start_date: isoDate(new Date(Date.now() + int(r, 10, 120) * 86400000)),
+      tech_stack: stack, required_skills: pickMany(r, SKILLS.map((s) => s[0]), int(r, 4, 7)),
+      suggested_employees: team.map((e) => ({ id: e.id, name: e.full_name, designation: e.designation, fit: int(r, 62, 98) })),
+      suggested_team: { size: team.length, lead: team[0]?.full_name ?? null },
+      status: pick(r, ["draft", "submitted", "won", "lost", "in_review"]),
+      win_probability: int(r, 20, 95),
+    };
+  }));
+
+  push("reports", Array.from({ length: 20 }, (_, i) => ({
+    id: uuid(), organization_id: org,
+    name: `${pick(r, ["Workforce Summary", "Engineering Velocity", "AI Scorecard", "Attrition Risk", "Utilisation"])} — ${pick(r, ["Jan", "Feb", "Mar", "Apr", "May"])} 2026`,
+    report_type: pick(r, ["workforce", "engineering", "ai", "risk", "utilisation"]),
+    format: pick(r, ["pdf", "xlsx", "csv"]), period_label: "Monthly", status: "ready",
+    summary: { employees: 100, avg_score: int(r, 60, 85), generated_index: i },
+    generated_by_name: "Demo Admin",
+  })));
+
+  push("notifications", Array.from({ length: 60 }, () => ({
+    id: uuid(), organization_id: org, user_id: null,
+    title: pick(r, ["Sync completed", "New high-risk signal", "Monthly report ready", "New employee onboarded", "Sprint closed"]),
+    body: "Generated as part of the demo workspace dataset.",
+    category: pick(r, ["system", "integration", "ai", "hr"]),
+    severity: pick(r, ["info", "info", "warning", "success"]),
+    read_at: chance(r, 0.4) ? iso(new Date()) : null,
+    created_at: iso(new Date(Date.now() - int(r, 0, 40) * 86400000)),
+  })));
+
+  push("data_imports", Array.from({ length: 15 }, (_, i) => {
+    const total = int(r, 50, 1200);
+    const failed = int(r, 0, 30);
+    return {
+      id: uuid(), organization_id: org, created_by_name: "Demo Admin",
+      file_name: `${pick(r, ["employees", "payroll", "attendance", "projects"])}-${i + 1}.xlsx`,
+      file_size: int(r, 20, 4000) * 1024, file_type: "xlsx",
+      dataset: pick(r, ["employees", "departments", "projects", "attendance", "payroll"]),
+      mode: pick(r, ["upsert", "insert", "skip_duplicates"]),
+      status: failed > 20 ? "partial" : "completed",
+      total_rows: total, imported_rows: total - failed, failed_rows: failed,
+      error_count: failed, duration_ms: int(r, 800, 45000),
+      finished_at: iso(new Date(Date.now() - int(r, 0, 60) * 86400000)),
+    };
+  }));
+
+  push("activity_logs", Array.from({ length: 80 }, () => ({
+    id: uuid(), organization_id: org,
+    action: pick(r, ["employee.created", "project.updated", "github.sync", "jira.sync", "report.generated", "department.updated"]),
+    entity_type: pick(r, ["employee", "project", "integration", "report"]),
+    metadata: { source: "seed" },
+    created_at: iso(new Date(Date.now() - int(r, 0, 60) * 86400000)),
+  })));
+
+  push("audit_logs", Array.from({ length: 60 }, () => ({
+    id: uuid(), organization_id: org,
+    action: pick(r, ["update", "create", "delete"]),
+    entity_type: pick(r, ["employee", "department", "project", "settings"]),
+    before_state: { seeded: true }, after_state: { seeded: true },
+    created_at: iso(new Date(Date.now() - int(r, 0, 60) * 86400000)),
+  })));
+
+  return batches;
+}
+
+export const SEEDED_TABLES = [
+  "audit_logs","activity_logs","data_imports","notifications","reports","project_proposals",
+  "leaderboard_snapshots","ai_score_history","productivity_history","leave_records","attendance_records",
+  "promotions","performance_reviews","training_records","employee_certifications",
+  "clickup_task_comments","clickup_time_entries","clickup_tasks","clickup_lists","clickup_folders",
+  "clickup_spaces","clickup_members","clickup_connections",
+  "jira_worklogs","jira_comments","jira_issues","jira_epics","jira_sprints","jira_boards",
+  "jira_projects","jira_accounts","jira_connections",
+  "github_issues","github_reviews","github_pull_requests","github_commits","github_repo_contributors",
+  "github_repositories","github_contributors","github_connections",
+  "employee_projects","projects","employee_skills","employees","skills","teams","departments",
+] as const;
