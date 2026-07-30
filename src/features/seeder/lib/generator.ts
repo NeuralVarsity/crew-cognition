@@ -34,6 +34,32 @@ const COURSES = [["Advanced React Patterns","Frontend Masters","engineering"],["
 const INDUSTRIES = ["Fintech","Healthcare","Retail","Logistics","Telecom","Energy","EdTech","Insurance"];
 const CLIENTS = ["Northwind Bank","Helia Health","Marlow Retail","TransGrid","Orbit Telecom","Brightpath Energy","Scholaris","Anvil Insurance"];
 
+/** Row volumes for the enterprise demo dataset. */
+export const DEMO_VOLUME = {
+  teams: 20,
+  employees: 100,
+  projects: 50,
+  repos: 100,
+  commits: 6000,
+  pullRequests: 900,
+  reviews: 700,
+  githubIssues: 900,
+  jiraProjects: 15,
+  sprintsPerBoard: 10,
+  epics: 300,
+  jiraIssues: 1500,
+  jiraComments: 1200,
+  jiraWorklogs: 1500,
+  clickupSpaces: 10,
+  clickupFolders: 30,
+  clickupLists: 120,
+  clickupTasks: 4000,
+  clickupTimeEntries: 2000,
+  clickupComments: 1000,
+  proposals: 60,
+} as const;
+const V = DEMO_VOLUME;
+
 export type SeedSummary = Record<string, number>;
 
 /** Builds the full interconnected demo dataset for one organization. */
@@ -111,7 +137,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("employee_skills", employeeSkills);
 
   // ---------- Projects ----------
-  const projects = Array.from({ length: 40 }, (_, i) => {
+  const projects = Array.from({ length: V.projects }, (_, i) => {
     const dept = departments[i % departments.length];
     const start = new Date(Date.now() - int(r, 30, 900) * 86400000);
     return {
@@ -151,7 +177,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
   push("github_contributors", contributors);
 
-  const repos = Array.from({ length: 25 }, (_, i) => {
+  const repos = Array.from({ length: V.repos }, (_, i) => {
     const name = `${pick(r, ["atlas", "orion", "nimbus", "helios", "vertex", "pulse", "nova", "cobalt"])}-${pick(r, ["api", "web", "worker", "infra", "sdk", "docs"])}-${i}`;
     return {
       id: uuid(), organization_id: org, connection_id: ghConnection.id, github_id: 7000000 + i,
@@ -175,7 +201,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     })),
   ));
 
-  const commits = Array.from({ length: 1500 }, (_, i) => {
+  const commits = Array.from({ length: V.commits }, (_, i) => {
     const repo = pick(r, repos);
     const c = pick(r, contributors);
     return {
@@ -188,7 +214,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("github_commits", commits);
 
-  const prs = Array.from({ length: 300 }, (_, i) => {
+  const prs = Array.from({ length: V.pullRequests }, (_, i) => {
     const repo = pick(r, repos);
     const c = pick(r, contributors);
     const created = new Date(Date.now() - int(r, 1, 180) * 86400000);
@@ -209,7 +235,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("github_pull_requests", prs);
 
-  push("github_reviews", Array.from({ length: 400 }, (_, i) => {
+  push("github_reviews", Array.from({ length: V.reviews }, (_, i) => {
     const pr = pick(r, prs);
     const c = pick(r, contributors);
     return {
@@ -221,7 +247,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("github_issues", Array.from({ length: 300 }, (_, i) => {
+  push("github_issues", Array.from({ length: V.githubIssues }, (_, i) => {
     const repo = pick(r, repos);
     const author = pick(r, contributors);
     const assignee = pick(r, contributors);
@@ -254,11 +280,11 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
   push("jira_accounts", jiraAccounts);
 
-  const jiraProjects = Array.from({ length: 10 }, (_, i) => {
+  const jiraProjects = Array.from({ length: V.jiraProjects }, (_, i) => {
     const lead = pick(r, jiraAccounts);
     return {
       id: uuid(), organization_id: org, connection_id: jiraConnection.id, jira_id: `10${i}`,
-      project_key: `PRJ${i + 1}`, name: PROJECT_NAMES[i], project_type: "software",
+      project_key: `PRJ${i + 1}`, name: PROJECT_NAMES[i % PROJECT_NAMES.length], project_type: "software",
       project_category: pick(r, ["Platform", "Growth", "Internal"]),
       description: "Seeded Jira project.", lead_account_id: lead.id, lead_name: lead.display_name,
       status: "active", archived: false, tracked: true, last_synced_at: iso(new Date()),
@@ -273,9 +299,9 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("jira_boards", boards);
 
   const sprints = boards.flatMap((b, bi) =>
-    Array.from({ length: 4 }, (_, si) => {
-      const start = new Date(Date.now() - (4 - si) * 14 * 86400000);
-      const state = si === 3 ? "active" : "closed";
+    Array.from({ length: V.sprintsPerBoard }, (_, si) => {
+      const start = new Date(Date.now() - (V.sprintsPerBoard - si) * 14 * 86400000);
+      const state = si === V.sprintsPerBoard - 1 ? "active" : "closed";
       const committed = int(r, 20, 60);
       const completed = state === "closed" ? int(r, 12, committed) : int(r, 3, committed - 5);
       return {
@@ -291,7 +317,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   );
   push("jira_sprints", sprints);
 
-  const epics = Array.from({ length: 30 }, (_, i) => {
+  const epics = Array.from({ length: V.epics }, (_, i) => {
     const p = pick(r, jiraProjects);
     const owner = pick(r, jiraAccounts);
     return {
@@ -305,7 +331,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("jira_epics", epics);
 
-  const jiraIssues = Array.from({ length: 400 }, (_, i) => {
+  const jiraIssues = Array.from({ length: V.jiraIssues }, (_, i) => {
     const p = pick(r, jiraProjects);
     const sprint = pick(r, sprints.filter((s) => s.project_id === p.id));
     const epic = pick(r, epics.filter((e) => e.project_id === p.id));
@@ -337,7 +363,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("jira_issues", jiraIssues);
 
-  push("jira_comments", Array.from({ length: 400 }, (_, i) => {
+  push("jira_comments", Array.from({ length: V.jiraComments }, (_, i) => {
     const issue = pick(r, jiraIssues);
     const a = pick(r, jiraAccounts);
     return {
@@ -348,7 +374,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("jira_worklogs", Array.from({ length: 500 }, (_, i) => {
+  push("jira_worklogs", Array.from({ length: V.jiraWorklogs }, (_, i) => {
     const issue = pick(r, jiraIssues);
     const a = pick(r, jiraAccounts);
     return {
@@ -376,7 +402,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
   push("clickup_members", cuMembers);
 
-  const spaces = Array.from({ length: 5 }, (_, i) => ({
+  const spaces = Array.from({ length: V.clickupSpaces }, (_, i) => ({
     id: uuid(), organization_id: org, connection_id: cuConnection.id, space_id: `s${i}`,
     name: pick(r, ["Delivery", "Platform", "Growth", "Support", "Design"]) + ` ${i + 1}`,
     description: "Seeded ClickUp space.", private: false, archived: false,
@@ -384,13 +410,13 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
   push("clickup_spaces", spaces);
 
-  const folders = Array.from({ length: 10 }, (_, i) => ({
+  const folders = Array.from({ length: V.clickupFolders }, (_, i) => ({
     id: uuid(), organization_id: org, space_id: spaces[i % spaces.length].id, folder_id: `f${i}`,
     name: `Folder ${i + 1}`, hidden: false, archived: false, task_count: int(r, 10, 120),
   }));
   push("clickup_folders", folders);
 
-  const lists = Array.from({ length: 25 }, (_, i) => {
+  const lists = Array.from({ length: V.clickupLists }, (_, i) => {
     const folder = folders[i % folders.length];
     return {
       id: uuid(), organization_id: org, space_id: folder.space_id, folder_id: folder.id,
@@ -400,7 +426,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("clickup_lists", lists);
 
-  const cuTasks = Array.from({ length: 1000 }, (_, i) => {
+  const cuTasks = Array.from({ length: V.clickupTasks }, (_, i) => {
     const list = pick(r, lists);
     const assignee = pick(r, cuMembers);
     const creator = pick(r, cuMembers);
@@ -428,7 +454,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("clickup_tasks", cuTasks);
 
-  push("clickup_time_entries", Array.from({ length: 600 }, (_, i) => {
+  push("clickup_time_entries", Array.from({ length: V.clickupTimeEntries }, (_, i) => {
     const task = pick(r, cuTasks);
     const m = pick(r, cuMembers);
     const started = new Date(Date.now() - int(r, 0, 120) * 86400000);
@@ -441,7 +467,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("clickup_task_comments", Array.from({ length: 300 }, (_, i) => {
+  push("clickup_task_comments", Array.from({ length: V.clickupComments }, (_, i) => {
     const task = pick(r, cuTasks);
     const m = pick(r, cuMembers);
     return {
@@ -594,7 +620,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   ]);
 
   // ---------- Workspace activity ----------
-  push("project_proposals", Array.from({ length: 25 }, (_, i) => {
+  push("project_proposals", Array.from({ length: V.proposals }, (_, i) => {
     const stack = pickMany(r, ["React", "Node.js", "PostgreSQL", "AWS", "Kubernetes", "Python", "Kafka"], int(r, 3, 5));
     const team = pickMany(r, employees, int(r, 3, 6));
     return {
