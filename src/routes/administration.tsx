@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { PlaceholderPage } from "@/components/common/placeholder-page";
+import { DemoDataCard } from "@/features/seeder/components/demo-data-card";
 
 export const Route = createFileRoute("/administration")({
   head: () => ({
@@ -12,15 +13,18 @@ export const Route = createFileRoute("/administration")({
     ],
   }),
   component: () => (
-    <PlaceholderPage
-      icon={ShieldCheck}
-      title="Administration"
-      description="Roles, permissions, audit logs, and enterprise governance controls."
-      features={[
-        { title: "Roles & permissions", description: "Fine-grained access control per module." },
-        { title: "Audit logs", description: "Traceable activity across the workspace." },
-        { title: "Compliance", description: "SSO, SCIM, and retention policies." },
-      ]}
-    />
+    <div className="space-y-6">
+      <DemoDataCard />
+      <PlaceholderPage
+        icon={ShieldCheck}
+        title="Administration"
+        description="Roles, permissions, audit logs, and enterprise governance controls."
+        features={[
+          { title: "Roles & permissions", description: "Fine-grained access control per module." },
+          { title: "Audit logs", description: "Traceable activity across the workspace." },
+          { title: "Compliance", description: "SSO, SCIM, and retention policies." },
+        ]}
+      />
+    </div>
   ),
 });
