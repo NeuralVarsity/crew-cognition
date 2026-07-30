@@ -28,6 +28,7 @@ export const Route = createFileRoute("/api/talent-chat")({
         if (query.length < 2) return new Response("A question is required", { status: 400 });
 
         const { runMatch } = await import("@/features/talent-matcher/lib/service.server");
+        const { classifyInsight, runInsight } = await import("@/features/talent-matcher/lib/insights.server");
         const { currentOrganizationId } = await import("@/features/talent-matcher/lib/settings.server");
         const { streamText } = await import("ai");
         const { createLovableAiGatewayProvider, requireLovableApiKey, TALENT_MODEL } = await import(
@@ -42,6 +43,79 @@ export const Route = createFileRoute("/api/talent-chat")({
 
             try {
               send({ type: "status", text: "Reading synchronized GitHub, Jira, ClickUp and HR data…" });
+
+              const intent = body.sourceName ? null : classifyInsight(query);
+
+              if (intent) {
+                const insight = await runInsight(supabase!, userId, intent, query);
+                send({ type: "insight", insight });
+                send({ type: "status", text: "Explaining the analysis…" });
+
+                let insightNarrative = "";
+                try {
+                  const gateway = createLovableAiGatewayProvider(requireLovableApiKey());
+                  const ai = streamText({
+                    model: gateway(TALENT_MODEL),
+                    system:
+                      "You are the TalentAI workforce copilot. Explain an analysis that has ALREADY been computed from " +
+                      "synchronized GitHub, Jira, ClickUp, Excel and AI Intelligence data. Never invent people, numbers or " +
+                      "scores — only reference the JSON provided. Answer in concise markdown: a one-line verdict, then 3–5 " +
+                      "bullets naming specific people and their evidence, then one recommended action. The detailed cards are " +
+                      "already rendered in the UI, so do not repeat every metric.",
+                    prompt: `User question: ${query}\n\nComputed analysis JSON:\n${JSON.stringify({
+                      ...insight,
+                      people: insight.people.slice(0, 6),
+                    })}`,
+                  });
+                  for await (const delta of ai.textStream) {
+                    insightNarrative += delta;
+                    send({ type: "text-delta", delta });
+                  }
+                } catch {
+                  insightNarrative =
+                    [insight.subtitle, ...insight.notes].filter(Boolean).map((l) => `- ${l}`).join("\n") ||
+                    "Analysis computed from synchronized data.";
+                  send({ type: "text-delta", delta: insightNarrative });
+                }
+
+                if (body.threadId) {
+                  try {
+                    const organizationId = await currentOrganizationId(supabase!, userId);
+                    const now = Date.now();
+                    const { error } = await supabase!.from("talent_messages").insert([
+                      {
+                        organization_id: organizationId,
+                        thread_id: body.threadId,
+                        user_id: userId,
+                        role: "user",
+                        client_message_id: `u_${now}`,
+                        parts: [{ type: "text", text: query }],
+                      },
+                      {
+                        organization_id: organizationId,
+                        thread_id: body.threadId,
+                        user_id: userId,
+                        role: "assistant",
+                        client_message_id: `a_${now}`,
+                        parts: [
+                          { type: "text", text: insightNarrative },
+                          { type: "insight", insight },
+                        ],
+                      },
+                    ]);
+                    if (error) console.error("[ai-workspace] persist failed", error.message);
+                    await supabase!
+                      .from("talent_threads")
+                      .update({ updated_at: new Date().toISOString() })
+                      .eq("id", body.threadId);
+                  } catch (error) {
+                    console.error("[ai-workspace] persist error", error);
+                  }
+                }
+
+                send({ type: "done" });
+                return;
+              }
 
               const result = await runMatch(supabase!, userId, {
                 query,

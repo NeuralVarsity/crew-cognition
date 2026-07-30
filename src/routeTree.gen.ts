@@ -21,6 +21,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as JiraRouteImport } from './routes/jira'
 import { Route as GithubRouteImport } from './routes/github'
+import { Route as ExecutiveDashboardRouteImport } from './routes/executive-dashboard'
 import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DepartmentsRouteImport } from './routes/departments'
@@ -30,13 +31,12 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MyDashboardIndexRouteImport } from './routes/my-dashboard.index'
-import { Route as MyDashboardJobMatcherRouteImport } from './routes/my-dashboard.job-matcher'
-import { Route as MyDashboardCompareRouteImport } from './routes/my-dashboard.compare'
+import { Route as WorkspaceJobMatcherRouteImport } from './routes/workspace.job-matcher'
+import { Route as WorkspaceCompareRouteImport } from './routes/workspace.compare'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
-import { Route as MyDashboardChatThreadIdRouteImport } from './routes/my-dashboard.chat.$threadId'
+import { Route as WorkspaceChatThreadIdRouteImport } from './routes/workspace.chat.$threadId'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
@@ -101,6 +101,11 @@ const GithubRoute = GithubRouteImport.update({
   path: '/github',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExecutiveDashboardRoute = ExecutiveDashboardRouteImport.update({
+  id: '/executive-dashboard',
+  path: '/executive-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExcelUploadRoute = ExcelUploadRouteImport.update({
   id: '/excel-upload',
   path: '/excel-upload',
@@ -146,19 +151,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MyDashboardIndexRoute = MyDashboardIndexRouteImport.update({
-  id: '/my-dashboard/',
-  path: '/my-dashboard/',
+const WorkspaceJobMatcherRoute = WorkspaceJobMatcherRouteImport.update({
+  id: '/workspace/job-matcher',
+  path: '/workspace/job-matcher',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MyDashboardJobMatcherRoute = MyDashboardJobMatcherRouteImport.update({
-  id: '/my-dashboard/job-matcher',
-  path: '/my-dashboard/job-matcher',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyDashboardCompareRoute = MyDashboardCompareRouteImport.update({
-  id: '/my-dashboard/compare',
-  path: '/my-dashboard/compare',
+const WorkspaceCompareRoute = WorkspaceCompareRouteImport.update({
+  id: '/workspace/compare',
+  path: '/workspace/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
@@ -176,9 +176,9 @@ const ApiTalentChatRoute = ApiTalentChatRouteImport.update({
   path: '/api/talent-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MyDashboardChatThreadIdRoute = MyDashboardChatThreadIdRouteImport.update({
-  id: '/my-dashboard/chat/$threadId',
-  path: '/my-dashboard/chat/$threadId',
+const WorkspaceChatThreadIdRoute = WorkspaceChatThreadIdRouteImport.update({
+  id: '/workspace/chat/$threadId',
+  path: '/workspace/chat/$threadId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
@@ -208,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
+  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
@@ -223,10 +224,9 @@ export interface FileRoutesByFullPath {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/my-dashboard/compare': typeof MyDashboardCompareRoute
-  '/my-dashboard/job-matcher': typeof MyDashboardJobMatcherRoute
-  '/my-dashboard/': typeof MyDashboardIndexRoute
-  '/my-dashboard/chat/$threadId': typeof MyDashboardChatThreadIdRoute
+  '/workspace/compare': typeof WorkspaceCompareRoute
+  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
+  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -241,6 +241,7 @@ export interface FileRoutesByTo {
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
+  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
@@ -256,10 +257,9 @@ export interface FileRoutesByTo {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/my-dashboard/compare': typeof MyDashboardCompareRoute
-  '/my-dashboard/job-matcher': typeof MyDashboardJobMatcherRoute
-  '/my-dashboard': typeof MyDashboardIndexRoute
-  '/my-dashboard/chat/$threadId': typeof MyDashboardChatThreadIdRoute
+  '/workspace/compare': typeof WorkspaceCompareRoute
+  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
+  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -275,6 +275,7 @@ export interface FileRoutesById {
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
+  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
@@ -290,10 +291,9 @@ export interface FileRoutesById {
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/my-dashboard/compare': typeof MyDashboardCompareRoute
-  '/my-dashboard/job-matcher': typeof MyDashboardJobMatcherRoute
-  '/my-dashboard/': typeof MyDashboardIndexRoute
-  '/my-dashboard/chat/$threadId': typeof MyDashboardChatThreadIdRoute
+  '/workspace/compare': typeof WorkspaceCompareRoute
+  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
+  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -310,6 +310,7 @@ export interface FileRouteTypes {
     | '/departments'
     | '/employees'
     | '/excel-upload'
+    | '/executive-dashboard'
     | '/github'
     | '/jira'
     | '/maintenance'
@@ -325,10 +326,9 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/my-dashboard/compare'
-    | '/my-dashboard/job-matcher'
-    | '/my-dashboard/'
-    | '/my-dashboard/chat/$threadId'
+    | '/workspace/compare'
+    | '/workspace/job-matcher'
+    | '/workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -343,6 +343,7 @@ export interface FileRouteTypes {
     | '/departments'
     | '/employees'
     | '/excel-upload'
+    | '/executive-dashboard'
     | '/github'
     | '/jira'
     | '/maintenance'
@@ -358,10 +359,9 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/my-dashboard/compare'
-    | '/my-dashboard/job-matcher'
-    | '/my-dashboard'
-    | '/my-dashboard/chat/$threadId'
+    | '/workspace/compare'
+    | '/workspace/job-matcher'
+    | '/workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -376,6 +376,7 @@ export interface FileRouteTypes {
     | '/departments'
     | '/employees'
     | '/excel-upload'
+    | '/executive-dashboard'
     | '/github'
     | '/jira'
     | '/maintenance'
@@ -391,10 +392,9 @@ export interface FileRouteTypes {
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/my-dashboard/compare'
-    | '/my-dashboard/job-matcher'
-    | '/my-dashboard/'
-    | '/my-dashboard/chat/$threadId'
+    | '/workspace/compare'
+    | '/workspace/job-matcher'
+    | '/workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -410,6 +410,7 @@ export interface RootRouteChildren {
   DepartmentsRoute: typeof DepartmentsRouteWithChildren
   EmployeesRoute: typeof EmployeesRouteWithChildren
   ExcelUploadRoute: typeof ExcelUploadRoute
+  ExecutiveDashboardRoute: typeof ExecutiveDashboardRoute
   GithubRoute: typeof GithubRoute
   JiraRoute: typeof JiraRoute
   MaintenanceRoute: typeof MaintenanceRoute
@@ -423,10 +424,9 @@ export interface RootRouteChildren {
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
-  MyDashboardCompareRoute: typeof MyDashboardCompareRoute
-  MyDashboardJobMatcherRoute: typeof MyDashboardJobMatcherRoute
-  MyDashboardIndexRoute: typeof MyDashboardIndexRoute
-  MyDashboardChatThreadIdRoute: typeof MyDashboardChatThreadIdRoute
+  WorkspaceCompareRoute: typeof WorkspaceCompareRoute
+  WorkspaceJobMatcherRoute: typeof WorkspaceJobMatcherRoute
+  WorkspaceChatThreadIdRoute: typeof WorkspaceChatThreadIdRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -518,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GithubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/executive-dashboard': {
+      id: '/executive-dashboard'
+      path: '/executive-dashboard'
+      fullPath: '/executive-dashboard'
+      preLoaderRoute: typeof ExecutiveDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/excel-upload': {
       id: '/excel-upload'
       path: '/excel-upload'
@@ -581,25 +588,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/my-dashboard/': {
-      id: '/my-dashboard/'
-      path: '/my-dashboard'
-      fullPath: '/my-dashboard/'
-      preLoaderRoute: typeof MyDashboardIndexRouteImport
+    '/workspace/job-matcher': {
+      id: '/workspace/job-matcher'
+      path: '/workspace/job-matcher'
+      fullPath: '/workspace/job-matcher'
+      preLoaderRoute: typeof WorkspaceJobMatcherRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/my-dashboard/job-matcher': {
-      id: '/my-dashboard/job-matcher'
-      path: '/my-dashboard/job-matcher'
-      fullPath: '/my-dashboard/job-matcher'
-      preLoaderRoute: typeof MyDashboardJobMatcherRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-dashboard/compare': {
-      id: '/my-dashboard/compare'
-      path: '/my-dashboard/compare'
-      fullPath: '/my-dashboard/compare'
-      preLoaderRoute: typeof MyDashboardCompareRouteImport
+    '/workspace/compare': {
+      id: '/workspace/compare'
+      path: '/workspace/compare'
+      fullPath: '/workspace/compare'
+      preLoaderRoute: typeof WorkspaceCompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/employees/$id': {
@@ -623,11 +623,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTalentChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/my-dashboard/chat/$threadId': {
-      id: '/my-dashboard/chat/$threadId'
-      path: '/my-dashboard/chat/$threadId'
-      fullPath: '/my-dashboard/chat/$threadId'
-      preLoaderRoute: typeof MyDashboardChatThreadIdRouteImport
+    '/workspace/chat/$threadId': {
+      id: '/workspace/chat/$threadId'
+      path: '/workspace/chat/$threadId'
+      fullPath: '/workspace/chat/$threadId'
+      preLoaderRoute: typeof WorkspaceChatThreadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/jira/callback': {
@@ -688,6 +688,7 @@ const rootRouteChildren: RootRouteChildren = {
   DepartmentsRoute: DepartmentsRouteWithChildren,
   EmployeesRoute: EmployeesRouteWithChildren,
   ExcelUploadRoute: ExcelUploadRoute,
+  ExecutiveDashboardRoute: ExecutiveDashboardRoute,
   GithubRoute: GithubRoute,
   JiraRoute: JiraRoute,
   MaintenanceRoute: MaintenanceRoute,
@@ -701,10 +702,9 @@ const rootRouteChildren: RootRouteChildren = {
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
-  MyDashboardCompareRoute: MyDashboardCompareRoute,
-  MyDashboardJobMatcherRoute: MyDashboardJobMatcherRoute,
-  MyDashboardIndexRoute: MyDashboardIndexRoute,
-  MyDashboardChatThreadIdRoute: MyDashboardChatThreadIdRoute,
+  WorkspaceCompareRoute: WorkspaceCompareRoute,
+  WorkspaceJobMatcherRoute: WorkspaceJobMatcherRoute,
+  WorkspaceChatThreadIdRoute: WorkspaceChatThreadIdRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,

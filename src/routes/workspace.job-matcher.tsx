@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { JobMatcher } from "@/features/talent-matcher/components/job-matcher";
 
-export const Route = createFileRoute("/my-dashboard/job-matcher")({
+export const Route = createFileRoute("/workspace/job-matcher")({
   head: () => ({
     meta: [
       { title: "Job & RFP matcher — TalentAI Enterprise" },
