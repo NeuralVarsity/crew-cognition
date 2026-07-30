@@ -142,7 +142,9 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     const start = new Date(Date.now() - int(r, 30, 900) * 86400000);
     return {
       id: uuid(), organization_id: org, department_id: dept.id,
-      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${i >= PROJECT_NAMES.length ? " II" : ""}`,
+      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${
+        i >= PROJECT_NAMES.length ? ` ${["II", "III", "IV", "V", "VI", "VII", "VIII"][Math.floor(i / PROJECT_NAMES.length) - 1] ?? `v${Math.floor(i / PROJECT_NAMES.length) + 1}`}` : ""
+      }`,
       description: `Strategic initiative owned by ${dept.name}.`,
       status: pick(r, ["planning", "active", "active", "on_hold", "completed", "archived"]),
       start_date: isoDate(start),
