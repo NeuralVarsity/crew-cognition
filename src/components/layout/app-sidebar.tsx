@@ -47,7 +47,7 @@ export function AppSidebar() {
                   .map((item) => {
                     const active =
                       item.url === "/"
-                        ? pathname === "/"
+                        ? pathname === "/" || pathname.startsWith("/workspace/chat")
                         : pathname === item.url || pathname.startsWith(item.url + "/");
                     return (
                       <SidebarMenuItem key={item.url}>

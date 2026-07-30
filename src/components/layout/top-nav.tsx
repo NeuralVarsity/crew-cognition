@@ -24,12 +24,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 function useCrumbs() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  if (pathname === "/") return [{ title: "Dashboard", url: "/" }];
+  if (pathname === "/") return [{ title: "AI Workspace", url: "/" }];
+  if (pathname.startsWith("/workspace/chat"))
+    return [
+      { title: "AI Workspace", url: "/" },
+      { title: "Conversation", url: pathname },
+    ];
   const match = navigation.find(
     (n) => n.url !== "/" && (pathname === n.url || pathname.startsWith(n.url + "/")),
   );
   return [
-    { title: "Home", url: "/" },
+    { title: "AI Workspace", url: "/" },
     { title: match?.title ?? "Page", url: match?.url ?? pathname },
   ];
 }

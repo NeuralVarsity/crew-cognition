@@ -14,6 +14,7 @@ import {
   saveTalentSettings,
 } from "./api/talent.functions";
 import type { MatchResult, TalentSettings } from "./types";
+import type { InsightResult } from "./insight-types";
 
 export const TALENT_KEYS = {
   context: ["talent", "context"] as const,
@@ -102,6 +103,7 @@ export function useDeleteRecommendation() {
 export type ChatStreamEvent =
   | { type: "status"; text: string }
   | { type: "match"; result: MatchResult }
+  | { type: "insight"; insight: InsightResult }
   | { type: "text-delta"; delta: string }
   | { type: "error"; message: string }
   | { type: "done" };

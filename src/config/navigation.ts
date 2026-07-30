@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  MessagesSquare,
   Users,
   UsersRound,
   Building2,
@@ -22,12 +23,16 @@ export type NavItem = {
   title: string;
   url: string;
   icon: LucideIcon;
-  group: "Workspace" | "Integrations" | "Insights" | "System";
+  group: "AI" | "Workspace" | "Integrations" | "Insights" | "System";
   badge?: string;
 };
 
 export const navigation: NavItem[] = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard, group: "Workspace" },
+  { title: "AI Workspace", url: "/", icon: MessagesSquare, group: "AI" },
+  { title: "Job & RFP Matcher", url: "/workspace/job-matcher", icon: Sparkles, group: "AI" },
+  { title: "Compare People", url: "/workspace/compare", icon: UsersRound, group: "AI" },
+
+  { title: "Executive Dashboard", url: "/executive-dashboard", icon: LayoutDashboard, group: "Workspace" },
   { title: "Employees", url: "/employees", icon: Users, group: "Workspace" },
   { title: "Teams", url: "/teams", icon: UsersRound, group: "Workspace" },
   { title: "Departments", url: "/departments", icon: Building2, group: "Workspace" },
@@ -39,7 +44,6 @@ export const navigation: NavItem[] = [
   { title: "Excel Upload", url: "/excel-upload", icon: FileSpreadsheet, group: "Integrations" },
 
   { title: "AI Intelligence", url: "/ai-intelligence", icon: Brain, group: "Insights" },
-  { title: "My Dashboard", url: "/my-dashboard", icon: Sparkles, group: "Insights" },
   { title: "Analytics", url: "/analytics", icon: BarChart3, group: "Insights", badge: "Soon" },
   { title: "Reports", url: "/reports", icon: FileText, group: "Insights", badge: "Soon" },
   { title: "Notifications", url: "/notifications", icon: Bell, group: "Insights" },
@@ -49,6 +53,7 @@ export const navigation: NavItem[] = [
 ];
 
 export const navGroups: NavItem["group"][] = [
+  "AI",
   "Workspace",
   "Integrations",
   "Insights",

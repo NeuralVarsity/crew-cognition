@@ -24,20 +24,43 @@ import { cn } from "@/lib/utils";
 import { ACCEPTED_DOC_TYPES, extractDocumentText, type ExtractedDocument } from "../lib/documents";
 import { streamTalentChat, useTalentMessages, useThreadMutations } from "../hooks";
 import { MatchResultView } from "./match-result-view";
+import { InsightView } from "./insight-view";
 import type { MatchResult } from "../types";
+import type { InsightResult } from "../insight-types";
 
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
   text: string;
   result?: MatchResult;
+  insight?: InsightResult;
 };
 
-const SUGGESTIONS = [
-  "Find the best Python developer",
-  "Who should lead a React + TypeScript dashboard project?",
-  "Rank engineers for a Kubernetes migration",
-  "Build a 4-person team for an AI chatbot RFP",
+const SUGGESTION_GROUPS: { label: string; prompts: string[] }[] = [
+  {
+    label: "Find talent",
+    prompts: [
+      "Find the best Python developer",
+      "Recommend a React developer",
+      "Show employees with Docker experience",
+    ],
+  },
+  {
+    label: "Staff a project",
+    prompts: [
+      "Who should lead our next AI project?",
+      "Build a 4-person team for an AI chatbot RFP",
+      "Find people available next month",
+    ],
+  },
+  {
+    label: "Workforce intelligence",
+    prompts: [
+      "Who is at burnout risk?",
+      "Find promotion candidates",
+      "Show the highest GitHub contributor",
+    ],
+  },
 ];
 
 export function TalentChat({ threadId }: { threadId?: string }) {
@@ -67,6 +90,7 @@ export function TalentChat({ threadId }: { threadId?: string }) {
           role: m.role,
           text: parts.filter((p) => p.type === "text").map((p) => p.text ?? "").join("\n"),
           result: parts.find((p) => p.type === "match")?.result,
+          insight: (parts as { type: string; insight?: InsightResult }[]).find((p) => p.type === "insight")?.insight,
         };
       }),
     );
@@ -130,6 +154,12 @@ export function TalentChat({ threadId }: { threadId?: string }) {
               prev.map((m) => (m.id === assistantId ? { ...m, result: event.result } : m)),
             );
           }
+          if (event.type === "insight") {
+            setStatus("streaming");
+            setMessages((prev) =>
+              prev.map((m) => (m.id === assistantId ? { ...m, insight: event.insight } : m)),
+            );
+          }
           if (event.type === "text-delta") {
             setStatus("streaming");
             setMessages((prev) =>
@@ -151,7 +181,7 @@ export function TalentChat({ threadId }: { threadId?: string }) {
         if (isNewThread && activeThread) {
           // Navigate only once the answer is persisted: the thread route mounts a
           // fresh chat that restores the saved transcript.
-          navigate({ to: "/my-dashboard/chat/$threadId", params: { threadId: activeThread } });
+          navigate({ to: "/workspace/chat/$threadId", params: { threadId: activeThread } });
         }
       }
     },
@@ -181,22 +211,37 @@ export function TalentChat({ threadId }: { threadId?: string }) {
         <ConversationContent className="mx-auto w-full max-w-4xl">
           {!messages.length ? (
             <ConversationEmptyState
-              title="Ask for the right person, not a keyword"
-              description="Describe a role, paste a job description or drop an RFP. Every ranking is computed from synced GitHub, Jira, ClickUp and HR data."
+              title="Ask your workforce anything"
+              description="Your enterprise AI copilot answers from synchronized GitHub, Jira, ClickUp, Excel and AI Intelligence data."
               icon={<Sparkle className="size-6" />}
             >
-              <div className="flex flex-col items-center gap-3">
-                <FileText className="size-8 text-muted-foreground" />
-                <h3 className="font-medium">Ask for the right person, not a keyword</h3>
-                <p className="max-w-md text-sm text-muted-foreground">
-                  Describe a role, paste a job description or drop an RFP. Rankings are computed from synced GitHub, Jira,
-                  ClickUp and HR data.
-                </p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {SUGGESTIONS.map((s) => (
-                    <Button key={s} variant="outline" size="sm" onClick={() => void send(s)}>
-                      {s}
-                    </Button>
+              <div className="w-full max-w-3xl space-y-5">
+                <div className="text-center">
+                  <h2 className="text-xl font-semibold tracking-tight">Ask your workforce anything</h2>
+                  <p className="mx-auto mt-1 max-w-lg text-sm text-muted-foreground">
+                    Describe a role, paste a job description, drop an RFP or ask an analytical question. Every answer is
+                    computed from synchronized GitHub, Jira, ClickUp, Excel and AI Intelligence data — never guessed.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {SUGGESTION_GROUPS.map((group) => (
+                    <div key={group.label} className="rounded-xl border bg-card/50 p-3 text-left">
+                      <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                        {group.label}
+                      </div>
+                      <div className="space-y-1.5">
+                        {group.prompts.map((prompt) => (
+                          <button
+                            key={prompt}
+                            type="button"
+                            onClick={() => void send(prompt)}
+                            className="w-full rounded-lg border border-transparent px-2 py-1.5 text-left text-sm transition hover:border-border hover:bg-accent"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -214,6 +259,11 @@ export function TalentChat({ threadId }: { threadId?: string }) {
               {message.result ? (
                 <div className="mt-2 w-full">
                   <MatchResultView result={message.result} />
+                </div>
+              ) : null}
+              {message.insight ? (
+                <div className="mt-2 w-full">
+                  <InsightView insight={message.insight} />
                 </div>
               ) : null}
             </Message>
@@ -245,7 +295,7 @@ export function TalentChat({ threadId }: { threadId?: string }) {
           <PromptInputTextarea
             ref={textareaRef}
             autoFocus
-            placeholder="Find the best Python developer, or drop a JD / RFP here…"
+            placeholder="Ask anything — find talent, compare people, check burnout risk, or drop a JD / RFP…"
           />
           <PromptInputFooter>
             <PromptInputTools>
