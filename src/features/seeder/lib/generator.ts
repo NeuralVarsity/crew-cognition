@@ -184,7 +184,12 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     head.seniority_level = "Executive";
     for (const l of leads) if (l.id !== head.id) l.manager_id = head.id;
   }
-  push("employees", employees);
+  // Managers must be inserted before their reports (rows are written in chunks).
+  const byId = new Map(employees.map((e) => [e.id, e]));
+  const depth = (e: (typeof employees)[number], guard = 0): number =>
+    !e.manager_id || guard > 10 ? 0 : 1 + depth(byId.get(e.manager_id)!, guard + 1);
+  const orderedEmployees = [...employees].sort((a, b) => depth(a) - depth(b));
+  push("employees", orderedEmployees);
 
   // ---------- Employee skills (role-aligned) ----------
   const proficiencyFor = (years: number) =>
