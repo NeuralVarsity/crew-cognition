@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/providers/auth-provider";
 import type { EmployeeRow, EmployeeFormValues } from "./types";
 
-const SELECT = "id, organization_id, employee_code, full_name, first_name, last_name, email, phone, dob, designation, status, employment_type, department_id, team_id, manager_id, joining_date, work_location, office_location, location, salary, profile_photo, notes, created_at, updated_at, departments(id, name), teams(id, name), manager:employees!employees_manager_id_fkey(id, full_name)";
+const SELECT = "id, organization_id, employee_code, full_name, first_name, last_name, email, phone, dob, designation, status, employment_type, department_id, team_id, manager_id, joining_date, work_location, office_location, location, salary, profile_photo, notes, created_at, updated_at, departments(id, name), teams(id, name), manager:employees!manager_id(id, full_name)";
 
 export function useEmployeesList() {
   const { organizationId } = useAuth();
