@@ -59,10 +59,10 @@ export function ClickUpModule() {
     if (search.connected) {
       toast.success(`Connected to ${search.connected}`);
       qc.invalidateQueries({ queryKey: ["clickup"] });
-      nav({ to: "/clickup", search: {}, replace: true });
+      nav({ to: "/clickup", search: () => ({}), replace: true });
     } else if (search.error) {
       toast.error(`ClickUp connect failed: ${search.error}`);
-      nav({ to: "/clickup", search: {}, replace: true });
+      nav({ to: "/clickup", search: () => ({}), replace: true });
     }
   }, [search.connected, search.error, qc, nav]);
 
