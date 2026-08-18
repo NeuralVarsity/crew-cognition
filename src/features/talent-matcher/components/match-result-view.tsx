@@ -14,6 +14,16 @@ export function MatchResultView({
   onToggleSelect?: (id: string, checked: boolean) => void;
 }) {
   const req = result.requirement;
+  const budgetConfidence =
+    result.prediction.budgetRisk === "low" ? "High" : result.prediction.budgetRisk === "medium" ? "Moderate" : "Low";
+  const filledSlots = result.team.filter((s) => s.employeeId).length;
+  const teamReadiness = result.team.length
+    ? Math.round((filledSlots / result.team.length) * 100)
+    : Math.round(
+        (result.candidates.slice(0, 3).reduce((s, c) => s + c.overall, 0) /
+          Math.max(1, result.candidates.slice(0, 3).length)) *
+          10,
+      );
 
   return (
     <div className="space-y-4">
