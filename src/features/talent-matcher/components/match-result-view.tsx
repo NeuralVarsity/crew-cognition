@@ -14,6 +14,16 @@ export function MatchResultView({
   onToggleSelect?: (id: string, checked: boolean) => void;
 }) {
   const req = result.requirement;
+  const budgetConfidence =
+    result.prediction.budgetRisk === "low" ? "High" : result.prediction.budgetRisk === "medium" ? "Moderate" : "Low";
+  const filledSlots = result.team.filter((s) => s.employeeId).length;
+  const teamReadiness = result.team.length
+    ? Math.round((filledSlots / result.team.length) * 100)
+    : Math.round(
+        (result.candidates.slice(0, 3).reduce((s, c) => s + c.overall, 0) /
+          Math.max(1, result.candidates.slice(0, 3).length)) *
+          10,
+      );
 
   return (
     <div className="space-y-4">
@@ -115,10 +125,14 @@ export function MatchResultView({
             { label: "Delivery confidence", value: `${result.prediction.deliveryConfidence}%` },
             { label: "Risk", value: `${result.prediction.riskPercent}%` },
             { label: "Skill gap", value: `${result.prediction.skillGapPercent}%` },
+            { label: "Budget confidence", value: budgetConfidence },
+            { label: "Timeline risk", value: result.prediction.timelineRisk },
+            { label: "Team readiness", value: `${teamReadiness}%` },
+            { label: "Resource gap", value: `${result.prediction.resourceGap}` },
           ].map((item) => (
             <div key={item.label} className="rounded-lg border bg-muted/40 px-3 py-2">
               <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{item.label}</div>
-              <div className="text-lg font-semibold">{item.value}</div>
+              <div className="text-lg font-semibold capitalize">{item.value}</div>
             </div>
           ))}
           {result.prediction.notes.length ? (
