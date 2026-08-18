@@ -13,12 +13,28 @@ export function DemoDataCard() {
   const runSeed = useServerFn(seedDemoData);
   const runClear = useServerFn(clearDemoData);
   const seedMutation = useMutation({
-    mutationFn: (vars: { seed?: number } = {}) => runSeed({ data: { reset: true, seed: vars.seed } }),
+    mutationFn: async (vars: { seed?: number } = {}) => {
+      const seed = vars.seed ?? 20260101;
+      let fromBatch = 0;
+      let rows = 0;
+      const startedAt = Date.now();
+      // The dataset is large, so seeding streams through in stages.
+      for (let stage = 0; stage < 40; stage++) {
+        const res = await runSeed({ data: { reset: fromBatch === 0, seed, fromBatch } });
+        rows += res.totalRows;
+        toast.info(`Seeding… ${rows.toLocaleString()} rows written`, { id: "seed-progress" });
+        if (res.done || res.nextBatch == null) break;
+        fromBatch = res.nextBatch;
+      }
+      return { rows, durationMs: Date.now() - startedAt };
+    },
     onSuccess: (res) => {
       queryClient.invalidateQueries();
-      toast.success(`Seeded ${res.totalRows.toLocaleString()} demo rows in ${(res.durationMs / 1000).toFixed(1)}s`);
+      toast.success(`Seeded ${res.rows.toLocaleString()} demo rows in ${(res.durationMs / 1000).toFixed(1)}s`, {
+        id: "seed-progress",
+      });
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message, { id: "seed-progress" }),
   });
 
   const clearMutation = useMutation({
