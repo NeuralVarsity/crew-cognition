@@ -194,11 +194,11 @@ const SKILL_FAMILIES: Record<string, string[]> = {
   javascript: ["typescript", "react", "node.js", "web development"],
   "rest api": ["backend development", "microservices", "graphql", "node.js", "fastapi", "spring boot"],
 
-  "machine learning": ["deep learning" as string, "pytorch", "tensorflow", "data science", "nlp", "mlops", "llm"],
+  "machine learning": ["deep learning", "pytorch", "tensorflow", "data science", "nlp", "mlops", "llm"],
   llm: ["langchain", "rag", "nlp", "openai", "prompt engineering", "machine learning", "llamaindex"],
   langchain: ["llm", "rag", "openai", "llamaindex", "python"],
   rag: ["llm", "langchain", "vector database", "nlp"],
-  nlp: ["machine learning", "llm", "deep learning" as string],
+  nlp: ["machine learning", "llm", "deep learning"],
   mlops: ["machine learning", "docker", "kubernetes", "model deployment", "ci/cd"],
   "data science": ["python", "machine learning", "statistics", "sql"],
   fastapi: ["python", "backend development", "rest api"],
