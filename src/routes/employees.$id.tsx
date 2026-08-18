@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { EmployeeFormDialog } from "@/features/employees/employee-form";
+import { EmployeeAiProfile } from "@/features/employees/employee-ai-profile";
 import { useEmployee, useEmployeeMutations } from "@/features/employees/api";
 import { useSignedPhoto } from "@/features/employees/hooks";
 import { useAuth } from "@/providers/auth-provider";
@@ -121,6 +122,7 @@ function EmployeeDetail() {
       <Tabs defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="ai">AI Profile</TabsTrigger>
           <TabsTrigger value="personal">Personal</TabsTrigger>
           <TabsTrigger value="employment">Employment</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
@@ -138,6 +140,10 @@ function EmployeeDetail() {
           <InfoCard title="Notes" icon={ClipboardList}>
             <div className="whitespace-pre-wrap">{emp.notes ?? <span className="text-muted-foreground">No notes</span>}</div>
           </InfoCard>
+        </TabsContent>
+
+        <TabsContent value="ai">
+          <EmployeeAiProfile employeeId={emp.id} />
         </TabsContent>
 
         <TabsContent value="personal" className="grid gap-4 md:grid-cols-2">
