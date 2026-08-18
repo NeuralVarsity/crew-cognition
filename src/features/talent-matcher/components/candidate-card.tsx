@@ -100,13 +100,17 @@ export function CandidateCard({
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <Badge variant="outline" className="gap-1">
-              Role fit {candidate.roleFit.score.toFixed(1)}/10 · {candidate.roleFit.label}
-            </Badge>
-            <Badge variant="outline" className="gap-1">
-              <Briefcase className="size-3" />
-              {candidate.availability.label} · {candidate.availability.allocation}% allocated
-            </Badge>
+            {candidate.roleFit ? (
+              <Badge variant="outline" className="gap-1">
+                Role fit {(candidate.roleFit.score ?? 0).toFixed(1)}/10 · {candidate.roleFit.label}
+              </Badge>
+            ) : null}
+            {candidate.availability ? (
+              <Badge variant="outline" className="gap-1">
+                <Briefcase className="size-3" />
+                {candidate.availability.label} · {candidate.availability.allocation}% allocated
+              </Badge>
+            ) : null}
             <span className="text-muted-foreground">
               {candidate.currentProjects.length
                 ? `Current: ${candidate.currentProjects.slice(0, 2).join(", ")}`
