@@ -1,10 +1,12 @@
 export const MATCH_DIMENSIONS = [
   "skills",
+  "projectRelevance",
   "github",
   "jira",
   "clickup",
+  "availability",
+  "roleFit",
   "experience",
-  "projectRelevance",
   "collaboration",
   "learning",
   "communication",
@@ -14,12 +16,14 @@ export const MATCH_DIMENSIONS = [
 export type MatchDimension = (typeof MATCH_DIMENSIONS)[number];
 
 export const DIMENSION_LABELS: Record<MatchDimension, string> = {
-  skills: "Skills",
+  skills: "Skills match",
   github: "GitHub",
   jira: "Jira",
   clickup: "ClickUp",
   experience: "Experience",
   projectRelevance: "Project relevance",
+  availability: "Availability",
+  roleFit: "Role fit",
   collaboration: "Collaboration",
   learning: "Learning",
   communication: "Communication",
@@ -29,16 +33,18 @@ export const DIMENSION_LABELS: Record<MatchDimension, string> = {
 export type MatchWeights = Record<MatchDimension, number>;
 
 export const DEFAULT_MATCH_WEIGHTS: MatchWeights = {
-  skills: 30,
+  skills: 40,
+  projectRelevance: 20,
   github: 15,
   jira: 10,
   clickup: 10,
-  experience: 10,
-  projectRelevance: 10,
-  collaboration: 5,
-  learning: 3,
-  communication: 3,
-  leadership: 4,
+  availability: 5,
+  roleFit: 0,
+  experience: 0,
+  collaboration: 0,
+  learning: 0,
+  communication: 0,
+  leadership: 0,
 };
 
 export type MatchRules = {
@@ -151,6 +157,10 @@ export type RoleRequirement = {
   department: string | null;
   team: string | null;
   teamRoles: string[];
+  /** Role profile keys detected from the ask (see lib/roles.ts). */
+  roleKeys: string[];
+  /** Designations that should rank first for this ask, best tier first. */
+  preferredTitles: string[];
   intent: "rank" | "compare" | "team" | "explain";
   extractedFrom: "query" | "document";
 };
@@ -161,6 +171,15 @@ export type SkillEvidence = {
   weight: "primary" | "secondary";
   sources: string[];
   strength: number;
+};
+
+/** Per-source proof used to justify a ranking decision. */
+export type CandidateEvidenceBundle = {
+  skills: string[];
+  projects: string[];
+  github: string[];
+  jira: string[];
+  clickup: string[];
 };
 
 export type DimensionScore = {
@@ -198,6 +217,12 @@ export type CandidateMatch = {
   strengths: string[];
   weaknesses: string[];
   reasons: string[];
+  roleFit: { score: number; label: string; reason: string };
+  skillMatchPercent: number;
+  projectRelevancePercent: number;
+  evidence: CandidateEvidenceBundle;
+  whySelected: string[];
+  whyNotSelected: string[];
   dataCoverage: { github: boolean; jira: boolean; clickup: boolean; profile: boolean };
   metrics: {
     commits: number;

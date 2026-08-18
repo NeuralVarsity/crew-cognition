@@ -11,9 +11,10 @@ export type CandidateEvidence = {
   skills: { name: string; category: string; proficiency: string; years: number }[];
   languages: Record<string, number>;
   repositories: string[];
-  projects: { name: string; role: string | null; status: string; allocation: number }[];
+  projects: { name: string; role: string | null; status: string; allocation: number; techStack: string[] }[];
   issueText: string;
   taskText: string;
+  commitText: string;
 };
 
 export type TalentPool = {
@@ -47,6 +48,7 @@ export async function buildTalentPool(
     cuTasksRes,
     departmentsRes,
     teamsRes,
+    commitsRes,
   ] = await Promise.all([
     supabase
       .from("employee_skills")
@@ -54,7 +56,7 @@ export async function buildTalentPool(
       .limit(LIMIT),
     supabase.from("employees").select("id, joining_date").is("deleted_at", null).limit(LIMIT),
     supabase.from("employee_projects").select("employee_id, project_id, role, allocation_percent").limit(LIMIT),
-    supabase.from("projects").select("id, name, description, status").is("deleted_at", null).limit(LIMIT),
+    supabase.from("projects").select("id, name, description, status, tech_stack").is("deleted_at", null).limit(LIMIT),
     supabase.from("github_contributors").select("id, linked_employee_id").limit(LIMIT),
     supabase.from("github_repo_contributors").select("repository_id, contributor_id, contributions").limit(LIMIT),
     supabase.from("github_repositories").select("id, name, description, language").limit(LIMIT),
@@ -72,6 +74,11 @@ export async function buildTalentPool(
       .limit(LIMIT),
     supabase.from("departments").select("id, name").is("deleted_at", null),
     supabase.from("teams").select("id, name").is("deleted_at", null),
+    supabase
+      .from("github_commits")
+      .select("author_contributor_id, message")
+      .order("committed_at", { ascending: false })
+      .limit(LIMIT),
   ]);
 
   const evidence = new Map<string, CandidateEvidence>();
@@ -87,6 +94,7 @@ export async function buildTalentPool(
         projects: [],
         issueText: "",
         taskText: "",
+        commitText: "",
       };
       evidence.set(id, entry);
     }
@@ -122,7 +130,7 @@ export async function buildTalentPool(
   const projectById = new Map(
     (projectsRes.data ?? []).map((p) => [
       (p as { id: string }).id,
-      p as { id: string; name: string; description: string | null; status: string },
+      p as { id: string; name: string; description: string | null; status: string; tech_stack: unknown },
     ]),
   );
   for (const row of empProjectsRes.data ?? []) {
@@ -140,6 +148,7 @@ export async function buildTalentPool(
       role: r.role,
       status: project.status,
       allocation: Number(r.allocation_percent ?? 0) || 0,
+      techStack: Array.isArray(project.tech_stack) ? (project.tech_stack as unknown[]).map(String) : [],
     });
   }
 
@@ -166,6 +175,16 @@ export async function buildTalentPool(
     if (repo.language) {
       entry.languages[repo.language] = (entry.languages[repo.language] ?? 0) + (Number(r.contributions) || 1);
     }
+  }
+
+  for (const row of commitsRes.data ?? []) {
+    const r = row as { author_contributor_id: string | null; message: string | null };
+    if (!r.author_contributor_id || !r.message) continue;
+    const employeeId = contributorToEmployee.get(r.author_contributor_id);
+    if (!employeeId || !evidence.has(employeeId)) continue;
+    const entry = ensure(employeeId);
+    if (entry.commitText.length > TEXT_CAP) continue;
+    entry.commitText += ` ${r.message}`;
   }
 
   const jiraAccountToEmployee = new Map<string, string>();
