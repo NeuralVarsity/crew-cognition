@@ -123,7 +123,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
 
   // ---------- Employees ----------
   const skillByName = new Map(skills.map((s) => [s.name, s]));
-  const deptByName = new Map(departments.map((d) => [d.name, d]));
+  const deptByName = new Map<string, (typeof departments)[number]>(departments.map((d) => [d.name as string, d]));
   const teamsByDept = new Map(departments.map((d) => [d.id, teams.filter((t) => t.department_id === d.id)]));
 
   const pickSeniority = () => {
@@ -156,7 +156,8 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
       phone: `+1 555 ${int(r, 1000, 9999)}`,
       dob: isoDate(new Date(Date.now() - int(r, 8500, 16000) * 86400000)),
       designation: `${seniority.prefix}${role.title}`,
-      seniority_level: seniority.level, salary_band: seniority.band, experience_years: experience,
+      seniority_level: seniority.level as string, salary_band: seniority.band as string,
+      experience_years: experience,
       department_id: dept.id, team_id: team.id, manager_id: null as string | null,
       joining_date: isoDate(joined),
       employment_type: chance(r, 0.86) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
