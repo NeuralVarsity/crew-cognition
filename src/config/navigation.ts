@@ -11,6 +11,7 @@ import {
   FileSpreadsheet,
   BarChart3,
   Brain,
+  Radar,
   Sparkles,
   FileText,
   Bell,
@@ -44,6 +45,7 @@ export const navigation: NavItem[] = [
   { title: "Excel Upload", url: "/excel-upload", icon: FileSpreadsheet, group: "Integrations" },
 
   { title: "AI Intelligence", url: "/ai-intelligence", icon: Brain, group: "Insights" },
+  { title: "Workforce Intelligence", url: "/workforce-intelligence", icon: Radar, group: "Insights" },
   { title: "Analytics", url: "/analytics", icon: BarChart3, group: "Insights", badge: "Soon" },
   { title: "Reports", url: "/reports", icon: FileText, group: "Insights", badge: "Soon" },
   { title: "Notifications", url: "/notifications", icon: Bell, group: "Insights" },
