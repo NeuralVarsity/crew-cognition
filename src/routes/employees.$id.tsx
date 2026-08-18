@@ -143,7 +143,6 @@ function EmployeeDetail() {
         </TabsContent>
 
         <TabsContent value="personal" className="grid gap-4 md:grid-cols-2">
-          <></>
           <Field label="First name" value={emp.first_name} />
           <Field label="Last name" value={emp.last_name} />
           <Field label="Email" value={emp.email} />
