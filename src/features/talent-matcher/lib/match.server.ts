@@ -175,6 +175,7 @@ export function matchCandidates(
       ({
         employeeId: score.id,
         tenureYears: 0,
+        contributions: 0,
         skills: [],
         languages: {},
         repositories: [],
