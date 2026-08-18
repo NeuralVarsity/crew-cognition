@@ -61,7 +61,7 @@ export function CandidateCard({
 }) {
   const [open, setOpen] = useState(false);
   const photo = useSignedPhoto(candidate.photo);
-  const dim = (key: string) => candidate.dimensions.find((d) => d.key === key);
+  const dim = (key: string) => (candidate.dimensions ?? []).find((d) => d.key === key);
   const skillMatchPct = candidate.skillMatchPercent;
 
   return (
@@ -163,7 +163,7 @@ export function CandidateCard({
             <section>
               <h4 className="text-sm font-semibold">Score explanation</h4>
               <div className="mt-2 space-y-2">
-                {candidate.dimensions.map((d) => (
+                {(candidate.dimensions ?? []).map((d) => (
                   <div key={d.key}>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">
@@ -188,20 +188,20 @@ export function CandidateCard({
               <div>
                 <h4 className="text-sm font-semibold">Delivery evidence</h4>
                 <div className="mt-2 grid grid-cols-2 gap-2">
-                  <Metric label="Commits" value={String(candidate.metrics.commits)} icon={Github} />
-                  <Metric label="Merged PRs" value={String(candidate.metrics.mergedPrs)} icon={Github} />
-                  <Metric label="Reviews" value={String(candidate.metrics.reviews)} icon={Github} />
-                  <Metric label="Repositories" value={String(candidate.metrics.repositories)} icon={Github} />
-                  <Metric label="Jira resolved" value={String(candidate.metrics.jiraResolved)} icon={ClipboardList} />
-                  <Metric label="Story points" value={String(candidate.metrics.storyPoints)} icon={ClipboardList} />
-                  <Metric label="Sprints" value={String(candidate.metrics.sprints)} icon={ClipboardList} />
-                  <Metric label="ClickUp done" value={String(candidate.metrics.clickupDone)} icon={ListChecks} />
+                  <Metric label="Commits" value={String((candidate.metrics ?? ({} as any)).commits)} icon={Github} />
+                  <Metric label="Merged PRs" value={String((candidate.metrics ?? ({} as any)).mergedPrs)} icon={Github} />
+                  <Metric label="Reviews" value={String((candidate.metrics ?? ({} as any)).reviews)} icon={Github} />
+                  <Metric label="Repositories" value={String((candidate.metrics ?? ({} as any)).repositories)} icon={Github} />
+                  <Metric label="Jira resolved" value={String((candidate.metrics ?? ({} as any)).jiraResolved)} icon={ClipboardList} />
+                  <Metric label="Story points" value={String((candidate.metrics ?? ({} as any)).storyPoints)} icon={ClipboardList} />
+                  <Metric label="Sprints" value={String((candidate.metrics ?? ({} as any)).sprints)} icon={ClipboardList} />
+                  <Metric label="ClickUp done" value={String((candidate.metrics ?? ({} as any)).clickupDone)} icon={ListChecks} />
                   <Metric
                     label="ClickUp completion"
-                    value={`${Math.round(candidate.metrics.clickupCompletionRate)}%`}
+                    value={`${Math.round((candidate.metrics ?? ({} as any)).clickupCompletionRate)}%`}
                     icon={ListChecks}
                   />
-                  <Metric label="Tracked hours" value={`${Math.round(candidate.metrics.trackedHours)}h`} />
+                  <Metric label="Tracked hours" value={`${Math.round((candidate.metrics ?? ({} as any)).trackedHours)}h`} />
                 </div>
               </div>
 
