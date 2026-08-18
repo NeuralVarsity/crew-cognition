@@ -107,7 +107,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("departments", departments);
 
   // ---------- Teams ----------
-  const teams = Array.from({ length: 20 }, (_, i) => {
+  const teams = Array.from({ length: V.teams }, (_, i) => {
     const dept = departments[i % departments.length];
     return {
       id: uuid(), organization_id: org, department_id: dept.id,
@@ -122,46 +122,93 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("skills", skills);
 
   // ---------- Employees ----------
-  const employees = Array.from({ length: 100 }, (_, i) => {
-    const first = FIRST[i % FIRST.length];
-    const last = LAST[(i * 7) % LAST.length];
-    const team = teams[i % teams.length];
-    const dept = departments.find((d) => d.id === team.department_id)!;
-    const designation = pick(r, DESIGNATIONS);
-    const joined = new Date(Date.now() - int(r, 90, 2200) * 86400000);
-    return {
+  const skillByName = new Map(skills.map((s) => [s.name, s]));
+  const deptByName = new Map(departments.map((d) => [d.name, d]));
+  const teamsByDept = new Map(departments.map((d) => [d.id, teams.filter((t) => t.department_id === d.id)]));
+
+  const pickSeniority = () => {
+    const roll = r();
+    let acc = 0;
+    for (const s of SENIORITY) {
+      acc += s.weight;
+      if (roll <= acc) return s;
+    }
+    return SENIORITY[1];
+  };
+
+  const employeeRole = new Map<string, RoleArchetype>();
+  const employees = Array.from({ length: V.employees }, (_, i) => {
+    const role = ROLES[i % ROLES.length];
+    const seniority = pickSeniority();
+    const first = FIRST[(i * 3) % FIRST.length];
+    const last = LAST[(i * 7 + Math.floor(i / LAST.length)) % LAST.length];
+    const dept = deptByName.get(role.department) ?? departments[i % departments.length];
+    const deptTeams = teamsByDept.get(dept.id) ?? teams;
+    const team = deptTeams[i % deptTeams.length];
+    const experience = float(r, seniority.minYears, seniority.maxYears, 1);
+    const tenureDays = Math.min(2600, Math.max(60, Math.round(experience * 200) + int(r, 30, 400)));
+    const joined = new Date(Date.now() - tenureDays * 86400000);
+    const salary = Math.round((role.base * seniority.mult * 1000 + int(r, -6, 9) * 1000) / 500) * 500;
+    const emp = {
       id: uuid(), organization_id: org, employee_code: `EMP-${String(1001 + i)}`,
       full_name: `${first} ${last}`, first_name: first, last_name: last,
       email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@demo-corp.io`,
       phone: `+1 555 ${int(r, 1000, 9999)}`,
       dob: isoDate(new Date(Date.now() - int(r, 8500, 16000) * 86400000)),
-      designation, department_id: dept.id, team_id: team.id, manager_id: null as string | null,
+      designation: `${seniority.prefix}${role.title}`,
+      seniority_level: seniority.level, salary_band: seniority.band, experience_years: experience,
+      department_id: dept.id, team_id: team.id, manager_id: null as string | null,
       joining_date: isoDate(joined),
-      employment_type: chance(r, 0.82) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
-      status: chance(r, 0.88) ? "active" : pick(r, ["on_leave", "probation", "terminated"]),
+      employment_type: chance(r, 0.86) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
+      status: chance(r, 0.9) ? "active" : pick(r, ["on_leave", "probation", "terminated"]),
       location: pick(r, LOCATIONS), work_location: chance(r, 0.5) ? "remote" : "onsite",
-      office_location: pick(r, LOCATIONS), salary: int(r, 45, 210) * 1000,
-      notes: null,
+      office_location: pick(r, LOCATIONS), salary,
+      notes: `${seniority.level} ${role.title} — ${experience} yrs experience, band ${seniority.band}.`,
     };
+    employeeRole.set(emp.id, role);
+    return emp;
   });
-  // managers: first employee of each department leads it
+  // managers: the most senior person per team leads it, department heads lead the leads
+  for (const team of teams) {
+    const members = employees.filter((e) => e.team_id === team.id);
+    if (members.length < 2) continue;
+    const lead = [...members].sort((a, b) => Number(b.experience_years) - Number(a.experience_years))[0];
+    for (const m of members) if (m.id !== lead.id) m.manager_id = lead.id;
+  }
   for (const dept of departments) {
-    const members = employees.filter((e) => e.department_id === dept.id);
-    if (!members.length) continue;
-    const lead = members[0];
-    lead.designation = "Engineering Manager";
-    for (const m of members.slice(1)) m.manager_id = lead.id;
+    const leads = employees.filter((e) => e.department_id === dept.id && !e.manager_id);
+    if (leads.length < 2) continue;
+    const head = [...leads].sort((a, b) => Number(b.experience_years) - Number(a.experience_years))[0];
+    head.designation = `Head of ${dept.name}`;
+    head.seniority_level = "Executive";
+    for (const l of leads) if (l.id !== head.id) l.manager_id = head.id;
   }
   push("employees", employees);
 
-  // ---------- Employee skills ----------
-  const employeeSkills = employees.flatMap((e) =>
-    pickMany(r, skills, int(r, 4, 8)).map((s) => ({
-      id: uuid(), employee_id: e.id, skill_id: s.id,
-      proficiency: pick(r, ["beginner", "intermediate", "advanced", "expert"]),
-      years_experience: float(r, 0.5, 12, 1),
-    })),
-  );
+  // ---------- Employee skills (role-aligned) ----------
+  const proficiencyFor = (years: number) =>
+    years >= 8 ? "expert" : years >= 5 ? "advanced" : years >= 2.5 ? "intermediate" : "beginner";
+  const employeeSkills = employees.flatMap((e) => {
+    const role = employeeRole.get(e.id)!;
+    const exp = Number(e.experience_years);
+    const names = new Set<string>([
+      ...role.primary,
+      ...pickMany(r, role.secondary, int(r, 2, role.secondary.length)),
+      ...pickMany(r, ["Communication", "Problem Solving", "Ownership", "Collaboration", "Agile Delivery"], 2),
+    ]);
+    if (exp >= 7) names.add("Mentoring");
+    if (exp >= 9) names.add("Team Leadership");
+    return [...names]
+      .map((n) => skillByName.get(n))
+      .filter((s): s is (typeof skills)[number] => Boolean(s))
+      .map((s) => {
+        const years = Math.max(0.5, Math.round(Math.min(exp, exp * float(r, 0.4, 1, 2)) * 10) / 10);
+        return {
+          id: uuid(), employee_id: e.id, skill_id: s.id,
+          proficiency: proficiencyFor(years), years_experience: years,
+        };
+      });
+  });
   push("employee_skills", employeeSkills);
 
   // ---------- Projects ----------
