@@ -61,7 +61,7 @@ export function CandidateCard({
 }) {
   const [open, setOpen] = useState(false);
   const photo = useSignedPhoto(candidate.photo);
-  const dim = (key: string) => candidate.dimensions.find((d) => d.key === key);
+  const dim = (key: string) => (candidate.dimensions ?? []).find((d) => d.key === key);
   const skillMatchPct = candidate.skillMatchPercent;
 
   return (
@@ -100,16 +100,20 @@ export function CandidateCard({
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <Badge variant="outline" className="gap-1">
-              Role fit {candidate.roleFit.score.toFixed(1)}/10 · {candidate.roleFit.label}
-            </Badge>
-            <Badge variant="outline" className="gap-1">
-              <Briefcase className="size-3" />
-              {candidate.availability.label} · {candidate.availability.allocation}% allocated
-            </Badge>
+            {candidate.roleFit ? (
+              <Badge variant="outline" className="gap-1">
+                Role fit {(candidate.roleFit.score ?? 0).toFixed(1)}/10 · {candidate.roleFit.label}
+              </Badge>
+            ) : null}
+            {candidate.availability ? (
+              <Badge variant="outline" className="gap-1">
+                <Briefcase className="size-3" />
+                {candidate.availability.label} · {candidate.availability.allocation}% allocated
+              </Badge>
+            ) : null}
             <span className="text-muted-foreground">
-              {candidate.currentProjects.length
-                ? `Current: ${candidate.currentProjects.slice(0, 2).join(", ")}`
+              {(candidate.currentProjects?.length ?? 0)
+                ? `Current: ${(candidate.currentProjects ?? []).slice(0, 2).join(", ")}`
                 : "No active project"}
             </span>
             <span className="text-muted-foreground">{candidate.yearsExperience} yrs experience</span>
@@ -159,7 +163,7 @@ export function CandidateCard({
             <section>
               <h4 className="text-sm font-semibold">Score explanation</h4>
               <div className="mt-2 space-y-2">
-                {candidate.dimensions.map((d) => (
+                {(candidate.dimensions ?? []).map((d) => (
                   <div key={d.key}>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">
@@ -184,39 +188,39 @@ export function CandidateCard({
               <div>
                 <h4 className="text-sm font-semibold">Delivery evidence</h4>
                 <div className="mt-2 grid grid-cols-2 gap-2">
-                  <Metric label="Commits" value={String(candidate.metrics.commits)} icon={Github} />
-                  <Metric label="Merged PRs" value={String(candidate.metrics.mergedPrs)} icon={Github} />
-                  <Metric label="Reviews" value={String(candidate.metrics.reviews)} icon={Github} />
-                  <Metric label="Repositories" value={String(candidate.metrics.repositories)} icon={Github} />
-                  <Metric label="Jira resolved" value={String(candidate.metrics.jiraResolved)} icon={ClipboardList} />
-                  <Metric label="Story points" value={String(candidate.metrics.storyPoints)} icon={ClipboardList} />
-                  <Metric label="Sprints" value={String(candidate.metrics.sprints)} icon={ClipboardList} />
-                  <Metric label="ClickUp done" value={String(candidate.metrics.clickupDone)} icon={ListChecks} />
+                  <Metric label="Commits" value={String((candidate.metrics ?? ({} as any)).commits)} icon={Github} />
+                  <Metric label="Merged PRs" value={String((candidate.metrics ?? ({} as any)).mergedPrs)} icon={Github} />
+                  <Metric label="Reviews" value={String((candidate.metrics ?? ({} as any)).reviews)} icon={Github} />
+                  <Metric label="Repositories" value={String((candidate.metrics ?? ({} as any)).repositories)} icon={Github} />
+                  <Metric label="Jira resolved" value={String((candidate.metrics ?? ({} as any)).jiraResolved)} icon={ClipboardList} />
+                  <Metric label="Story points" value={String((candidate.metrics ?? ({} as any)).storyPoints)} icon={ClipboardList} />
+                  <Metric label="Sprints" value={String((candidate.metrics ?? ({} as any)).sprints)} icon={ClipboardList} />
+                  <Metric label="ClickUp done" value={String((candidate.metrics ?? ({} as any)).clickupDone)} icon={ListChecks} />
                   <Metric
                     label="ClickUp completion"
-                    value={`${Math.round(candidate.metrics.clickupCompletionRate)}%`}
+                    value={`${Math.round((candidate.metrics ?? ({} as any)).clickupCompletionRate)}%`}
                     icon={ListChecks}
                   />
-                  <Metric label="Tracked hours" value={`${Math.round(candidate.metrics.trackedHours)}h`} />
+                  <Metric label="Tracked hours" value={`${Math.round((candidate.metrics ?? ({} as any)).trackedHours)}h`} />
                 </div>
               </div>
 
               <div>
                 <h4 className="text-sm font-semibold">Skills &amp; evidence</h4>
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {candidate.matchedSkills.map((s) => (
+                  {(candidate.matchedSkills ?? []).map((s) => (
                     <Badge key={s} variant="secondary">
                       {s}
                     </Badge>
                   ))}
-                  {candidate.missingSkills.map((s) => (
+                  {(candidate.missingSkills ?? []).map((s) => (
                     <Badge key={s} variant="outline" className="text-muted-foreground line-through">
                       {s}
                     </Badge>
                   ))}
                 </div>
                 <ul className="mt-2 space-y-0.5 text-[11px] text-muted-foreground">
-                  {candidate.skillEvidence
+                  {(candidate.skillEvidence ?? [])
                     .filter((e) => e.matched)
                     .slice(0, 6)
                     .map((e) => (
@@ -230,11 +234,11 @@ export function CandidateCard({
               <div>
                 <h4 className="text-sm font-semibold">Project history</h4>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {candidate.currentProjects.length ? candidate.currentProjects.join(", ") : "No project assignments synced"}
+                  {(candidate.currentProjects?.length ?? 0) ? (candidate.currentProjects ?? []).join(", ") : "No project assignments synced"}
                 </p>
-                {candidate.evidence.projects.length ? (
+                {(candidate.evidence?.projects?.length ?? 0) ? (
                   <ul className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
-                    {candidate.evidence.projects.map((p) => (
+                    {(candidate.evidence?.projects ?? []).map((p) => (
                       <li key={p}>– Relevant: {p}</li>
                     ))}
                   </ul>
@@ -244,9 +248,9 @@ export function CandidateCard({
               <div className="grid gap-3 sm:grid-cols-3">
                 {(
                   [
-                    ["GitHub evidence", candidate.evidence.github],
-                    ["Jira evidence", candidate.evidence.jira],
-                    ["ClickUp evidence", candidate.evidence.clickup],
+                    ["GitHub evidence", candidate.evidence?.github ?? []],
+                    ["Jira evidence", candidate.evidence?.jira ?? []],
+                    ["ClickUp evidence", candidate.evidence?.clickup ?? []],
                   ] as const
                 ).map(([label, items]) => (
                   <div key={label}>
@@ -267,7 +271,7 @@ export function CandidateCard({
             <div>
               <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Why selected</h4>
               <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
-                {candidate.whySelected.map((r) => (
+                {(candidate.whySelected ?? []).map((r) => (
                   <li key={r}>• {r}</li>
                 ))}
               </ul>
@@ -275,7 +279,7 @@ export function CandidateCard({
             <div>
               <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Why not ranked higher</h4>
               <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
-                {candidate.whyNotSelected.map((r) => (
+                {(candidate.whyNotSelected ?? []).map((r) => (
                   <li key={r}>• {r}</li>
                 ))}
               </ul>
