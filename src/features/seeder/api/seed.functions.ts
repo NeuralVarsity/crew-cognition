@@ -17,7 +17,9 @@ async function requireAdminOrg(context: { supabase: any; userId: string }) {
 
 export const seedDemoData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { reset?: boolean; seed?: number } | undefined) => input ?? {})
+  .inputValidator(
+    (input: { reset?: boolean; seed?: number; fromBatch?: number; maxRows?: number } | undefined) => input ?? {},
+  )
   .handler(async ({ data, context }) => {
     const organizationId = await requireAdminOrg(context as never);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -25,6 +27,8 @@ export const seedDemoData = createServerFn({ method: "POST" })
     return seedOrganization(supabaseAdmin as never, organizationId, {
       reset: data.reset ?? true,
       seed: data.seed,
+      fromBatch: data.fromBatch ?? 0,
+      maxRows: data.maxRows ?? 12000,
     });
   });
 
