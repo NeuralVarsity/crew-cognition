@@ -212,27 +212,55 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("employee_skills", employeeSkills);
 
-  // ---------- Projects ----------
-  const projects = Array.from({ length: V.projects }, (_, i) => {
+  // ---------- Projects: 50 active, 30 completed, 20 upcoming ----------
+  const STACKS: string[][] = [
+    ["Python", "FastAPI", "PyTorch", "AWS"],
+    ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    ["Next.js", "GraphQL", "Redis", "GCP"],
+    ["Python", "LangChain", "Vector Search", "Kubernetes"],
+    ["Java", "Kafka", "Snowflake", "dbt"],
+    ["Go", "Terraform", "Kubernetes", "Observability"],
+  ];
+  const projectPlan = [
+    ...Array.from({ length: 50 }, () => "active" as const),
+    ...Array.from({ length: 30 }, () => "completed" as const),
+    ...Array.from({ length: 20 }, () => "planning" as const),
+  ].slice(0, V.projects);
+  const projects = projectPlan.map((phase, i) => {
     const dept = departments[i % departments.length];
-    const start = new Date(Date.now() - int(r, 30, 900) * 86400000);
+    const suffix = i >= PROJECT_NAMES.length
+      ? ` ${["II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][Math.floor(i / PROJECT_NAMES.length) - 1] ?? `v${Math.floor(i / PROJECT_NAMES.length) + 1}`}`
+      : "";
+    const durationWeeks = int(r, 8, 52);
+    const start =
+      phase === "planning"
+        ? new Date(Date.now() + int(r, 14, 120) * 86400000)
+        : new Date(Date.now() - int(r, 30, 900) * 86400000);
+    const complexity = pick(r, ["low", "medium", "medium", "high", "critical"]);
     return {
       id: uuid(), organization_id: org, department_id: dept.id,
-      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${
-        i >= PROJECT_NAMES.length ? ` ${["II", "III", "IV", "V", "VI", "VII", "VIII"][Math.floor(i / PROJECT_NAMES.length) - 1] ?? `v${Math.floor(i / PROJECT_NAMES.length) + 1}`}` : ""
-      }`,
+      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${suffix}`,
       description: `Strategic initiative owned by ${dept.name}.`,
-      status: pick(r, ["planning", "active", "active", "on_hold", "completed", "archived"]),
+      status: phase,
       start_date: isoDate(start),
-      end_date: isoDate(new Date(start.getTime() + int(r, 60, 500) * 86400000)),
+      end_date: isoDate(new Date(start.getTime() + durationWeeks * 7 * 86400000)),
+      budget: int(r, 80, 2400) * 1000,
+      complexity, duration_weeks: durationWeeks,
+      tech_stack: pick(r, STACKS),
+      delivery_status:
+        phase === "completed"
+          ? pick(r, ["delivered", "delivered", "delivered_late"])
+          : phase === "active"
+            ? pick(r, ["on_track", "on_track", "at_risk", "delayed"])
+            : "not_started",
     };
   });
   push("projects", projects);
 
   const employeeProjects = projects.flatMap((p) =>
-    pickMany(r, employees, int(r, 3, 6)).map((e) => ({
+    pickMany(r, employees, int(r, 4, 9)).map((e, idx) => ({
       id: uuid(), project_id: p.id, employee_id: e.id,
-      role: pick(r, ["Contributor", "Tech Lead", "Reviewer", "QA", "Analyst"]),
+      role: idx === 0 ? "Tech Lead" : pick(r, ["Contributor", "Contributor", "Reviewer", "QA", "Analyst"]),
       allocation_percent: pick(r, [20, 30, 50, 60, 80, 100]),
     })),
   );
