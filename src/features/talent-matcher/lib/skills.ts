@@ -24,7 +24,8 @@ export const SKILL_DICTIONARY: SkillDef[] = [
   def("javascript", "language", "js", "es6", "ecmascript"),
   def("typescript", "language", "ts"),
   def("java", "language"),
-  def("c#", "language", "csharp", ".net", "dotnet"),
+  def("c#", "language", "csharp"),
+  def(".net", "framework", "dotnet", "asp.net", "dot net"),
   def("c++", "language", "cpp"),
   def("go", "language", "golang"),
   def("rust", "language"),
@@ -58,6 +59,12 @@ export const SKILL_DICTIONARY: SkillDef[] = [
   def("grpc", "framework"),
   def("tailwind", "framework", "tailwindcss"),
   def("microservices", "framework", "micro services"),
+
+  def("software engineering", "framework", "software development", "application development", "app development", "applications development", "product engineering", "enterprise software", "enterprise application", "enterprise applications", "saas development", "saas", "software delivery"),
+  def("full stack development", "framework", "full stack", "fullstack", "full-stack", "mern", "mean stack"),
+  def("web development", "framework", "web application", "web applications", "web apps", "web app"),
+  def("backend development", "framework", "backend", "back end", "back-end", "server side", "server-side"),
+  def("frontend development", "framework", "frontend", "front end", "front-end", "ui development"),
 
   def("postgresql", "database", "postgres", "psql"),
   def("mysql", "database", "mariadb"),
@@ -159,6 +166,50 @@ export function canonicalSkill(raw: string): { canonical: string; category: Skil
 
 export function normalizeSkill(raw: string): string {
   return canonicalSkill(raw)?.canonical ?? raw.trim().toLowerCase();
+}
+
+/**
+ * Skill families: related capabilities that count as partial evidence for each other.
+ * "Application Development" is satisfied by full stack / web / backend / frontend work,
+ * by the mainstream app languages and by the frameworks built on them.
+ */
+const SKILL_FAMILIES: Record<string, string[]> = {
+  "software engineering": [
+    "full stack development", "web development", "backend development", "frontend development",
+    "javascript", "typescript", "react", "node.js", "python", "java", "spring boot", ".net", "c#",
+    "rest api", "microservices", "postgresql", "next.js", "django", "flask", "fastapi", "express",
+  ],
+  "full stack development": ["software engineering", "react", "node.js", "typescript", "javascript", "next.js", "rest api", "postgresql", "web development", "backend development", "frontend development"],
+  "web development": ["software engineering", "full stack development", "react", "javascript", "typescript", "html", "css", "next.js", "node.js"],
+  "backend development": ["software engineering", "node.js", "python", "java", "spring boot", ".net", "fastapi", "django", "flask", "express", "rest api", "microservices", "postgresql", "mysql"],
+  "frontend development": ["software engineering", "react", "angular", "vue", "javascript", "typescript", "html", "css", "next.js", "tailwind"],
+  react: ["frontend development", "full stack development", "javascript", "typescript", "next.js"],
+  "node.js": ["backend development", "full stack development", "javascript", "typescript", "express", "nestjs"],
+  python: ["backend development", "fastapi", "django", "flask", "data science", "machine learning"],
+  java: ["backend development", "spring boot", "software engineering"],
+  "spring boot": ["java", "backend development", "rest api"],
+  ".net": ["c#", "backend development", "software engineering"],
+  "c#": [".net", "backend development"],
+  typescript: ["javascript", "react", "node.js", "full stack development"],
+  javascript: ["typescript", "react", "node.js", "web development"],
+  "rest api": ["backend development", "microservices", "graphql", "node.js", "fastapi", "spring boot"],
+
+  "machine learning": ["deep learning" as string, "pytorch", "tensorflow", "data science", "nlp", "mlops", "llm"],
+  llm: ["langchain", "rag", "nlp", "openai", "prompt engineering", "machine learning", "llamaindex"],
+  langchain: ["llm", "rag", "openai", "llamaindex", "python"],
+  rag: ["llm", "langchain", "vector database", "nlp"],
+  nlp: ["machine learning", "llm", "deep learning" as string],
+  mlops: ["machine learning", "docker", "kubernetes", "model deployment", "ci/cd"],
+  "data science": ["python", "machine learning", "statistics", "sql"],
+  fastapi: ["python", "backend development", "rest api"],
+  django: ["python", "backend development", "rest api"],
+  flask: ["python", "backend development", "rest api"],
+};
+
+/** Related canonical skills that count as partial (not full) evidence. */
+export function relatedSkills(skill: string): string[] {
+  const canonical = canonicalSkill(skill)?.canonical ?? skill.trim().toLowerCase();
+  return SKILL_FAMILIES[canonical] ?? [];
 }
 
 function escapeRegExp(value: string) {
