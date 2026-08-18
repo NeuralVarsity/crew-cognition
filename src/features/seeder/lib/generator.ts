@@ -586,7 +586,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
 
   // ---------- HR history ----------
-  push("employee_certifications", Array.from({ length: 150 }, () => {
+  push("employee_certifications", Array.from({ length: 900 }, () => {
     const e = pick(r, employees);
     const [name, issuer] = pick(r, CERTS);
     const issued = new Date(Date.now() - int(r, 60, 1400) * 86400000);
@@ -597,7 +597,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("training_records", Array.from({ length: 250 }, () => {
+  push("training_records", Array.from({ length: 1400 }, () => {
     const e = pick(r, employees);
     const [course, provider, category] = pick(r, COURSES);
     const started = new Date(Date.now() - int(r, 30, 700) * 86400000);
@@ -610,7 +610,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("performance_reviews", Array.from({ length: 200 }, () => {
+  push("performance_reviews", Array.from({ length: 1200 }, () => {
     const e = pick(r, employees);
     const reviewer = employees.find((x) => x.id === e.manager_id) ?? pick(r, employees);
     const cycle = pick(r, ["H1 2025", "H2 2025", "H1 2026"]);
@@ -625,7 +625,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("promotions", Array.from({ length: 60 }, () => {
+  push("promotions", Array.from({ length: 220 }, () => {
     const e = pick(r, employees);
     const salary = Number(e.salary);
     return {
@@ -657,7 +657,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }
   push("attendance_records", attendance);
 
-  push("leave_records", Array.from({ length: 200 }, () => {
+  push("leave_records", Array.from({ length: 800 }, () => {
     const e = pick(r, employees);
     const start = new Date(Date.now() - int(r, -30, 300) * 86400000);
     const days = int(r, 1, 8);
@@ -749,7 +749,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     name: `${pick(r, ["Workforce Summary", "Engineering Velocity", "AI Scorecard", "Attrition Risk", "Utilisation"])} — ${pick(r, ["Jan", "Feb", "Mar", "Apr", "May"])} 2026`,
     report_type: pick(r, ["workforce", "engineering", "ai", "risk", "utilisation"]),
     format: pick(r, ["pdf", "xlsx", "csv"]), period_label: "Monthly", status: "ready",
-    summary: { employees: 100, avg_score: int(r, 60, 85), generated_index: i },
+    summary: { employees: V.employees, avg_score: int(r, 60, 85), generated_index: i },
     generated_by_name: "Demo Admin",
   })));
 
