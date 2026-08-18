@@ -185,7 +185,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     for (const l of leads) if (l.id !== head.id) l.manager_id = head.id;
   }
   // Managers must be inserted before their reports (rows are written in chunks).
-  const byId = new Map(employees.map((e) => [e.id, e]));
+  const byId = new Map<string, (typeof employees)[number]>(employees.map((e) => [e.id as string, e]));
   const depth = (e: (typeof employees)[number], guard = 0): number =>
     !e.manager_id || guard > 10 ? 0 : 1 + depth(byId.get(e.manager_id)!, guard + 1);
   const orderedEmployees = [...employees].sort((a, b) => depth(a) - depth(b));
