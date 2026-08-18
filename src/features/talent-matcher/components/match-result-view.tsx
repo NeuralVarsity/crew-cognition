@@ -115,10 +115,14 @@ export function MatchResultView({
             { label: "Delivery confidence", value: `${result.prediction.deliveryConfidence}%` },
             { label: "Risk", value: `${result.prediction.riskPercent}%` },
             { label: "Skill gap", value: `${result.prediction.skillGapPercent}%` },
+            { label: "Budget confidence", value: budgetConfidence },
+            { label: "Timeline risk", value: result.prediction.timelineRisk },
+            { label: "Team readiness", value: `${teamReadiness}%` },
+            { label: "Resource gap", value: `${result.prediction.resourceGap}` },
           ].map((item) => (
             <div key={item.label} className="rounded-lg border bg-muted/40 px-3 py-2">
               <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{item.label}</div>
-              <div className="text-lg font-semibold">{item.value}</div>
+              <div className="text-lg font-semibold capitalize">{item.value}</div>
             </div>
           ))}
           {result.prediction.notes.length ? (
