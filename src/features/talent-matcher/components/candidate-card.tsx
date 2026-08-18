@@ -62,8 +62,7 @@ export function CandidateCard({
   const [open, setOpen] = useState(false);
   const photo = useSignedPhoto(candidate.photo);
   const dim = (key: string) => candidate.dimensions.find((d) => d.key === key);
-  const skillsDim = dim("skills");
-  const skillMatchPct = skillsDim ? Math.round(skillsDim.score * 10) : 0;
+  const skillMatchPct = candidate.skillMatchPercent;
 
   return (
     <Card className={cn("overflow-hidden border-border/70", candidate.rank === 1 && "border-primary/50 shadow-sm")}>
@@ -94,13 +93,16 @@ export function CandidateCard({
           </p>
 
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <Metric label="Skills match" value={`${skillMatchPct}%`} icon={BrainCircuit} />
+            <Metric label="Project relevance" value={`${candidate.projectRelevancePercent}%`} icon={Briefcase} />
             <Metric label="GitHub" value={`${dim("github")?.score.toFixed(1) ?? "—"}/10`} icon={Github} />
             <Metric label="Jira" value={`${dim("jira")?.score.toFixed(1) ?? "—"}/10`} icon={ClipboardList} />
-            <Metric label="ClickUp" value={`${dim("clickup")?.score.toFixed(1) ?? "—"}/10`} icon={ListChecks} />
-            <Metric label="Skills match" value={`${skillMatchPct}%`} icon={BrainCircuit} />
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+            <Badge variant="outline" className="gap-1">
+              Role fit {candidate.roleFit.score.toFixed(1)}/10 · {candidate.roleFit.label}
+            </Badge>
             <Badge variant="outline" className="gap-1">
               <Briefcase className="size-3" />
               {candidate.availability.label} · {candidate.availability.allocation}% allocated
@@ -230,8 +232,54 @@ export function CandidateCard({
                 <p className="mt-1 text-sm text-muted-foreground">
                   {candidate.currentProjects.length ? candidate.currentProjects.join(", ") : "No project assignments synced"}
                 </p>
+                {candidate.evidence.projects.length ? (
+                  <ul className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
+                    {candidate.evidence.projects.map((p) => (
+                      <li key={p}>– Relevant: {p}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                {(
+                  [
+                    ["GitHub evidence", candidate.evidence.github],
+                    ["Jira evidence", candidate.evidence.jira],
+                    ["ClickUp evidence", candidate.evidence.clickup],
+                  ] as const
+                ).map(([label, items]) => (
+                  <div key={label}>
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</h4>
+                    <ul className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
+                      {items.map((i) => (
+                        <li key={i}>– {i}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </section>
+          </div>
+
+          <Separator className="my-4" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Why selected</h4>
+              <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
+                {candidate.whySelected.map((r) => (
+                  <li key={r}>• {r}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-amber-600 dark:text-amber-400">Why not ranked higher</h4>
+              <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
+                {candidate.whyNotSelected.map((r) => (
+                  <li key={r}>• {r}</li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <Separator className="my-4" />

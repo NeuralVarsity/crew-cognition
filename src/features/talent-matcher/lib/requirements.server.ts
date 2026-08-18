@@ -1,6 +1,7 @@
 import { generateText } from "ai";
 import { createLovableAiGatewayProvider, requireLovableApiKey, TALENT_MODEL } from "@/lib/ai-gateway.server";
 import { extractMinYears, extractSkills } from "./skills";
+import { detectRoleProfiles, roleSkillSets } from "./roles";
 import type { RoleRequirement } from "../types";
 
 const EMPTY: RoleRequirement = {
@@ -26,6 +27,8 @@ const EMPTY: RoleRequirement = {
   department: null,
   team: null,
   teamRoles: [],
+  roleKeys: [],
+  preferredTitles: [],
   intent: "rank",
   extractedFrom: "query",
 };
@@ -41,6 +44,13 @@ export function extractRequirementDeterministic(text: string, from: "query" | "d
   const technical = found.filter((s) => s.category !== "soft").map((s) => s.canonical);
   const soft = byCategory("soft");
 
+  // Role profiles carry the implied tech stack for asks like "best AI Engineer",
+  // which mention no explicit skills at all.
+  const profiles = detectRoleProfiles(text);
+  const roleSkills = roleSkillSets(profiles);
+  const primaryList = [...new Set([...technical, ...roleSkills.primary])];
+  const secondaryList = [...new Set([...roleSkills.secondary, ...technical])].filter((s) => !primaryList.includes(s));
+
   const seniority = SENIORITY.find((s) => new RegExp(`\\b${s}\\b`, "i").test(lower)) ?? null;
   const teamRoleMatches = [...lower.matchAll(/(\d+)\s+([a-z][a-z\s/]{2,30}?)(?:s)?\s*(?:developer|engineer|designer|analyst|manager|lead|tester)/g)];
 
@@ -50,8 +60,10 @@ export function extractRequirementDeterministic(text: string, from: "query" | "d
     summary: text.trim().slice(0, 600),
     seniority,
     minYears: extractMinYears(text),
-    primarySkills: technical.slice(0, 8),
-    secondarySkills: technical.slice(8, 16),
+    primarySkills: primaryList.slice(0, 10),
+    secondarySkills: [...primaryList.slice(10), ...secondaryList].slice(0, 12),
+    roleKeys: profiles.map((p) => p.key),
+    preferredTitles: profiles.flatMap((p) => p.titleTiers[0] ?? []),
     languages: byCategory("language"),
     frameworks: byCategory("framework"),
     databases: byCategory("database"),
