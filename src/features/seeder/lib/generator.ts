@@ -68,9 +68,9 @@ export const DEMO_VOLUME = {
   employees: 500,
   projects: 100,
   repos: 140,
-  commits: 12000,
-  pullRequests: 2600,
-  reviews: 2000,
+  commits: 24000,
+  pullRequests: 4200,
+  reviews: 3600,
   githubIssues: 1600,
   jiraProjects: 20,
   sprintsPerBoard: 10,
@@ -305,16 +305,51 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   });
   push("github_repositories", repos);
 
-  push("github_repo_contributors", repos.flatMap((repo) =>
-    pickMany(r, contributors, int(r, 3, 8)).map((c) => ({
+  // Realistic lifetime GitHub activity per seniority band.
+  const LIFETIME_COMMITS: Record<string, [number, number]> = {
+    Junior: [100, 300],
+    Mid: [500, 1000],
+    Senior: [1500, 5000],
+    Lead: [3000, 10000],
+    Principal: [4000, 12000],
+    Executive: [2000, 6000],
+  };
+  const empById = new Map(employees.map((e) => [e.id as string, e]));
+  const contributorRepos = new Map<string, string[]>();
+  const repoContributors = contributors.flatMap((c) => {
+    const emp = empById.get(c.linked_employee_id as string);
+    const band = LIFETIME_COMMITS[String(emp?.seniority_level ?? "Mid")] ?? LIFETIME_COMMITS.Mid;
+    const lifetime = int(r, band[0], band[1]);
+    const owned = pickMany(r, repos, int(r, 2, 6));
+    contributorRepos.set(c.id, owned.map((repo) => repo.id));
+    const share = Math.max(1, Math.round(lifetime / Math.max(1, owned.length)));
+    return owned.map((repo) => ({
       id: uuid(), organization_id: org, repository_id: repo.id, contributor_id: c.id,
-      contributions: int(r, 5, 800),
-    })),
-  ));
+      contributions: Math.max(20, share + int(r, -Math.round(share * 0.25), Math.round(share * 0.25))),
+    }));
+  });
+  push("github_repo_contributors", repoContributors);
+
+  // Recent commit rows are weighted so senior engineers are visibly more active.
+  const ACTIVITY_WEIGHT: Record<string, number> = {
+    Junior: 1, Mid: 2, Senior: 4, Lead: 5, Principal: 5, Executive: 2,
+  };
+  const activityPool: (typeof contributors)[number][] = [];
+  for (const c of contributors) {
+    const emp = empById.get(c.linked_employee_id as string);
+    const weight = ACTIVITY_WEIGHT[String(emp?.seniority_level ?? "Mid")] ?? 2;
+    for (let i = 0; i < weight; i++) activityPool.push(c);
+  }
+  const repoById = new Map(repos.map((repo) => [repo.id as string, repo]));
+  const pickActor = () => pick(r, activityPool);
+  const pickRepoFor = (c: (typeof contributors)[number]) => {
+    const owned = contributorRepos.get(c.id) ?? [];
+    return (owned.length ? repoById.get(pick(r, owned)) : undefined) ?? pick(r, repos);
+  };
 
   const commits = Array.from({ length: V.commits }, (_, i) => {
-    const repo = pick(r, repos);
-    const c = pick(r, contributors);
+    const c = pickActor();
+    const repo = pickRepoFor(c);
     return {
       id: uuid(), organization_id: org, repository_id: repo.id, sha: `${(i + 1).toString(16).padStart(8, "0")}${uuid().replace(/-/g, "").slice(0, 32)}`,
       author_contributor_id: c.id, author_login: c.login, author_email: c.email,
@@ -326,8 +361,8 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("github_commits", commits);
 
   const prs = Array.from({ length: V.pullRequests }, (_, i) => {
-    const repo = pick(r, repos);
-    const c = pick(r, contributors);
+    const c = pickActor();
+    const repo = pickRepoFor(c);
     const created = new Date(Date.now() - int(r, 1, 180) * 86400000);
     const merged = chance(r, 0.68);
     const closed = merged || chance(r, 0.15);
@@ -348,7 +383,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
 
   push("github_reviews", Array.from({ length: V.reviews }, (_, i) => {
     const pr = pick(r, prs);
-    const c = pick(r, contributors);
+    const c = pickActor();
     return {
       id: uuid(), organization_id: org, pull_request_id: pr.id, github_id: 8500000 + i,
       reviewer_contributor_id: c.id, reviewer_login: c.login,

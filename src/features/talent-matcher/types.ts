@@ -33,14 +33,16 @@ export const DIMENSION_LABELS: Record<MatchDimension, string> = {
 export type MatchWeights = Record<MatchDimension, number>;
 
 export const DEFAULT_MATCH_WEIGHTS: MatchWeights = {
-  skills: 40,
-  projectRelevance: 20,
+  skills: 35,
+  experience: 20,
   github: 15,
   jira: 10,
   clickup: 10,
-  availability: 5,
+  availability: 10,
+  // Project relevance is reported for explainability; role fit is applied as a
+  // multiplicative discipline gate rather than a weighted dimension.
+  projectRelevance: 0,
   roleFit: 0,
-  experience: 0,
   collaboration: 0,
   learning: 0,
   communication: 0,
@@ -224,8 +226,11 @@ export type CandidateMatch = {
   whySelected: string[];
   whyNotSelected: string[];
   dataCoverage: { github: boolean; jira: boolean; clickup: boolean; profile: boolean };
+  riskLevel: "low" | "medium" | "high";
+  aiExplanation: string;
   metrics: {
     commits: number;
+    commitsPerWeek: number;
     mergedPrs: number;
     reviews: number;
     repositories: number;

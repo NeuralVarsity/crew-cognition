@@ -86,6 +86,18 @@ export function CandidateCard({
             <h3 className="truncate text-base font-semibold text-foreground">{candidate.name}</h3>
             <Badge variant={candidate.rank === 1 ? "default" : "secondary"}>{candidate.recommendation}</Badge>
             <Badge variant="outline">{candidate.fit}</Badge>
+            {candidate.riskLevel ? (
+              <Badge
+                variant="outline"
+                className={cn(
+                  candidate.riskLevel === "high" && "border-destructive/40 text-destructive",
+                  candidate.riskLevel === "medium" && "border-amber-500/40 text-amber-600 dark:text-amber-400",
+                  candidate.riskLevel === "low" && "border-emerald-500/40 text-emerald-600 dark:text-emerald-400",
+                )}
+              >
+                {candidate.riskLevel} risk
+              </Badge>
+            ) : null}
           </div>
           <p className="mt-0.5 truncate text-sm text-muted-foreground">
             {[candidate.designation, candidate.department, candidate.team].filter(Boolean).join(" · ") ||
@@ -95,8 +107,24 @@ export function CandidateCard({
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
             <Metric label="Skills match" value={`${skillMatchPct}%`} icon={BrainCircuit} />
             <Metric label="Project relevance" value={`${candidate.projectRelevancePercent}%`} icon={Briefcase} />
-            <Metric label="GitHub" value={`${dim("github")?.score.toFixed(1) ?? "—"}/10`} icon={Github} />
-            <Metric label="Jira" value={`${dim("jira")?.score.toFixed(1) ?? "—"}/10`} icon={ClipboardList} />
+            <Metric label="Experience" value={`${candidate.yearsExperience} yrs`} icon={TrendingUp} />
+            <Metric label="Availability" value={`${100 - (candidate.availability?.allocation ?? 0)}% free`} icon={Briefcase} />
+            <Metric
+              label="GitHub activity"
+              value={`${candidate.metrics?.commits ?? 0} commits`}
+              icon={Github}
+            />
+            <Metric
+              label="Jira velocity"
+              value={`${candidate.metrics?.storyPoints ?? 0} pts`}
+              icon={ClipboardList}
+            />
+            <Metric
+              label="ClickUp productivity"
+              value={`${Math.round(candidate.metrics?.clickupCompletionRate ?? 0)}%`}
+              icon={ListChecks}
+            />
+            <Metric label="Match score" value={`${candidate.overall}/10`} icon={BrainCircuit} />
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
@@ -188,7 +216,12 @@ export function CandidateCard({
               <div>
                 <h4 className="text-sm font-semibold">Delivery evidence</h4>
                 <div className="mt-2 grid grid-cols-2 gap-2">
-                  <Metric label="Commits" value={String((candidate.metrics ?? ({} as any)).commits)} icon={Github} />
+                  <Metric label="Commits (lifetime)" value={String((candidate.metrics ?? ({} as any)).commits ?? 0)} icon={Github} />
+                  <Metric
+                    label="Commits / week"
+                    value={String((candidate.metrics ?? ({} as any)).commitsPerWeek ?? 0)}
+                    icon={Github}
+                  />
                   <Metric label="Merged PRs" value={String((candidate.metrics ?? ({} as any)).mergedPrs)} icon={Github} />
                   <Metric label="Reviews" value={String((candidate.metrics ?? ({} as any)).reviews)} icon={Github} />
                   <Metric label="Repositories" value={String((candidate.metrics ?? ({} as any)).repositories)} icon={Github} />
@@ -265,6 +298,16 @@ export function CandidateCard({
               </div>
             </section>
           </div>
+
+          {candidate.aiExplanation ? (
+            <>
+              <Separator className="my-4" />
+              <div>
+                <h4 className="text-sm font-semibold">AI explanation</h4>
+                <p className="mt-1 text-sm text-muted-foreground">{candidate.aiExplanation}</p>
+              </div>
+            </>
+          ) : null}
 
           <Separator className="my-4" />
           <div className="grid gap-4 md:grid-cols-2">

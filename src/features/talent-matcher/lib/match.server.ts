@@ -1,6 +1,6 @@
 import type { EmployeeScore } from "@/features/ai-engine/types";
 import type { CandidateEvidence, TalentPool } from "./pool.server";
-import { canonicalSkill, evidenceMatchesSkill } from "./skills";
+import { canonicalSkill, evidenceMatchesSkill, relatedSkills } from "./skills";
 import { detectRoleProfiles, roleFit as computeRoleFit, ROLE_PROFILES, type RoleProfile } from "./roles";
 import {
   DIMENSION_LABELS,
@@ -32,6 +32,14 @@ const clamp10 = (n: number) => Math.max(0, Math.min(10, n));
 type SkillHit = { strength: number; sources: string[] };
 
 function skillStrength(skill: string, score: EmployeeScore, ev: CandidateEvidence): SkillHit {
+  const related = relatedSkills(skill);
+  // A skill is evidenced directly, or partially through a related capability
+  // (e.g. "Application Development" is evidenced by React + Node.js delivery).
+  const matches = (text: string): number => {
+    if (!text) return 0;
+    if (evidenceMatchesSkill(skill, text)) return 1;
+    return related.some((alt) => evidenceMatchesSkill(alt, text)) ? 0.8 : 0;
+  };
   const sources: string[] = [];
   let strength = 0;
   const bump = (value: number, source: string) => {
@@ -41,32 +49,40 @@ function skillStrength(skill: string, score: EmployeeScore, ev: CandidateEvidenc
   };
 
   for (const owned of ev.skills) {
-    if (evidenceMatchesSkill(skill, owned.name)) {
+    const factor = matches(owned.name);
+    if (factor) {
       const base = PROFICIENCY_STRENGTH[owned.proficiency] ?? 0.7;
       const yearsBoost = Math.min(0.1, owned.years * 0.02);
-      bump(Math.min(1, base + yearsBoost), `Skill profile · ${owned.name} (${owned.proficiency})`);
+      bump(Math.min(1, base + yearsBoost) * factor, `Skill profile · ${owned.name} (${owned.proficiency})`);
     }
   }
 
   const totalContrib = Object.values(ev.languages).reduce((a, b) => a + b, 0);
   for (const [language, contributions] of Object.entries(ev.languages)) {
-    if (!evidenceMatchesSkill(skill, language)) continue;
+    const factor = matches(language);
+    if (!factor) continue;
     const share = totalContrib > 0 ? contributions / totalContrib : 0;
-    bump(Math.min(0.95, 0.6 + share * 0.35), `GitHub language · ${language} (${Math.round(share * 100)}% of commits)`);
+    bump(
+      Math.min(0.95, 0.6 + share * 0.35) * factor,
+      `GitHub language · ${language} (${Math.round(share * 100)}% of contributions)`,
+    );
   }
 
-  const repoHit = ev.repositories.find((repo) => evidenceMatchesSkill(skill, repo));
-  if (repoHit) bump(0.62, `GitHub repository · ${repoHit.split(" — ")[0]}`);
+  const repoHit = ev.repositories.find((repo) => matches(repo) > 0);
+  if (repoHit) bump(0.62 * matches(repoHit), `GitHub repository · ${repoHit.split(" — ")[0]}`);
 
-  const projectHit = ev.projects.find((project) =>
-    evidenceMatchesSkill(skill, `${project.name} ${project.role ?? ""} ${project.techStack.join(" ")}`),
+  const projectHit = ev.projects.find(
+    (project) => matches(`${project.name} ${project.role ?? ""} ${project.techStack.join(" ")}`) > 0,
   );
-  if (projectHit) bump(0.58, `Project · ${projectHit.name.split(" — ")[0]}`);
+  if (projectHit) {
+    const factor = matches(`${projectHit.name} ${projectHit.role ?? ""} ${projectHit.techStack.join(" ")}`);
+    bump(0.6 * factor, `Project · ${projectHit.name.split(" — ")[0]}`);
+  }
 
-  if (ev.issueText && evidenceMatchesSkill(skill, ev.issueText)) bump(0.5, "Jira issue history");
-  if (ev.taskText && evidenceMatchesSkill(skill, ev.taskText)) bump(0.5, "ClickUp task history");
-  if (ev.commitText && evidenceMatchesSkill(skill, ev.commitText)) bump(0.55, "GitHub commit history");
-  if (score.designation && evidenceMatchesSkill(skill, score.designation)) bump(0.6, `Role · ${score.designation}`);
+  if (ev.issueText) bump(0.5 * matches(ev.issueText), "Jira issue history");
+  if (ev.taskText) bump(0.5 * matches(ev.taskText), "ClickUp task history");
+  if (ev.commitText) bump(0.55 * matches(ev.commitText), "GitHub commit history");
+  if (score.designation) bump(0.75 * matches(score.designation), `Role · ${score.designation}`);
 
   return { strength, sources: sources.slice(0, 4) };
 }
@@ -101,6 +117,14 @@ function availabilityOf(score: EmployeeScore, ev: CandidateEvidence) {
         ? "Partially available"
         : "Available";
   return { label, allocation, activeProjects: active.length };
+}
+
+function riskOf(score: EmployeeScore): "low" | "medium" | "high" {
+  const burnout = score.workload.burnoutRisk;
+  const attrition = score.prediction.attritionRisk;
+  if (burnout === "high" || attrition >= 70) return "high";
+  if (burnout === "medium" || attrition >= 45) return "medium";
+  return "low";
 }
 
 export type MatchOptions = {
@@ -151,6 +175,7 @@ export function matchCandidates(
       ({
         employeeId: score.id,
         tenureYears: 0,
+        contributions: 0,
         skills: [],
         languages: {},
         repositories: [],
@@ -207,12 +232,16 @@ export function matchCandidates(
     // designation is not evidence of domain work either way.
     const hasDeliveryHistory =
       ev.projects.length > 0 || ev.repositories.length > 0 || !!ev.issueText || !!ev.taskText || !!ev.commitText;
-    const relevanceHits = keywords.filter((k) => evidenceMatchesSkill(k, relevanceText));
-    // Relevance saturates: covering ~60% of the requested stack across delivery
-    // artefacts is already strong evidence of domain experience.
-    const relevanceScore = keywords.length
-      ? clamp10((relevanceHits.length / Math.max(1, keywords.length * 0.6)) * 10)
-      : 0;
+    // Fuzzy relevance: a keyword counts when the delivery history mentions it OR a
+    // related technology (project tech stack, repo names/topics, Jira epics, ClickUp lists).
+    const relevanceHits = keywords.filter(
+      (k) => evidenceMatchesSkill(k, relevanceText) || relatedSkills(k).some((alt) => evidenceMatchesSkill(alt, relevanceText)),
+    );
+    // Saturates at ~35% coverage of the requested stack — real engineers rarely touch
+    // every listed technology inside one lookback window.
+    const coverageRatio = keywords.length ? relevanceHits.length / Math.max(1, keywords.length * 0.35) : 0;
+    const deliveryBaseline = hasDeliveryHistory ? 3 : 0;
+    const relevanceScore = keywords.length ? clamp10(Math.max(deliveryBaseline, coverageRatio * 10)) : deliveryBaseline;
 
     const availability = availabilityOf(score, ev);
     const availabilityScore = clamp10(10 - availability.allocation / 12 - (score.workload.burnoutRisk === "high" ? 2 : 0));
@@ -329,10 +358,15 @@ export function matchCandidates(
     // Role gate: a discipline mismatch (e.g. a PM for an engineering ask) can never
     // outrank a real engineer purely on delivery throughput.
     if (profiles.length) {
-      const gate = 0.55 + 0.045 * fit.score; // 0.595 (mismatch) … 1.0 (exact title)
+      const gate = 0.7 + 0.03 * fit.score; // 0.73 (discipline mismatch) … 1.0 (exact title)
       overall *= gate;
-      if (primary.length && primaryCoverage === 0) overall *= 0.55;
+      if (primary.length && primaryCoverage === 0 && fit.score < 6.5) overall *= 0.75;
     }
+    // A single missing keyword must never collapse an otherwise credible candidate:
+    // anyone with role fit plus real delivery evidence keeps a 4/10 floor.
+    const hasDeliverySignal =
+      score.dataCoverage.github || score.dataCoverage.jira || score.dataCoverage.clickup || ev.projects.length > 0;
+    if (hasDeliverySignal && (fit.score >= 6.5 || primaryCoverage > 0)) overall = Math.max(overall, 4);
     overall = round1(clamp10(overall));
 
     const ranked = [...usable].sort((a, b) => b.score - a.score);
@@ -405,6 +439,17 @@ export function matchCandidates(
       `Availability: ${availability.label} (${availability.allocation}% allocated across ${availability.activeProjects} active projects).`,
     ];
 
+    const lifetimeCommits = Math.max(
+      ev.contributions,
+      Math.round(score.productivity.commitFrequency * 13),
+    );
+    const explanation =
+      `${score.name} scores ${overall}/10 for "${requirement.title}": role fit ${round1(fit.score)}/10 (${fit.label}), ` +
+      `skills ${skillMatchPercent}% (${matchedSkills.slice(0, 4).join(", ") || "no direct evidence"}), ` +
+      `project relevance ${projectRelevancePercent}%, ${lifetimeCommits} commits · ${score.productivity.pullRequests} PRs, ` +
+      `${score.productivity.issueResolution} Jira items, ${score.productivity.taskCompletionRate}% ClickUp completion, ` +
+      `${years} yrs experience, ${availability.label.toLowerCase()} (${availability.allocation}% allocated).`;
+
     return {
       employeeId: score.id,
       name: score.name,
@@ -441,8 +486,11 @@ export function matchCandidates(
         clickup: score.dataCoverage.clickup,
         profile: ev.skills.length > 0,
       },
+      riskLevel: riskOf(score),
+      aiExplanation: explanation,
       metrics: {
-        commits: score.productivity.commitFrequency,
+        commits: lifetimeCommits,
+        commitsPerWeek: score.productivity.commitFrequency,
         mergedPrs: score.productivity.pullRequests,
         reviews: score.productivity.reviewActivity,
         repositories: score.productivity.repositoryContributions,

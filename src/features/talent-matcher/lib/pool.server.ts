@@ -8,6 +8,8 @@ const TEXT_CAP = 6000;
 export type CandidateEvidence = {
   employeeId: string;
   tenureYears: number;
+  /** Lifetime GitHub contributions across all tracked repositories. */
+  contributions: number;
   skills: { name: string; category: string; proficiency: string; years: number }[];
   languages: Record<string, number>;
   repositories: string[];
@@ -88,6 +90,7 @@ export async function buildTalentPool(
       entry = {
         employeeId: id,
         tenureYears: 0,
+        contributions: 0,
         skills: [],
         languages: {},
         repositories: [],
@@ -170,6 +173,7 @@ export async function buildTalentPool(
     const repo = repoById.get(r.repository_id);
     if (!repo) continue;
     const entry = ensure(employeeId);
+    entry.contributions += Number(r.contributions) || 0;
     const label = `${repo.name}${repo.description ? ` — ${repo.description}` : ""}`;
     if (!entry.repositories.includes(label)) entry.repositories.push(label);
     if (repo.language) {
