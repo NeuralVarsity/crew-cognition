@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkforceIntelligenceRouteImport } from './routes/workforce-intelligence'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TeamsRouteImport } from './routes/teams'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -41,6 +42,11 @@ import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/j
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
 
+const WorkforceIntelligenceRoute = WorkforceIntelligenceRouteImport.update({
+  id: '/workforce-intelligence',
+  path: '/workforce-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
   path: '/unauthorized',
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/workforce-intelligence': typeof WorkforceIntelligenceRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/workforce-intelligence': typeof WorkforceIntelligenceRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/workforce-intelligence': typeof WorkforceIntelligenceRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/workforce-intelligence'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/workforce-intelligence'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/teams'
     | '/unauthorized'
+    | '/workforce-intelligence'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
@@ -423,6 +435,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  WorkforceIntelligenceRoute: typeof WorkforceIntelligenceRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
   WorkspaceCompareRoute: typeof WorkspaceCompareRoute
   WorkspaceJobMatcherRoute: typeof WorkspaceJobMatcherRoute
@@ -434,6 +447,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workforce-intelligence': {
+      id: '/workforce-intelligence'
+      path: '/workforce-intelligence'
+      fullPath: '/workforce-intelligence'
+      preLoaderRoute: typeof WorkforceIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/unauthorized': {
       id: '/unauthorized'
       path: '/unauthorized'
@@ -701,6 +721,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  WorkforceIntelligenceRoute: WorkforceIntelligenceRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
   WorkspaceCompareRoute: WorkspaceCompareRoute,
   WorkspaceJobMatcherRoute: WorkspaceJobMatcherRoute,
