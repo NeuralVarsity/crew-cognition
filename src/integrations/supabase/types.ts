@@ -1659,6 +1659,7 @@ export type Database = {
           email: string
           employee_code: string
           employment_type: Database["public"]["Enums"]["employment_type"]
+          experience_years: number | null
           first_name: string | null
           full_name: string
           id: string
@@ -1672,6 +1673,8 @@ export type Database = {
           phone: string | null
           profile_photo: string | null
           salary: number | null
+          salary_band: string | null
+          seniority_level: string | null
           status: Database["public"]["Enums"]["employee_status"]
           team_id: string | null
           updated_at: string
@@ -1687,6 +1690,7 @@ export type Database = {
           email: string
           employee_code: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          experience_years?: number | null
           first_name?: string | null
           full_name: string
           id?: string
@@ -1700,6 +1704,8 @@ export type Database = {
           phone?: string | null
           profile_photo?: string | null
           salary?: number | null
+          salary_band?: string | null
+          seniority_level?: string | null
           status?: Database["public"]["Enums"]["employee_status"]
           team_id?: string | null
           updated_at?: string
@@ -1715,6 +1721,7 @@ export type Database = {
           email?: string
           employee_code?: string
           employment_type?: Database["public"]["Enums"]["employment_type"]
+          experience_years?: number | null
           first_name?: string | null
           full_name?: string
           id?: string
@@ -1728,6 +1735,8 @@ export type Database = {
           phone?: string | null
           profile_photo?: string | null
           salary?: number | null
+          salary_band?: string | null
+          seniority_level?: string | null
           status?: Database["public"]["Enums"]["employee_status"]
           team_id?: string | null
           updated_at?: string
@@ -3812,42 +3821,57 @@ export type Database = {
       }
       projects: {
         Row: {
+          budget: number | null
+          complexity: string | null
           created_at: string
           deleted_at: string | null
+          delivery_status: string | null
           department_id: string | null
           description: string | null
+          duration_weeks: number | null
           end_date: string | null
           id: string
           name: string
           organization_id: string
           start_date: string | null
           status: Database["public"]["Enums"]["project_status"]
+          tech_stack: Json
           updated_at: string
         }
         Insert: {
+          budget?: number | null
+          complexity?: string | null
           created_at?: string
           deleted_at?: string | null
+          delivery_status?: string | null
           department_id?: string | null
           description?: string | null
+          duration_weeks?: number | null
           end_date?: string | null
           id?: string
           name: string
           organization_id: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["project_status"]
+          tech_stack?: Json
           updated_at?: string
         }
         Update: {
+          budget?: number | null
+          complexity?: string | null
           created_at?: string
           deleted_at?: string | null
+          delivery_status?: string | null
           department_id?: string | null
           description?: string | null
+          duration_weeks?: number | null
           end_date?: string | null
           id?: string
           name?: string
           organization_id?: string
           start_date?: string | null
           status?: Database["public"]["Enums"]["project_status"]
+          tech_stack?: Json
           updated_at?: string
         }
         Relationships: [

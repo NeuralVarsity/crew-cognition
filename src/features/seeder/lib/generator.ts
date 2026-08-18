@@ -15,14 +15,42 @@ const DEPARTMENTS = [
 const DESIGNATIONS = ["Software Engineer","Senior Software Engineer","Staff Engineer","Engineering Manager","Product Manager","Product Designer","QA Engineer","Data Scientist","ML Engineer","DevOps Engineer","Site Reliability Engineer","Technical Lead","Business Analyst","Scrum Master","HR Business Partner","Account Executive","Marketing Specialist","Financial Analyst"];
 const LOCATIONS = ["Bengaluru, IN","Austin, TX","Berlin, DE","London, UK","Toronto, CA","Singapore, SG","Lisbon, PT","Remote"];
 const SKILLS: [string, string][] = [
-  ["TypeScript","programming"],["React","programming"],["Node.js","programming"],["Python","programming"],["Go","programming"],["Rust","programming"],["Java","programming"],["Kotlin","programming"],["Swift","programming"],["GraphQL","programming"],
-  ["AWS","cloud"],["Azure","cloud"],["GCP","cloud"],["Kubernetes","cloud"],["Terraform","cloud"],["Docker","cloud"],
-  ["PostgreSQL","database"],["MongoDB","database"],["Redis","database"],["Snowflake","database"],["ClickHouse","database"],
-  ["LLM Fine-tuning","ai"],["PyTorch","ai"],["LangChain","ai"],["Computer Vision","ai"],["MLOps","ai"],["Prompt Engineering","ai"],
-  ["Team Leadership","leadership"],["Mentoring","leadership"],["Stakeholder Management","leadership"],["Hiring","leadership"],
+  ["TypeScript","programming"],["JavaScript","programming"],["React","programming"],["Next.js","programming"],["Node.js","programming"],["Python","programming"],["FastAPI","programming"],["Django","programming"],["Go","programming"],["Rust","programming"],["Java","programming"],["Kotlin","programming"],["Swift","programming"],["GraphQL","programming"],["REST API Design","programming"],["Tailwind CSS","programming"],
+  ["AWS","cloud"],["Azure","cloud"],["GCP","cloud"],["Kubernetes","cloud"],["Terraform","cloud"],["Docker","cloud"],["CI/CD","cloud"],["Jenkins","cloud"],["GitHub Actions","cloud"],["Observability","cloud"],["Linux Administration","cloud"],
+  ["PostgreSQL","database"],["MongoDB","database"],["Redis","database"],["Snowflake","database"],["ClickHouse","database"],["Airflow","database"],["dbt","database"],["Spark","database"],["SQL Analytics","database"],
+  ["LLM Fine-tuning","ai"],["PyTorch","ai"],["TensorFlow","ai"],["scikit-learn","ai"],["LangChain","ai"],["RAG Pipelines","ai"],["Vector Search","ai"],["Computer Vision","ai"],["NLP","ai"],["MLOps","ai"],["Prompt Engineering","ai"],["Model Deployment","ai"],["Pandas","ai"],["Statistics","ai"],["Deep Learning","ai"],
+  ["Team Leadership","leadership"],["Mentoring","leadership"],["Stakeholder Management","leadership"],["Hiring","leadership"],["Roadmap Planning","leadership"],
   ["Communication","soft_skills"],["Problem Solving","soft_skills"],["Ownership","soft_skills"],["Collaboration","soft_skills"],
-  ["Figma","other"],["Cypress","other"],["Playwright","other"],["Jira Administration","other"],["Technical Writing","other"],
+  ["Figma","other"],["Design Systems","other"],["User Research","other"],["Prototyping","other"],["Cypress","other"],["Playwright","other"],["Selenium","other"],["Test Automation","other"],["Performance Testing","other"],["Jira Administration","other"],["Technical Writing","other"],["Agile Delivery","other"],["Product Analytics","other"],
 ];
+
+/** Role archetypes drive department, skills, salary band and seniority mix. */
+type RoleArchetype = {
+  title: string;
+  department: string;
+  primary: string[];
+  secondary: string[];
+  base: number;
+};
+const ROLES: RoleArchetype[] = [
+  { title: "AI Engineer", department: "Data & AI", base: 118, primary: ["LLM Fine-tuning","LangChain","RAG Pipelines","Python","Prompt Engineering"], secondary: ["PyTorch","MLOps","Model Deployment","AWS","Vector Search" ] },
+  { title: "Python Developer", department: "Engineering", base: 96, primary: ["Python","FastAPI","PostgreSQL","REST API Design"], secondary: ["Django","Redis","Docker","AWS"] },
+  { title: "Data Scientist", department: "Data & AI", base: 110, primary: ["Python","Pandas","Statistics","scikit-learn","SQL Analytics"], secondary: ["Snowflake","dbt","Deep Learning","Spark"] },
+  { title: "ML Engineer", department: "Data & AI", base: 122, primary: ["PyTorch","TensorFlow","MLOps","Python","Model Deployment"], secondary: ["Kubernetes","Airflow","Computer Vision","NLP"] },
+  { title: "Full Stack Developer", department: "Engineering", base: 102, primary: ["TypeScript","React","Node.js","PostgreSQL"], secondary: ["GraphQL","Next.js","AWS","Docker"] },
+  { title: "React Developer", department: "Engineering", base: 94, primary: ["React","TypeScript","Next.js","Tailwind CSS"], secondary: ["JavaScript","GraphQL","Design Systems","Playwright"] },
+  { title: "DevOps Engineer", department: "DevOps", base: 108, primary: ["Kubernetes","Terraform","CI/CD","AWS","Docker"], secondary: ["Observability","Linux Administration","GitHub Actions","Jenkins"] },
+  { title: "Product Manager", department: "Product", base: 116, primary: ["Roadmap Planning","Stakeholder Management","Product Analytics","Agile Delivery"], secondary: ["Communication","User Research","SQL Analytics"] },
+  { title: "QA Engineer", department: "Quality Assurance", base: 82, primary: ["Test Automation","Cypress","Selenium","Playwright"], secondary: ["Performance Testing","CI/CD","Jira Administration"] },
+  { title: "UI/UX Designer", department: "Design", base: 88, primary: ["Figma","Design Systems","User Research","Prototyping"], secondary: ["Communication","Tailwind CSS","Product Analytics"] },
+];
+const SENIORITY = [
+  { level: "Junior", prefix: "Junior ", band: "B1", minYears: 0.5, maxYears: 2.5, mult: 0.7, weight: 0.2 },
+  { level: "Mid", prefix: "", band: "B2", minYears: 2.5, maxYears: 5, mult: 0.95, weight: 0.35 },
+  { level: "Senior", prefix: "Senior ", band: "B3", minYears: 5, maxYears: 9, mult: 1.25, weight: 0.28 },
+  { level: "Lead", prefix: "Lead ", band: "B4", minYears: 8, maxYears: 13, mult: 1.5, weight: 0.12 },
+  { level: "Principal", prefix: "Principal ", band: "B5", minYears: 11, maxYears: 18, mult: 1.85, weight: 0.05 },
+] as const;
 const PROJECT_NAMES = ["Atlas Platform","Orion Billing","Nimbus Data Lake","Helios CRM","Vertex Mobile App","Quantum Search","Beacon Analytics","Falcon Payments","Aurora Design System","Pulse Monitoring","Comet Onboarding","Zenith Marketplace","Nova Identity","Titan Warehouse","Echo Support Bot","Lumen Reporting","Cobalt Gateway","Delta Migration","Sierra Compliance","Kestrel Insights"];
 const LANGS = ["TypeScript","Python","Go","Java","Rust","Kotlin","Ruby"];
 const COMMIT_MSGS = ["fix: handle null response from billing API","feat: add candidate ranking endpoint","chore: bump dependencies","refactor: extract sync engine","perf: batch database writes","test: cover edge cases in mapper","docs: update integration guide","fix: race condition in token refresh","feat: streaming chat responses","style: align table spacing"];
@@ -36,26 +64,26 @@ const CLIENTS = ["Northwind Bank","Helia Health","Marlow Retail","TransGrid","Or
 
 /** Row volumes for the enterprise demo dataset. */
 export const DEMO_VOLUME = {
-  teams: 20,
-  employees: 100,
-  projects: 50,
-  repos: 100,
-  commits: 6000,
-  pullRequests: 900,
-  reviews: 700,
-  githubIssues: 900,
-  jiraProjects: 15,
+  teams: 40,
+  employees: 500,
+  projects: 100,
+  repos: 140,
+  commits: 12000,
+  pullRequests: 2600,
+  reviews: 2000,
+  githubIssues: 1600,
+  jiraProjects: 20,
   sprintsPerBoard: 10,
-  epics: 300,
-  jiraIssues: 1500,
-  jiraComments: 1200,
-  jiraWorklogs: 1500,
-  clickupSpaces: 10,
-  clickupFolders: 30,
-  clickupLists: 120,
-  clickupTasks: 4000,
-  clickupTimeEntries: 2000,
-  clickupComments: 1000,
+  epics: 400,
+  jiraIssues: 5000,
+  jiraComments: 2500,
+  jiraWorklogs: 3500,
+  clickupSpaces: 12,
+  clickupFolders: 36,
+  clickupLists: 150,
+  clickupTasks: 7000,
+  clickupTimeEntries: 4000,
+  clickupComments: 2000,
   proposals: 60,
 } as const;
 const V = DEMO_VOLUME;
@@ -79,7 +107,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("departments", departments);
 
   // ---------- Teams ----------
-  const teams = Array.from({ length: 20 }, (_, i) => {
+  const teams = Array.from({ length: V.teams }, (_, i) => {
     const dept = departments[i % departments.length];
     return {
       id: uuid(), organization_id: org, department_id: dept.id,
@@ -94,69 +122,150 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   push("skills", skills);
 
   // ---------- Employees ----------
-  const employees = Array.from({ length: 100 }, (_, i) => {
-    const first = FIRST[i % FIRST.length];
-    const last = LAST[(i * 7) % LAST.length];
-    const team = teams[i % teams.length];
-    const dept = departments.find((d) => d.id === team.department_id)!;
-    const designation = pick(r, DESIGNATIONS);
-    const joined = new Date(Date.now() - int(r, 90, 2200) * 86400000);
-    return {
+  const skillByName = new Map(skills.map((s) => [s.name, s]));
+  const deptByName = new Map<string, (typeof departments)[number]>(departments.map((d) => [d.name as string, d]));
+  const teamsByDept = new Map(departments.map((d) => [d.id, teams.filter((t) => t.department_id === d.id)]));
+
+  const pickSeniority = () => {
+    const roll = r();
+    let acc = 0;
+    for (const s of SENIORITY) {
+      acc += s.weight;
+      if (roll <= acc) return s;
+    }
+    return SENIORITY[1];
+  };
+
+  const employeeRole = new Map<string, RoleArchetype>();
+  const employees = Array.from({ length: V.employees }, (_, i) => {
+    const role = ROLES[i % ROLES.length];
+    const seniority = pickSeniority();
+    const first = FIRST[(i * 3) % FIRST.length];
+    const last = LAST[(i * 7 + Math.floor(i / LAST.length)) % LAST.length];
+    const dept = deptByName.get(role.department) ?? departments[i % departments.length];
+    const deptTeams = teamsByDept.get(dept.id) ?? teams;
+    const team = deptTeams[i % deptTeams.length];
+    const experience = float(r, seniority.minYears, seniority.maxYears, 1);
+    const tenureDays = Math.min(2600, Math.max(60, Math.round(experience * 200) + int(r, 30, 400)));
+    const joined = new Date(Date.now() - tenureDays * 86400000);
+    const salary = Math.round((role.base * seniority.mult * 1000 + int(r, -6, 9) * 1000) / 500) * 500;
+    const emp = {
       id: uuid(), organization_id: org, employee_code: `EMP-${String(1001 + i)}`,
       full_name: `${first} ${last}`, first_name: first, last_name: last,
       email: `${first.toLowerCase()}.${last.toLowerCase()}${i}@demo-corp.io`,
       phone: `+1 555 ${int(r, 1000, 9999)}`,
       dob: isoDate(new Date(Date.now() - int(r, 8500, 16000) * 86400000)),
-      designation, department_id: dept.id, team_id: team.id, manager_id: null as string | null,
+      designation: `${seniority.prefix}${role.title}`,
+      seniority_level: seniority.level as string, salary_band: seniority.band as string,
+      experience_years: experience,
+      department_id: dept.id, team_id: team.id, manager_id: null as string | null,
       joining_date: isoDate(joined),
-      employment_type: chance(r, 0.82) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
-      status: chance(r, 0.88) ? "active" : pick(r, ["on_leave", "probation", "terminated"]),
+      employment_type: chance(r, 0.86) ? "full_time" : pick(r, ["contract", "part_time", "intern", "consultant"]),
+      status: chance(r, 0.9) ? "active" : pick(r, ["on_leave", "probation", "terminated"]),
       location: pick(r, LOCATIONS), work_location: chance(r, 0.5) ? "remote" : "onsite",
-      office_location: pick(r, LOCATIONS), salary: int(r, 45, 210) * 1000,
-      notes: null,
+      office_location: pick(r, LOCATIONS), salary,
+      notes: `${seniority.level} ${role.title} — ${experience} yrs experience, band ${seniority.band}.`,
     };
+    employeeRole.set(emp.id, role);
+    return emp;
   });
-  // managers: first employee of each department leads it
-  for (const dept of departments) {
-    const members = employees.filter((e) => e.department_id === dept.id);
-    if (!members.length) continue;
-    const lead = members[0];
-    lead.designation = "Engineering Manager";
-    for (const m of members.slice(1)) m.manager_id = lead.id;
+  // managers: the most senior person per team leads it, department heads lead the leads
+  for (const team of teams) {
+    const members = employees.filter((e) => e.team_id === team.id);
+    if (members.length < 2) continue;
+    const lead = [...members].sort((a, b) => Number(b.experience_years) - Number(a.experience_years))[0];
+    for (const m of members) if (m.id !== lead.id) m.manager_id = lead.id;
   }
-  push("employees", employees);
+  for (const dept of departments) {
+    const leads = employees.filter((e) => e.department_id === dept.id && !e.manager_id);
+    if (leads.length < 2) continue;
+    const head = [...leads].sort((a, b) => Number(b.experience_years) - Number(a.experience_years))[0];
+    head.designation = `Head of ${dept.name}`;
+    head.seniority_level = "Executive";
+    for (const l of leads) if (l.id !== head.id) l.manager_id = head.id;
+  }
+  // Managers must be inserted before their reports (rows are written in chunks).
+  const byId = new Map<string, (typeof employees)[number]>(employees.map((e) => [e.id as string, e]));
+  const depth = (e: (typeof employees)[number], guard = 0): number =>
+    !e.manager_id || guard > 10 ? 0 : 1 + depth(byId.get(e.manager_id)!, guard + 1);
+  const orderedEmployees = [...employees].sort((a, b) => depth(a) - depth(b));
+  push("employees", orderedEmployees);
 
-  // ---------- Employee skills ----------
-  const employeeSkills = employees.flatMap((e) =>
-    pickMany(r, skills, int(r, 4, 8)).map((s) => ({
-      id: uuid(), employee_id: e.id, skill_id: s.id,
-      proficiency: pick(r, ["beginner", "intermediate", "advanced", "expert"]),
-      years_experience: float(r, 0.5, 12, 1),
-    })),
-  );
+  // ---------- Employee skills (role-aligned) ----------
+  const proficiencyFor = (years: number) =>
+    years >= 8 ? "expert" : years >= 5 ? "advanced" : years >= 2.5 ? "intermediate" : "beginner";
+  const employeeSkills = employees.flatMap((e) => {
+    const role = employeeRole.get(e.id)!;
+    const exp = Number(e.experience_years);
+    const names = new Set<string>([
+      ...role.primary,
+      ...pickMany(r, role.secondary, int(r, 2, role.secondary.length)),
+      ...pickMany(r, ["Communication", "Problem Solving", "Ownership", "Collaboration", "Agile Delivery"], 2),
+    ]);
+    if (exp >= 7) names.add("Mentoring");
+    if (exp >= 9) names.add("Team Leadership");
+    return [...names]
+      .map((n) => skillByName.get(n))
+      .filter((s): s is (typeof skills)[number] => Boolean(s))
+      .map((s) => {
+        const years = Math.max(0.5, Math.round(Math.min(exp, exp * float(r, 0.4, 1, 2)) * 10) / 10);
+        return {
+          id: uuid(), employee_id: e.id, skill_id: s.id,
+          proficiency: proficiencyFor(years), years_experience: years,
+        };
+      });
+  });
   push("employee_skills", employeeSkills);
 
-  // ---------- Projects ----------
-  const projects = Array.from({ length: V.projects }, (_, i) => {
+  // ---------- Projects: 50 active, 30 completed, 20 upcoming ----------
+  const STACKS: string[][] = [
+    ["Python", "FastAPI", "PyTorch", "AWS"],
+    ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    ["Next.js", "GraphQL", "Redis", "GCP"],
+    ["Python", "LangChain", "Vector Search", "Kubernetes"],
+    ["Java", "Kafka", "Snowflake", "dbt"],
+    ["Go", "Terraform", "Kubernetes", "Observability"],
+  ];
+  const projectPlan = [
+    ...Array.from({ length: 50 }, () => "active" as const),
+    ...Array.from({ length: 30 }, () => "completed" as const),
+    ...Array.from({ length: 20 }, () => "planning" as const),
+  ].slice(0, V.projects);
+  const projects = projectPlan.map((phase, i) => {
     const dept = departments[i % departments.length];
-    const start = new Date(Date.now() - int(r, 30, 900) * 86400000);
+    const suffix = i >= PROJECT_NAMES.length
+      ? ` ${["II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][Math.floor(i / PROJECT_NAMES.length) - 1] ?? `v${Math.floor(i / PROJECT_NAMES.length) + 1}`}`
+      : "";
+    const durationWeeks = int(r, 8, 52);
+    const start =
+      phase === "planning"
+        ? new Date(Date.now() + int(r, 14, 120) * 86400000)
+        : new Date(Date.now() - int(r, 30, 900) * 86400000);
+    const complexity = pick(r, ["low", "medium", "medium", "high", "critical"]);
     return {
       id: uuid(), organization_id: org, department_id: dept.id,
-      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${
-        i >= PROJECT_NAMES.length ? ` ${["II", "III", "IV", "V", "VI", "VII", "VIII"][Math.floor(i / PROJECT_NAMES.length) - 1] ?? `v${Math.floor(i / PROJECT_NAMES.length) + 1}`}` : ""
-      }`,
+      name: `${PROJECT_NAMES[i % PROJECT_NAMES.length]}${suffix}`,
       description: `Strategic initiative owned by ${dept.name}.`,
-      status: pick(r, ["planning", "active", "active", "on_hold", "completed", "archived"]),
+      status: phase,
       start_date: isoDate(start),
-      end_date: isoDate(new Date(start.getTime() + int(r, 60, 500) * 86400000)),
+      end_date: isoDate(new Date(start.getTime() + durationWeeks * 7 * 86400000)),
+      budget: int(r, 80, 2400) * 1000,
+      complexity, duration_weeks: durationWeeks,
+      tech_stack: pick(r, STACKS),
+      delivery_status:
+        phase === "completed"
+          ? pick(r, ["delivered", "delivered", "delivered_late"])
+          : phase === "active"
+            ? pick(r, ["on_track", "on_track", "at_risk", "delayed"])
+            : "not_started",
     };
   });
   push("projects", projects);
 
   const employeeProjects = projects.flatMap((p) =>
-    pickMany(r, employees, int(r, 3, 6)).map((e) => ({
+    pickMany(r, employees, int(r, 4, 9)).map((e, idx) => ({
       id: uuid(), project_id: p.id, employee_id: e.id,
-      role: pick(r, ["Contributor", "Tech Lead", "Reviewer", "QA", "Analyst"]),
+      role: idx === 0 ? "Tech Lead" : pick(r, ["Contributor", "Contributor", "Reviewer", "QA", "Analyst"]),
       allocation_percent: pick(r, [20, 30, 50, 60, 80, 100]),
     })),
   );
@@ -482,7 +591,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }));
 
   // ---------- HR history ----------
-  push("employee_certifications", Array.from({ length: 150 }, () => {
+  push("employee_certifications", Array.from({ length: 900 }, () => {
     const e = pick(r, employees);
     const [name, issuer] = pick(r, CERTS);
     const issued = new Date(Date.now() - int(r, 60, 1400) * 86400000);
@@ -493,7 +602,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("training_records", Array.from({ length: 250 }, () => {
+  push("training_records", Array.from({ length: 1400 }, () => {
     const e = pick(r, employees);
     const [course, provider, category] = pick(r, COURSES);
     const started = new Date(Date.now() - int(r, 30, 700) * 86400000);
@@ -506,7 +615,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("performance_reviews", Array.from({ length: 200 }, () => {
+  push("performance_reviews", Array.from({ length: 1200 }, () => {
     const e = pick(r, employees);
     const reviewer = employees.find((x) => x.id === e.manager_id) ?? pick(r, employees);
     const cycle = pick(r, ["H1 2025", "H2 2025", "H1 2026"]);
@@ -521,7 +630,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     };
   }));
 
-  push("promotions", Array.from({ length: 60 }, () => {
+  push("promotions", Array.from({ length: 220 }, () => {
     const e = pick(r, employees);
     const salary = Number(e.salary);
     return {
@@ -553,7 +662,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
   }
   push("attendance_records", attendance);
 
-  push("leave_records", Array.from({ length: 200 }, () => {
+  push("leave_records", Array.from({ length: 800 }, () => {
     const e = pick(r, employees);
     const start = new Date(Date.now() - int(r, -30, 300) * 86400000);
     const days = int(r, 1, 8);
@@ -645,7 +754,7 @@ export function generateDemoData(organizationId: string, seed = 20260101): SeedB
     name: `${pick(r, ["Workforce Summary", "Engineering Velocity", "AI Scorecard", "Attrition Risk", "Utilisation"])} — ${pick(r, ["Jan", "Feb", "Mar", "Apr", "May"])} 2026`,
     report_type: pick(r, ["workforce", "engineering", "ai", "risk", "utilisation"]),
     format: pick(r, ["pdf", "xlsx", "csv"]), period_label: "Monthly", status: "ready",
-    summary: { employees: 100, avg_score: int(r, 60, 85), generated_index: i },
+    summary: { employees: V.employees, avg_score: int(r, 60, 85), generated_index: i },
     generated_by_name: "Demo Admin",
   })));
 

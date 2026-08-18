@@ -40,26 +40,45 @@ export async function clearOrganizationData(client: AnyClient, organizationId: s
   return removed;
 }
 
-/** Wipes the organization and regenerates the full demo dataset. */
+/**
+ * Seeds the organization. The dataset is large (~60k rows), so seeding runs in
+ * stages: each call inserts batches starting at `fromBatch` until `maxRows`
+ * rows are written, then returns the next batch index to continue from.
+ */
 export async function seedOrganization(
   client: AnyClient,
   organizationId: string,
-  options: { reset?: boolean; seed?: number } = {},
+  options: { reset?: boolean; seed?: number; fromBatch?: number; maxRows?: number } = {},
 ) {
   const startedAt = Date.now();
-  if (options.reset !== false) await clearOrganizationData(client, organizationId);
+  const fromBatch = options.fromBatch ?? 0;
+  const maxRows = options.maxRows ?? Number.POSITIVE_INFINITY;
+  if (fromBatch === 0 && options.reset !== false) await clearOrganizationData(client, organizationId);
 
   const batches = generateDemoData(organizationId, options.seed ?? 20260101);
   const inserted: Record<string, number> = {};
-  for (const batch of batches) {
+  let written = 0;
+  let index = fromBatch;
+
+  for (; index < batches.length; index++) {
+    const batch = batches[index];
     if (!batch.rows.length) continue;
     await insertRows(client, batch.table, batch.rows);
     inserted[batch.table] = (inserted[batch.table] ?? 0) + batch.rows.length;
+    written += batch.rows.length;
+    if (written >= maxRows) {
+      index += 1;
+      break;
+    }
   }
 
+  const done = index >= batches.length;
   return {
     inserted,
-    totalRows: Object.values(inserted).reduce((a, b) => a + b, 0),
+    totalRows: written,
+    totalBatches: batches.length,
+    nextBatch: done ? null : index,
+    done,
     durationMs: Date.now() - startedAt,
   };
 }
