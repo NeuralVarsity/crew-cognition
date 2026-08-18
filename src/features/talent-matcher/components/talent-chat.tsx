@@ -40,24 +40,24 @@ const SUGGESTION_GROUPS: { label: string; prompts: string[] }[] = [
   {
     label: "Find talent",
     prompts: [
-      "Find the best Python developer",
-      "Recommend a React developer",
-      "Show employees with Docker experience",
+      "Who is the best AI Engineer?",
+      "Compare top Python developers",
+      "Recommend hiring needs",
     ],
   },
   {
     label: "Staff a project",
     prompts: [
       "Who should lead our next AI project?",
-      "Build a 4-person team for an AI chatbot RFP",
-      "Find people available next month",
+      "Build a team for a fintech AI project",
+      "Predict project success",
     ],
   },
   {
     label: "Workforce intelligence",
     prompts: [
-      "Who is at burnout risk?",
-      "Find promotion candidates",
+      "Show promotion-ready employees",
+      "Show burnout risks",
       "Show the highest GitHub contributor",
     ],
   },
