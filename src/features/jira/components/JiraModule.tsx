@@ -55,10 +55,10 @@ export function JiraModule() {
     if (search.connected) {
       toast.success(`Connected to ${search.connected}`);
       qc.invalidateQueries({ queryKey: ["jira"] });
-      nav({ to: "/jira", search: () => ({}), replace: true });
+      nav({ to: "/jira", search: { connected: undefined, error: undefined }, replace: true });
     } else if (search.error) {
       toast.error(`Jira connect failed: ${search.error}`);
-      nav({ to: "/jira", search: () => ({}), replace: true });
+      nav({ to: "/jira", search: { connected: undefined, error: undefined }, replace: true });
     }
   }, [search.connected, search.error, qc, nav]);
 
