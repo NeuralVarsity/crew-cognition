@@ -15,14 +15,42 @@ const DEPARTMENTS = [
 const DESIGNATIONS = ["Software Engineer","Senior Software Engineer","Staff Engineer","Engineering Manager","Product Manager","Product Designer","QA Engineer","Data Scientist","ML Engineer","DevOps Engineer","Site Reliability Engineer","Technical Lead","Business Analyst","Scrum Master","HR Business Partner","Account Executive","Marketing Specialist","Financial Analyst"];
 const LOCATIONS = ["Bengaluru, IN","Austin, TX","Berlin, DE","London, UK","Toronto, CA","Singapore, SG","Lisbon, PT","Remote"];
 const SKILLS: [string, string][] = [
-  ["TypeScript","programming"],["React","programming"],["Node.js","programming"],["Python","programming"],["Go","programming"],["Rust","programming"],["Java","programming"],["Kotlin","programming"],["Swift","programming"],["GraphQL","programming"],
-  ["AWS","cloud"],["Azure","cloud"],["GCP","cloud"],["Kubernetes","cloud"],["Terraform","cloud"],["Docker","cloud"],
-  ["PostgreSQL","database"],["MongoDB","database"],["Redis","database"],["Snowflake","database"],["ClickHouse","database"],
-  ["LLM Fine-tuning","ai"],["PyTorch","ai"],["LangChain","ai"],["Computer Vision","ai"],["MLOps","ai"],["Prompt Engineering","ai"],
-  ["Team Leadership","leadership"],["Mentoring","leadership"],["Stakeholder Management","leadership"],["Hiring","leadership"],
+  ["TypeScript","programming"],["JavaScript","programming"],["React","programming"],["Next.js","programming"],["Node.js","programming"],["Python","programming"],["FastAPI","programming"],["Django","programming"],["Go","programming"],["Rust","programming"],["Java","programming"],["Kotlin","programming"],["Swift","programming"],["GraphQL","programming"],["REST API Design","programming"],["Tailwind CSS","programming"],
+  ["AWS","cloud"],["Azure","cloud"],["GCP","cloud"],["Kubernetes","cloud"],["Terraform","cloud"],["Docker","cloud"],["CI/CD","cloud"],["Jenkins","cloud"],["GitHub Actions","cloud"],["Observability","cloud"],["Linux Administration","cloud"],
+  ["PostgreSQL","database"],["MongoDB","database"],["Redis","database"],["Snowflake","database"],["ClickHouse","database"],["Airflow","database"],["dbt","database"],["Spark","database"],["SQL Analytics","database"],
+  ["LLM Fine-tuning","ai"],["PyTorch","ai"],["TensorFlow","ai"],["scikit-learn","ai"],["LangChain","ai"],["RAG Pipelines","ai"],["Computer Vision","ai"],["NLP","ai"],["MLOps","ai"],["Prompt Engineering","ai"],["Model Deployment","ai"],["Pandas","ai"],["Statistics","ai"],["Deep Learning","ai"],
+  ["Team Leadership","leadership"],["Mentoring","leadership"],["Stakeholder Management","leadership"],["Hiring","leadership"],["Roadmap Planning","leadership"],
   ["Communication","soft_skills"],["Problem Solving","soft_skills"],["Ownership","soft_skills"],["Collaboration","soft_skills"],
-  ["Figma","other"],["Cypress","other"],["Playwright","other"],["Jira Administration","other"],["Technical Writing","other"],
+  ["Figma","other"],["Design Systems","other"],["User Research","other"],["Prototyping","other"],["Cypress","other"],["Playwright","other"],["Selenium","other"],["Test Automation","other"],["Performance Testing","other"],["Jira Administration","other"],["Technical Writing","other"],["Agile Delivery","other"],["Product Analytics","other"],
 ];
+
+/** Role archetypes drive department, skills, salary band and seniority mix. */
+type RoleArchetype = {
+  title: string;
+  department: string;
+  primary: string[];
+  secondary: string[];
+  base: number;
+};
+const ROLES: RoleArchetype[] = [
+  { title: "AI Engineer", department: "Data & AI", base: 118, primary: ["LLM Fine-tuning","LangChain","RAG Pipelines","Python","Prompt Engineering"], secondary: ["PyTorch","MLOps","Model Deployment","AWS","Vector Search" ] },
+  { title: "Python Developer", department: "Engineering", base: 96, primary: ["Python","FastAPI","PostgreSQL","REST API Design"], secondary: ["Django","Redis","Docker","AWS"] },
+  { title: "Data Scientist", department: "Data & AI", base: 110, primary: ["Python","Pandas","Statistics","scikit-learn","SQL Analytics"], secondary: ["Snowflake","dbt","Deep Learning","Spark"] },
+  { title: "ML Engineer", department: "Data & AI", base: 122, primary: ["PyTorch","TensorFlow","MLOps","Python","Model Deployment"], secondary: ["Kubernetes","Airflow","Computer Vision","NLP"] },
+  { title: "Full Stack Developer", department: "Engineering", base: 102, primary: ["TypeScript","React","Node.js","PostgreSQL"], secondary: ["GraphQL","Next.js","AWS","Docker"] },
+  { title: "React Developer", department: "Engineering", base: 94, primary: ["React","TypeScript","Next.js","Tailwind CSS"], secondary: ["JavaScript","GraphQL","Design Systems","Playwright"] },
+  { title: "DevOps Engineer", department: "DevOps", base: 108, primary: ["Kubernetes","Terraform","CI/CD","AWS","Docker"], secondary: ["Observability","Linux Administration","GitHub Actions","Jenkins"] },
+  { title: "Product Manager", department: "Product", base: 116, primary: ["Roadmap Planning","Stakeholder Management","Product Analytics","Agile Delivery"], secondary: ["Communication","User Research","SQL Analytics"] },
+  { title: "QA Engineer", department: "Quality Assurance", base: 82, primary: ["Test Automation","Cypress","Selenium","Playwright"], secondary: ["Performance Testing","CI/CD","Jira Administration"] },
+  { title: "UI/UX Designer", department: "Design", base: 88, primary: ["Figma","Design Systems","User Research","Prototyping"], secondary: ["Communication","Tailwind CSS","Product Analytics"] },
+];
+const SENIORITY = [
+  { level: "Junior", prefix: "Junior ", band: "B1", minYears: 0.5, maxYears: 2.5, mult: 0.7, weight: 0.2 },
+  { level: "Mid", prefix: "", band: "B2", minYears: 2.5, maxYears: 5, mult: 0.95, weight: 0.35 },
+  { level: "Senior", prefix: "Senior ", band: "B3", minYears: 5, maxYears: 9, mult: 1.25, weight: 0.28 },
+  { level: "Lead", prefix: "Lead ", band: "B4", minYears: 8, maxYears: 13, mult: 1.5, weight: 0.12 },
+  { level: "Principal", prefix: "Principal ", band: "B5", minYears: 11, maxYears: 18, mult: 1.85, weight: 0.05 },
+] as const;
 const PROJECT_NAMES = ["Atlas Platform","Orion Billing","Nimbus Data Lake","Helios CRM","Vertex Mobile App","Quantum Search","Beacon Analytics","Falcon Payments","Aurora Design System","Pulse Monitoring","Comet Onboarding","Zenith Marketplace","Nova Identity","Titan Warehouse","Echo Support Bot","Lumen Reporting","Cobalt Gateway","Delta Migration","Sierra Compliance","Kestrel Insights"];
 const LANGS = ["TypeScript","Python","Go","Java","Rust","Kotlin","Ruby"];
 const COMMIT_MSGS = ["fix: handle null response from billing API","feat: add candidate ranking endpoint","chore: bump dependencies","refactor: extract sync engine","perf: batch database writes","test: cover edge cases in mapper","docs: update integration guide","fix: race condition in token refresh","feat: streaming chat responses","style: align table spacing"];
