@@ -2,7 +2,15 @@ import { chance, float, int, iso, isoDate, makeRng, monthStart, pick, pickMany, 
 
 export type SeedBatch = { table: string; rows: Record<string, unknown>[] };
 
-const uuid = () => crypto.randomUUID();
+// Deterministic UUIDs: seeding runs in stages and regenerates the dataset each
+// call, so ids must be identical across stages or cross-table foreign keys break.
+let uuidRng: Rng = makeRng(1);
+const hex = (n: number) => {
+  let out = "";
+  for (let i = 0; i < n; i++) out += Math.floor(uuidRng() * 16).toString(16);
+  return out;
+};
+const uuid = () => `${hex(8)}-${hex(4)}-4${hex(3)}-${["8", "9", "a", "b"][Math.floor(uuidRng() * 4)]}${hex(3)}-${hex(12)}`;
 
 const FIRST = ["Aarav","Priya","Liam","Sofia","Noah","Mia","Ethan","Ava","Kabir","Isha","Lucas","Emma","Rohan","Nina","Diego","Yuki","Omar","Zara","Elena","Marcus","Chloe","Arjun","Hana","Tomas","Layla","Felix","Anika","Jonas","Maya","Ravi","Clara","Dmitri","Farah","Leo","Sana","Victor","Amara","Kenji","Julia","Samir"];
 const LAST = ["Sharma","Nguyen","Okafor","Rossi","Kim","Silva","Novak","Haddad","Fischer","Costa","Patel","Larsen","Moreau","Tanaka","Duarte","Ivanov","Mensah","Klein","Bianchi","Reyes","Petrov","Ahmed","Weber","Santos","Cohen","Dubois","Lindqvist","Mbeki","Kowalski","Ferrari"];
@@ -93,6 +101,7 @@ export type SeedSummary = Record<string, number>;
 /** Builds the full interconnected demo dataset for one organization. */
 export function generateDemoData(organizationId: string, seed = 20260101): SeedBatch[] {
   const r: Rng = makeRng(seed);
+  uuidRng = makeRng(seed ^ 0x5f356495);
   const org = organizationId;
   const batches: SeedBatch[] = [];
   const push = (table: string, rows: Record<string, unknown>[]) => batches.push({ table, rows });
