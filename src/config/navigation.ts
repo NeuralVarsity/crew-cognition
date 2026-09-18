@@ -29,27 +29,23 @@ export type NavItem = {
 };
 
 export const navigation: NavItem[] = [
+  { title: "Executive Dashboard", url: "/", icon: LayoutDashboard, group: "Workspace" },
   { title: "AI Workspace", url: "/ai-workspace", icon: MessagesSquare, group: "AI" },
   { title: "Job & RFP Matcher", url: "/ai-workspace/job-matcher", icon: Sparkles, group: "AI" },
   { title: "Compare People", url: "/ai-workspace/compare", icon: UsersRound, group: "AI" },
-
-  { title: "Executive Dashboard", url: "/", icon: LayoutDashboard, group: "Workspace" },
   { title: "Employees", url: "/employees", icon: Users, group: "Workspace" },
   { title: "Teams", url: "/teams", icon: UsersRound, group: "Workspace" },
   { title: "Departments", url: "/departments", icon: Building2, group: "Workspace" },
   { title: "Projects", url: "/projects", icon: FolderKanban, group: "Workspace" },
-
   { title: "GitHub", url: "/github", icon: Github, group: "Integrations" },
   { title: "Jira", url: "/jira", icon: ClipboardList, group: "Integrations" },
   { title: "ClickUp", url: "/clickup", icon: ListChecks, group: "Integrations" },
   { title: "Excel Upload", url: "/excel-upload", icon: FileSpreadsheet, group: "Integrations" },
-
   { title: "AI Intelligence", url: "/ai-intelligence", icon: Brain, group: "Insights" },
   { title: "Workforce Intelligence", url: "/workforce-intelligence", icon: Radar, group: "Insights" },
   { title: "Analytics", url: "/analytics", icon: BarChart3, group: "Insights", badge: "Soon" },
   { title: "Reports", url: "/reports", icon: FileText, group: "Insights", badge: "Soon" },
   { title: "Notifications", url: "/notifications", icon: Bell, group: "Insights" },
-
   { title: "Settings", url: "/settings", icon: Settings, group: "System" },
   { title: "Administration", url: "/administration", icon: ShieldCheck, group: "System" },
 ];
