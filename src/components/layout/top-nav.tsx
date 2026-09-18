@@ -24,17 +24,17 @@ import { supabase } from "@/integrations/supabase/client";
 
 function useCrumbs() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  if (pathname === "/") return [{ title: "AI Workspace", url: "/" }];
-  if (pathname.startsWith("/workspace/chat"))
+  if (pathname === "/") return [{ title: "Executive Dashboard", url: "/" }];
+  if (pathname.startsWith("/ai-workspace/chat"))
     return [
-      { title: "AI Workspace", url: "/" },
+      { title: "AI Workspace", url: "/ai-workspace" },
       { title: "Conversation", url: pathname },
     ];
   const match = navigation.find(
     (n) => n.url !== "/" && (pathname === n.url || pathname.startsWith(n.url + "/")),
   );
   return [
-    { title: "AI Workspace", url: "/" },
+    { title: "Executive Dashboard", url: "/" },
     { title: match?.title ?? "Page", url: match?.url ?? pathname },
   ];
 }
@@ -57,7 +57,7 @@ export function TopNav() {
   const primaryRole = roles[0]?.replace(/_/g, " ") ?? "member";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/60 bg-background/80 px-3 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-4">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/70 bg-background/82 px-3 backdrop-blur-xl sm:px-4">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mx-1 h-5" />
 

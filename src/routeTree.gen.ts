@@ -12,32 +12,42 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkforceIntelligenceRouteImport } from './routes/workforce-intelligence'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TeamsRouteImport } from './routes/teams'
+import { Route as TalentIntelligenceRouteImport } from './routes/talent-intelligence'
+import { Route as SlackRouteImport } from './routes/slack'
+import { Route as SkillsIntelligenceRouteImport } from './routes/skills-intelligence'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
+import { Route as RfpMatcherRouteImport } from './routes/rfp-matcher'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as PromotionReadinessRouteImport } from './routes/promotion-readiness'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as JiraRouteImport } from './routes/jira'
+import { Route as HiringPipelineRouteImport } from './routes/hiring-pipeline'
 import { Route as GithubRouteImport } from './routes/github'
-import { Route as ExecutiveDashboardRouteImport } from './routes/executive-dashboard'
 import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
+import { Route as CandidateSearchRouteImport } from './routes/candidate-search'
+import { Route as BurnoutRiskRouteImport } from './routes/burnout-risk'
+import { Route as BillingRouteImport } from './routes/billing'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorkspaceJobMatcherRouteImport } from './routes/workspace.job-matcher'
-import { Route as WorkspaceCompareRouteImport } from './routes/workspace.compare'
+import { Route as AiWorkspaceIndexRouteImport } from './routes/ai-workspace.index'
 import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as DepartmentsIdRouteImport } from './routes/departments.$id'
 import { Route as ApiTalentChatRouteImport } from './routes/api/talent-chat'
-import { Route as WorkspaceChatThreadIdRouteImport } from './routes/workspace.chat.$threadId'
+import { Route as AiWorkspaceJobMatcherRouteImport } from './routes/ai-workspace.job-matcher'
+import { Route as AiWorkspaceCompareRouteImport } from './routes/ai-workspace.compare'
+import { Route as AiWorkspaceChatThreadIdRouteImport } from './routes/ai-workspace.chat.$threadId'
 import { Route as ApiPublicJiraCallbackRouteImport } from './routes/api/public/jira/callback'
 import { Route as ApiPublicGithubCallbackRouteImport } from './routes/api/public/github/callback'
 import { Route as ApiPublicClickupCallbackRouteImport } from './routes/api/public/clickup/callback'
@@ -57,6 +67,21 @@ const TeamsRoute = TeamsRouteImport.update({
   path: '/teams',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentIntelligenceRoute = TalentIntelligenceRouteImport.update({
+  id: '/talent-intelligence',
+  path: '/talent-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SlackRoute = SlackRouteImport.update({
+  id: '/slack',
+  path: '/slack',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillsIntelligenceRoute = SkillsIntelligenceRouteImport.update({
+  id: '/skills-intelligence',
+  path: '/skills-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -72,14 +97,29 @@ const ServerErrorRoute = ServerErrorRouteImport.update({
   path: '/server-error',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RfpMatcherRoute = RfpMatcherRouteImport.update({
+  id: '/rfp-matcher',
+  path: '/rfp-matcher',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromotionReadinessRoute = PromotionReadinessRouteImport.update({
+  id: '/promotion-readiness',
+  path: '/promotion-readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PermissionsRoute = PermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -102,14 +142,14 @@ const JiraRoute = JiraRouteImport.update({
   path: '/jira',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HiringPipelineRoute = HiringPipelineRouteImport.update({
+  id: '/hiring-pipeline',
+  path: '/hiring-pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GithubRoute = GithubRouteImport.update({
   id: '/github',
   path: '/github',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExecutiveDashboardRoute = ExecutiveDashboardRouteImport.update({
-  id: '/executive-dashboard',
-  path: '/executive-dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExcelUploadRoute = ExcelUploadRouteImport.update({
@@ -130,6 +170,21 @@ const DepartmentsRoute = DepartmentsRouteImport.update({
 const ClickupRoute = ClickupRouteImport.update({
   id: '/clickup',
   path: '/clickup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidateSearchRoute = CandidateSearchRouteImport.update({
+  id: '/candidate-search',
+  path: '/candidate-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BurnoutRiskRoute = BurnoutRiskRouteImport.update({
+  id: '/burnout-risk',
+  path: '/burnout-risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -157,14 +212,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkspaceJobMatcherRoute = WorkspaceJobMatcherRouteImport.update({
-  id: '/workspace/job-matcher',
-  path: '/workspace/job-matcher',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorkspaceCompareRoute = WorkspaceCompareRouteImport.update({
-  id: '/workspace/compare',
-  path: '/workspace/compare',
+const AiWorkspaceIndexRoute = AiWorkspaceIndexRouteImport.update({
+  id: '/ai-workspace/',
+  path: '/ai-workspace/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmployeesIdRoute = EmployeesIdRouteImport.update({
@@ -182,9 +232,19 @@ const ApiTalentChatRoute = ApiTalentChatRouteImport.update({
   path: '/api/talent-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkspaceChatThreadIdRoute = WorkspaceChatThreadIdRouteImport.update({
-  id: '/workspace/chat/$threadId',
-  path: '/workspace/chat/$threadId',
+const AiWorkspaceJobMatcherRoute = AiWorkspaceJobMatcherRouteImport.update({
+  id: '/ai-workspace/job-matcher',
+  path: '/ai-workspace/job-matcher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiWorkspaceCompareRoute = AiWorkspaceCompareRouteImport.update({
+  id: '/ai-workspace/compare',
+  path: '/ai-workspace/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiWorkspaceChatThreadIdRoute = AiWorkspaceChatThreadIdRouteImport.update({
+  id: '/ai-workspace/chat/$threadId',
+  path: '/ai-workspace/chat/$threadId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicJiraCallbackRoute = ApiPublicJiraCallbackRouteImport.update({
@@ -210,30 +270,40 @@ export interface FileRoutesByFullPath {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
+  '/ai-workspace/compare': typeof AiWorkspaceCompareRoute
+  '/ai-workspace/job-matcher': typeof AiWorkspaceJobMatcherRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/workspace/compare': typeof WorkspaceCompareRoute
-  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
-  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
+  '/ai-workspace/': typeof AiWorkspaceIndexRoute
+  '/ai-workspace/chat/$threadId': typeof AiWorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -244,30 +314,40 @@ export interface FileRoutesByTo {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
+  '/ai-workspace/compare': typeof AiWorkspaceCompareRoute
+  '/ai-workspace/job-matcher': typeof AiWorkspaceJobMatcherRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/workspace/compare': typeof WorkspaceCompareRoute
-  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
-  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
+  '/ai-workspace': typeof AiWorkspaceIndexRoute
+  '/ai-workspace/chat/$threadId': typeof AiWorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -279,30 +359,40 @@ export interface FileRoutesById {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
-  '/executive-dashboard': typeof ExecutiveDashboardRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
+  '/ai-workspace/compare': typeof AiWorkspaceCompareRoute
+  '/ai-workspace/job-matcher': typeof AiWorkspaceJobMatcherRoute
   '/api/talent-chat': typeof ApiTalentChatRoute
   '/departments/$id': typeof DepartmentsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
-  '/workspace/compare': typeof WorkspaceCompareRoute
-  '/workspace/job-matcher': typeof WorkspaceJobMatcherRoute
-  '/workspace/chat/$threadId': typeof WorkspaceChatThreadIdRoute
+  '/ai-workspace/': typeof AiWorkspaceIndexRoute
+  '/ai-workspace/chat/$threadId': typeof AiWorkspaceChatThreadIdRoute
   '/api/public/clickup/callback': typeof ApiPublicClickupCallbackRoute
   '/api/public/github/callback': typeof ApiPublicGithubCallbackRoute
   '/api/public/jira/callback': typeof ApiPublicJiraCallbackRoute
@@ -315,30 +405,40 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
-    | '/executive-dashboard'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
+    | '/ai-workspace/compare'
+    | '/ai-workspace/job-matcher'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/workspace/compare'
-    | '/workspace/job-matcher'
-    | '/workspace/chat/$threadId'
+    | '/ai-workspace/'
+    | '/ai-workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -349,30 +449,40 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
-    | '/executive-dashboard'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
+    | '/ai-workspace/compare'
+    | '/ai-workspace/job-matcher'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/workspace/compare'
-    | '/workspace/job-matcher'
-    | '/workspace/chat/$threadId'
+    | '/ai-workspace'
+    | '/ai-workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -383,30 +493,40 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
-    | '/executive-dashboard'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
+    | '/ai-workspace/compare'
+    | '/ai-workspace/job-matcher'
     | '/api/talent-chat'
     | '/departments/$id'
     | '/employees/$id'
-    | '/workspace/compare'
-    | '/workspace/job-matcher'
-    | '/workspace/chat/$threadId'
+    | '/ai-workspace/'
+    | '/ai-workspace/chat/$threadId'
     | '/api/public/clickup/callback'
     | '/api/public/github/callback'
     | '/api/public/jira/callback'
@@ -418,28 +538,38 @@ export interface RootRouteChildren {
   AiIntelligenceRoute: typeof AiIntelligenceRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AuthRoute: typeof AuthRoute
+  BillingRoute: typeof BillingRoute
+  BurnoutRiskRoute: typeof BurnoutRiskRoute
+  CandidateSearchRoute: typeof CandidateSearchRoute
   ClickupRoute: typeof ClickupRoute
   DepartmentsRoute: typeof DepartmentsRouteWithChildren
   EmployeesRoute: typeof EmployeesRouteWithChildren
   ExcelUploadRoute: typeof ExcelUploadRoute
-  ExecutiveDashboardRoute: typeof ExecutiveDashboardRoute
   GithubRoute: typeof GithubRoute
+  HiringPipelineRoute: typeof HiringPipelineRoute
   JiraRoute: typeof JiraRoute
   MaintenanceRoute: typeof MaintenanceRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PermissionsRoute: typeof PermissionsRoute
   ProjectsRoute: typeof ProjectsRoute
+  PromotionReadinessRoute: typeof PromotionReadinessRoute
   ReportsRoute: typeof ReportsRoute
+  RfpMatcherRoute: typeof RfpMatcherRoute
   ServerErrorRoute: typeof ServerErrorRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SkillsIntelligenceRoute: typeof SkillsIntelligenceRoute
+  SlackRoute: typeof SlackRoute
+  TalentIntelligenceRoute: typeof TalentIntelligenceRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   WorkforceIntelligenceRoute: typeof WorkforceIntelligenceRoute
+  AiWorkspaceCompareRoute: typeof AiWorkspaceCompareRoute
+  AiWorkspaceJobMatcherRoute: typeof AiWorkspaceJobMatcherRoute
   ApiTalentChatRoute: typeof ApiTalentChatRoute
-  WorkspaceCompareRoute: typeof WorkspaceCompareRoute
-  WorkspaceJobMatcherRoute: typeof WorkspaceJobMatcherRoute
-  WorkspaceChatThreadIdRoute: typeof WorkspaceChatThreadIdRoute
+  AiWorkspaceIndexRoute: typeof AiWorkspaceIndexRoute
+  AiWorkspaceChatThreadIdRoute: typeof AiWorkspaceChatThreadIdRoute
   ApiPublicClickupCallbackRoute: typeof ApiPublicClickupCallbackRoute
   ApiPublicGithubCallbackRoute: typeof ApiPublicGithubCallbackRoute
   ApiPublicJiraCallbackRoute: typeof ApiPublicJiraCallbackRoute
@@ -468,6 +598,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeamsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent-intelligence': {
+      id: '/talent-intelligence'
+      path: '/talent-intelligence'
+      fullPath: '/talent-intelligence'
+      preLoaderRoute: typeof TalentIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/slack': {
+      id: '/slack'
+      path: '/slack'
+      fullPath: '/slack'
+      preLoaderRoute: typeof SlackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skills-intelligence': {
+      id: '/skills-intelligence'
+      path: '/skills-intelligence'
+      fullPath: '/skills-intelligence'
+      preLoaderRoute: typeof SkillsIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -489,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServerErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rfp-matcher': {
+      id: '/rfp-matcher'
+      path: '/rfp-matcher'
+      fullPath: '/rfp-matcher'
+      preLoaderRoute: typeof RfpMatcherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -496,11 +654,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/promotion-readiness': {
+      id: '/promotion-readiness'
+      path: '/promotion-readiness'
+      fullPath: '/promotion-readiness'
+      preLoaderRoute: typeof PromotionReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/permissions': {
+      id: '/permissions'
+      path: '/permissions'
+      fullPath: '/permissions'
+      preLoaderRoute: typeof PermissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -531,18 +703,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JiraRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hiring-pipeline': {
+      id: '/hiring-pipeline'
+      path: '/hiring-pipeline'
+      fullPath: '/hiring-pipeline'
+      preLoaderRoute: typeof HiringPipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/github': {
       id: '/github'
       path: '/github'
       fullPath: '/github'
       preLoaderRoute: typeof GithubRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/executive-dashboard': {
-      id: '/executive-dashboard'
-      path: '/executive-dashboard'
-      fullPath: '/executive-dashboard'
-      preLoaderRoute: typeof ExecutiveDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/excel-upload': {
@@ -571,6 +743,27 @@ declare module '@tanstack/react-router' {
       path: '/clickup'
       fullPath: '/clickup'
       preLoaderRoute: typeof ClickupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidate-search': {
+      id: '/candidate-search'
+      path: '/candidate-search'
+      fullPath: '/candidate-search'
+      preLoaderRoute: typeof CandidateSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/burnout-risk': {
+      id: '/burnout-risk'
+      path: '/burnout-risk'
+      fullPath: '/burnout-risk'
+      preLoaderRoute: typeof BurnoutRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -608,18 +801,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workspace/job-matcher': {
-      id: '/workspace/job-matcher'
-      path: '/workspace/job-matcher'
-      fullPath: '/workspace/job-matcher'
-      preLoaderRoute: typeof WorkspaceJobMatcherRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workspace/compare': {
-      id: '/workspace/compare'
-      path: '/workspace/compare'
-      fullPath: '/workspace/compare'
-      preLoaderRoute: typeof WorkspaceCompareRouteImport
+    '/ai-workspace/': {
+      id: '/ai-workspace/'
+      path: '/ai-workspace'
+      fullPath: '/ai-workspace/'
+      preLoaderRoute: typeof AiWorkspaceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/employees/$id': {
@@ -643,11 +829,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTalentChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workspace/chat/$threadId': {
-      id: '/workspace/chat/$threadId'
-      path: '/workspace/chat/$threadId'
-      fullPath: '/workspace/chat/$threadId'
-      preLoaderRoute: typeof WorkspaceChatThreadIdRouteImport
+    '/ai-workspace/job-matcher': {
+      id: '/ai-workspace/job-matcher'
+      path: '/ai-workspace/job-matcher'
+      fullPath: '/ai-workspace/job-matcher'
+      preLoaderRoute: typeof AiWorkspaceJobMatcherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-workspace/compare': {
+      id: '/ai-workspace/compare'
+      path: '/ai-workspace/compare'
+      fullPath: '/ai-workspace/compare'
+      preLoaderRoute: typeof AiWorkspaceCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-workspace/chat/$threadId': {
+      id: '/ai-workspace/chat/$threadId'
+      path: '/ai-workspace/chat/$threadId'
+      fullPath: '/ai-workspace/chat/$threadId'
+      preLoaderRoute: typeof AiWorkspaceChatThreadIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/jira/callback': {
@@ -704,28 +904,38 @@ const rootRouteChildren: RootRouteChildren = {
   AiIntelligenceRoute: AiIntelligenceRoute,
   AnalyticsRoute: AnalyticsRoute,
   AuthRoute: AuthRoute,
+  BillingRoute: BillingRoute,
+  BurnoutRiskRoute: BurnoutRiskRoute,
+  CandidateSearchRoute: CandidateSearchRoute,
   ClickupRoute: ClickupRoute,
   DepartmentsRoute: DepartmentsRouteWithChildren,
   EmployeesRoute: EmployeesRouteWithChildren,
   ExcelUploadRoute: ExcelUploadRoute,
-  ExecutiveDashboardRoute: ExecutiveDashboardRoute,
   GithubRoute: GithubRoute,
+  HiringPipelineRoute: HiringPipelineRoute,
   JiraRoute: JiraRoute,
   MaintenanceRoute: MaintenanceRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
+  PermissionsRoute: PermissionsRoute,
   ProjectsRoute: ProjectsRoute,
+  PromotionReadinessRoute: PromotionReadinessRoute,
   ReportsRoute: ReportsRoute,
+  RfpMatcherRoute: RfpMatcherRoute,
   ServerErrorRoute: ServerErrorRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SkillsIntelligenceRoute: SkillsIntelligenceRoute,
+  SlackRoute: SlackRoute,
+  TalentIntelligenceRoute: TalentIntelligenceRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   WorkforceIntelligenceRoute: WorkforceIntelligenceRoute,
+  AiWorkspaceCompareRoute: AiWorkspaceCompareRoute,
+  AiWorkspaceJobMatcherRoute: AiWorkspaceJobMatcherRoute,
   ApiTalentChatRoute: ApiTalentChatRoute,
-  WorkspaceCompareRoute: WorkspaceCompareRoute,
-  WorkspaceJobMatcherRoute: WorkspaceJobMatcherRoute,
-  WorkspaceChatThreadIdRoute: WorkspaceChatThreadIdRoute,
+  AiWorkspaceIndexRoute: AiWorkspaceIndexRoute,
+  AiWorkspaceChatThreadIdRoute: AiWorkspaceChatThreadIdRoute,
   ApiPublicClickupCallbackRoute: ApiPublicClickupCallbackRoute,
   ApiPublicGithubCallbackRoute: ApiPublicGithubCallbackRoute,
   ApiPublicJiraCallbackRoute: ApiPublicJiraCallbackRoute,

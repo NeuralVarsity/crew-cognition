@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { TalentIntelligenceDashboard } from "@/features/talent-intelligence/components/talent-intelligence-dashboard";
+export const Route=createFileRoute("/talent-intelligence")({head:()=>({meta:[{title:"Talent Intelligence — TalentAI Enterprise"},{name:"description",content:"Performance, skill, mobility, flight-risk and promotion intelligence."},{property:"og:title",content:"Talent Intelligence — TalentAI Enterprise"},{property:"og:description",content:"Evidence-backed talent intelligence across the workforce."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary"}]}),component:TalentIntelligenceDashboard});

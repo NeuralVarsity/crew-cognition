@@ -181,7 +181,7 @@ export function TalentChat({ threadId }: { threadId?: string }) {
         if (isNewThread && activeThread) {
           // Navigate only once the answer is persisted: the thread route mounts a
           // fresh chat that restores the saved transcript.
-          navigate({ to: "/workspace/chat/$threadId", params: { threadId: activeThread } });
+          navigate({ to: "/ai-workspace/chat/$threadId", params: { threadId: activeThread } });
         }
       }
     },

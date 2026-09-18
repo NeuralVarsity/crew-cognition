@@ -5,7 +5,7 @@ import { ThreadSidebar } from "./thread-sidebar";
 import { TalentChat } from "./talent-chat";
 
 const SECONDARY_MODULES = [
-  { label: "Executive Dashboard", to: "/executive-dashboard", icon: BarChart3 },
+  { label: "Executive Dashboard", to: "/", icon: BarChart3 },
   { label: "AI Intelligence", to: "/ai-intelligence", icon: Brain },
   { label: "GitHub", to: "/github", icon: Github },
   { label: "Employees", to: "/employees", icon: Users },
@@ -15,13 +15,13 @@ export function TalentWorkspace({ threadId }: { threadId?: string }) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-[calc(100dvh-8rem)] min-h-0 overflow-hidden rounded-xl border bg-background">
+    <div className="flex h-[calc(100dvh-8rem)] min-h-0 overflow-hidden rounded-lg border border-border/70 bg-card/70 shadow-2xl backdrop-blur-xl">
       <div className="hidden lg:block">
         <ThreadSidebar
           activeThreadId={threadId}
-          onNewChat={() => navigate({ to: "/" })}
+          onNewChat={() => navigate({ to: "/ai-workspace" })}
           onDeleted={(id) => {
-            if (id === threadId) navigate({ to: "/" });
+            if (id === threadId) navigate({ to: "/ai-workspace" });
           }}
         />
       </div>
@@ -45,12 +45,12 @@ export function TalentWorkspace({ threadId }: { threadId?: string }) {
               ))}
             </div>
             <Button asChild variant="outline" size="sm">
-              <Link to="/workspace/job-matcher">
+              <Link to="/ai-workspace/job-matcher">
                 <FileUp className="mr-1.5 size-4" /> Job matcher
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <Link to="/workspace/compare">
+              <Link to="/ai-workspace/compare">
                 <Users className="mr-1.5 size-4" /> Compare
               </Link>
             </Button>
