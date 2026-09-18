@@ -25,7 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 function useCrumbs() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   if (pathname === "/") return [{ title: "AI Workspace", url: "/" }];
-  if (pathname.startsWith("/workspace/chat"))
+  if (pathname.startsWith("/ai-workspace/chat"))
     return [
       { title: "AI Workspace", url: "/" },
       { title: "Conversation", url: pathname },

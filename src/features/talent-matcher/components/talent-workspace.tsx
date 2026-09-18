@@ -5,7 +5,7 @@ import { ThreadSidebar } from "./thread-sidebar";
 import { TalentChat } from "./talent-chat";
 
 const SECONDARY_MODULES = [
-  { label: "Executive Dashboard", to: "/executive-dashboard", icon: BarChart3 },
+  { label: "Executive Dashboard", to: "/", icon: BarChart3 },
   { label: "AI Intelligence", to: "/ai-intelligence", icon: Brain },
   { label: "GitHub", to: "/github", icon: Github },
   { label: "Employees", to: "/employees", icon: Users },
@@ -45,12 +45,12 @@ export function TalentWorkspace({ threadId }: { threadId?: string }) {
               ))}
             </div>
             <Button asChild variant="outline" size="sm">
-              <Link to="/workspace/job-matcher">
+              <Link to="/ai-workspace/job-matcher">
                 <FileUp className="mr-1.5 size-4" /> Job matcher
               </Link>
             </Button>
             <Button asChild variant="outline" size="sm">
-              <Link to="/workspace/compare">
+              <Link to="/ai-workspace/compare">
                 <Users className="mr-1.5 size-4" /> Compare
               </Link>
             </Button>
