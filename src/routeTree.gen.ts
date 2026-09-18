@@ -13,20 +13,29 @@ import { Route as WorkforceIntelligenceRouteImport } from './routes/workforce-in
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TeamsRouteImport } from './routes/teams'
 import { Route as TalentIntelligenceRouteImport } from './routes/talent-intelligence'
+import { Route as SlackRouteImport } from './routes/slack'
+import { Route as SkillsIntelligenceRouteImport } from './routes/skills-intelligence'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
+import { Route as RfpMatcherRouteImport } from './routes/rfp-matcher'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as PromotionReadinessRouteImport } from './routes/promotion-readiness'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PermissionsRouteImport } from './routes/permissions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as JiraRouteImport } from './routes/jira'
+import { Route as HiringPipelineRouteImport } from './routes/hiring-pipeline'
 import { Route as GithubRouteImport } from './routes/github'
 import { Route as ExcelUploadRouteImport } from './routes/excel-upload'
 import { Route as EmployeesRouteImport } from './routes/employees'
 import { Route as DepartmentsRouteImport } from './routes/departments'
 import { Route as ClickupRouteImport } from './routes/clickup'
+import { Route as CandidateSearchRouteImport } from './routes/candidate-search'
+import { Route as BurnoutRiskRouteImport } from './routes/burnout-risk'
+import { Route as BillingRouteImport } from './routes/billing'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AiIntelligenceRouteImport } from './routes/ai-intelligence'
@@ -63,6 +72,16 @@ const TalentIntelligenceRoute = TalentIntelligenceRouteImport.update({
   path: '/talent-intelligence',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SlackRoute = SlackRouteImport.update({
+  id: '/slack',
+  path: '/slack',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillsIntelligenceRoute = SkillsIntelligenceRouteImport.update({
+  id: '/skills-intelligence',
+  path: '/skills-intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -78,14 +97,29 @@ const ServerErrorRoute = ServerErrorRouteImport.update({
   path: '/server-error',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RfpMatcherRoute = RfpMatcherRouteImport.update({
+  id: '/rfp-matcher',
+  path: '/rfp-matcher',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromotionReadinessRoute = PromotionReadinessRouteImport.update({
+  id: '/promotion-readiness',
+  path: '/promotion-readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PermissionsRoute = PermissionsRouteImport.update({
+  id: '/permissions',
+  path: '/permissions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -106,6 +140,11 @@ const MaintenanceRoute = MaintenanceRouteImport.update({
 const JiraRoute = JiraRouteImport.update({
   id: '/jira',
   path: '/jira',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HiringPipelineRoute = HiringPipelineRouteImport.update({
+  id: '/hiring-pipeline',
+  path: '/hiring-pipeline',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GithubRoute = GithubRouteImport.update({
@@ -131,6 +170,21 @@ const DepartmentsRoute = DepartmentsRouteImport.update({
 const ClickupRoute = ClickupRouteImport.update({
   id: '/clickup',
   path: '/clickup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CandidateSearchRoute = CandidateSearchRouteImport.update({
+  id: '/candidate-search',
+  path: '/candidate-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BurnoutRiskRoute = BurnoutRiskRouteImport.update({
+  id: '/burnout-risk',
+  path: '/burnout-risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -216,20 +270,29 @@ export interface FileRoutesByFullPath {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
   '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -251,20 +314,29 @@ export interface FileRoutesByTo {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
   '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -287,20 +359,29 @@ export interface FileRoutesById {
   '/ai-intelligence': typeof AiIntelligenceRoute
   '/analytics': typeof AnalyticsRoute
   '/auth': typeof AuthRoute
+  '/billing': typeof BillingRoute
+  '/burnout-risk': typeof BurnoutRiskRoute
+  '/candidate-search': typeof CandidateSearchRoute
   '/clickup': typeof ClickupRoute
   '/departments': typeof DepartmentsRouteWithChildren
   '/employees': typeof EmployeesRouteWithChildren
   '/excel-upload': typeof ExcelUploadRoute
   '/github': typeof GithubRoute
+  '/hiring-pipeline': typeof HiringPipelineRoute
   '/jira': typeof JiraRoute
   '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/permissions': typeof PermissionsRoute
   '/projects': typeof ProjectsRoute
+  '/promotion-readiness': typeof PromotionReadinessRoute
   '/reports': typeof ReportsRoute
+  '/rfp-matcher': typeof RfpMatcherRoute
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/skills-intelligence': typeof SkillsIntelligenceRoute
+  '/slack': typeof SlackRoute
   '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -324,20 +405,29 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
     | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
@@ -359,20 +449,29 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
     | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
@@ -394,20 +493,29 @@ export interface FileRouteTypes {
     | '/ai-intelligence'
     | '/analytics'
     | '/auth'
+    | '/billing'
+    | '/burnout-risk'
+    | '/candidate-search'
     | '/clickup'
     | '/departments'
     | '/employees'
     | '/excel-upload'
     | '/github'
+    | '/hiring-pipeline'
     | '/jira'
     | '/maintenance'
     | '/notifications'
     | '/onboarding'
+    | '/permissions'
     | '/projects'
+    | '/promotion-readiness'
     | '/reports'
+    | '/rfp-matcher'
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/skills-intelligence'
+    | '/slack'
     | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
@@ -430,20 +538,29 @@ export interface RootRouteChildren {
   AiIntelligenceRoute: typeof AiIntelligenceRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AuthRoute: typeof AuthRoute
+  BillingRoute: typeof BillingRoute
+  BurnoutRiskRoute: typeof BurnoutRiskRoute
+  CandidateSearchRoute: typeof CandidateSearchRoute
   ClickupRoute: typeof ClickupRoute
   DepartmentsRoute: typeof DepartmentsRouteWithChildren
   EmployeesRoute: typeof EmployeesRouteWithChildren
   ExcelUploadRoute: typeof ExcelUploadRoute
   GithubRoute: typeof GithubRoute
+  HiringPipelineRoute: typeof HiringPipelineRoute
   JiraRoute: typeof JiraRoute
   MaintenanceRoute: typeof MaintenanceRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PermissionsRoute: typeof PermissionsRoute
   ProjectsRoute: typeof ProjectsRoute
+  PromotionReadinessRoute: typeof PromotionReadinessRoute
   ReportsRoute: typeof ReportsRoute
+  RfpMatcherRoute: typeof RfpMatcherRoute
   ServerErrorRoute: typeof ServerErrorRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SkillsIntelligenceRoute: typeof SkillsIntelligenceRoute
+  SlackRoute: typeof SlackRoute
   TalentIntelligenceRoute: typeof TalentIntelligenceRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
@@ -488,6 +605,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TalentIntelligenceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/slack': {
+      id: '/slack'
+      path: '/slack'
+      fullPath: '/slack'
+      preLoaderRoute: typeof SlackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skills-intelligence': {
+      id: '/skills-intelligence'
+      path: '/skills-intelligence'
+      fullPath: '/skills-intelligence'
+      preLoaderRoute: typeof SkillsIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -509,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServerErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rfp-matcher': {
+      id: '/rfp-matcher'
+      path: '/rfp-matcher'
+      fullPath: '/rfp-matcher'
+      preLoaderRoute: typeof RfpMatcherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -516,11 +654,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/promotion-readiness': {
+      id: '/promotion-readiness'
+      path: '/promotion-readiness'
+      fullPath: '/promotion-readiness'
+      preLoaderRoute: typeof PromotionReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/permissions': {
+      id: '/permissions'
+      path: '/permissions'
+      fullPath: '/permissions'
+      preLoaderRoute: typeof PermissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -549,6 +701,13 @@ declare module '@tanstack/react-router' {
       path: '/jira'
       fullPath: '/jira'
       preLoaderRoute: typeof JiraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hiring-pipeline': {
+      id: '/hiring-pipeline'
+      path: '/hiring-pipeline'
+      fullPath: '/hiring-pipeline'
+      preLoaderRoute: typeof HiringPipelineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/github': {
@@ -584,6 +743,27 @@ declare module '@tanstack/react-router' {
       path: '/clickup'
       fullPath: '/clickup'
       preLoaderRoute: typeof ClickupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/candidate-search': {
+      id: '/candidate-search'
+      path: '/candidate-search'
+      fullPath: '/candidate-search'
+      preLoaderRoute: typeof CandidateSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/burnout-risk': {
+      id: '/burnout-risk'
+      path: '/burnout-risk'
+      fullPath: '/burnout-risk'
+      preLoaderRoute: typeof BurnoutRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -724,20 +904,29 @@ const rootRouteChildren: RootRouteChildren = {
   AiIntelligenceRoute: AiIntelligenceRoute,
   AnalyticsRoute: AnalyticsRoute,
   AuthRoute: AuthRoute,
+  BillingRoute: BillingRoute,
+  BurnoutRiskRoute: BurnoutRiskRoute,
+  CandidateSearchRoute: CandidateSearchRoute,
   ClickupRoute: ClickupRoute,
   DepartmentsRoute: DepartmentsRouteWithChildren,
   EmployeesRoute: EmployeesRouteWithChildren,
   ExcelUploadRoute: ExcelUploadRoute,
   GithubRoute: GithubRoute,
+  HiringPipelineRoute: HiringPipelineRoute,
   JiraRoute: JiraRoute,
   MaintenanceRoute: MaintenanceRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
+  PermissionsRoute: PermissionsRoute,
   ProjectsRoute: ProjectsRoute,
+  PromotionReadinessRoute: PromotionReadinessRoute,
   ReportsRoute: ReportsRoute,
+  RfpMatcherRoute: RfpMatcherRoute,
   ServerErrorRoute: ServerErrorRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SkillsIntelligenceRoute: SkillsIntelligenceRoute,
+  SlackRoute: SlackRoute,
   TalentIntelligenceRoute: TalentIntelligenceRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
