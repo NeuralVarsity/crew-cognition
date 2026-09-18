@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
+import { Orbit } from "lucide-react";
 
 import {
   Sidebar,
@@ -21,16 +21,16 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
+    <Sidebar collapsible="icon" className="border-sidebar-border/70">
+      <SidebarHeader className="border-b border-sidebar-border/70">
         <div className="flex items-center gap-2.5 px-2 py-1.5">
-          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Sparkles className="h-4 w-4" />
+          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground shadow-[0_0_24px_color-mix(in_oklab,var(--primary)_28%,transparent)]">
+            <Orbit className="h-4 w-4" />
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <div className="truncate text-sm font-semibold leading-tight">TalentAI</div>
-            <div className="truncate text-[11px] text-sidebar-foreground/60">
-              Workforce Intelligence
+            <div className="truncate font-display text-sm font-semibold leading-tight">TalentAI</div>
+            <div className="truncate text-[10px] uppercase text-sidebar-foreground/50">
+              Intelligence OS
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <div className="px-2 py-1.5 text-[11px] text-sidebar-foreground/50 group-data-[collapsible=icon]:hidden">
-          v0.1 · Foundation
+          Intelligence sync · Live
         </div>
       </SidebarFooter>
       <SidebarRail />

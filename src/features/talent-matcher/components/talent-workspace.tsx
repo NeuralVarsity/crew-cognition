@@ -15,13 +15,13 @@ export function TalentWorkspace({ threadId }: { threadId?: string }) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex h-[calc(100dvh-8rem)] min-h-0 overflow-hidden rounded-xl border bg-background">
+    <div className="flex h-[calc(100dvh-8rem)] min-h-0 overflow-hidden rounded-lg border border-border/70 bg-card/70 shadow-2xl backdrop-blur-xl">
       <div className="hidden lg:block">
         <ThreadSidebar
           activeThreadId={threadId}
-          onNewChat={() => navigate({ to: "/" })}
+          onNewChat={() => navigate({ to: "/ai-workspace" })}
           onDeleted={(id) => {
-            if (id === threadId) navigate({ to: "/" });
+            if (id === threadId) navigate({ to: "/ai-workspace" });
           }}
         />
       </div>
