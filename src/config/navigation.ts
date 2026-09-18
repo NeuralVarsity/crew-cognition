@@ -29,11 +29,11 @@ export type NavItem = {
 };
 
 export const navigation: NavItem[] = [
-  { title: "AI Workspace", url: "/", icon: MessagesSquare, group: "AI" },
-  { title: "Job & RFP Matcher", url: "/workspace/job-matcher", icon: Sparkles, group: "AI" },
-  { title: "Compare People", url: "/workspace/compare", icon: UsersRound, group: "AI" },
+  { title: "AI Workspace", url: "/ai-workspace", icon: MessagesSquare, group: "AI" },
+  { title: "Job & RFP Matcher", url: "/ai-workspace/job-matcher", icon: Sparkles, group: "AI" },
+  { title: "Compare People", url: "/ai-workspace/compare", icon: UsersRound, group: "AI" },
 
-  { title: "Executive Dashboard", url: "/executive-dashboard", icon: LayoutDashboard, group: "Workspace" },
+  { title: "Executive Dashboard", url: "/", icon: LayoutDashboard, group: "Workspace" },
   { title: "Employees", url: "/employees", icon: Users, group: "Workspace" },
   { title: "Teams", url: "/teams", icon: UsersRound, group: "Workspace" },
   { title: "Departments", url: "/departments", icon: Building2, group: "Workspace" },

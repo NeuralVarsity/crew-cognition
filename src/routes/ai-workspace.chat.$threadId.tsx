@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TalentWorkspace } from "@/features/talent-matcher/components/talent-workspace";
 
-export const Route = createFileRoute("/workspace/chat/$threadId")({
+export const Route = createFileRoute("/ai-workspace/chat/$threadId")({
   head: () => ({
     meta: [
       { title: "AI Workspace conversation — TalentAI Enterprise" },

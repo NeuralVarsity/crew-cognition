@@ -1,23 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TalentWorkspace } from "@/features/talent-matcher/components/talent-workspace";
+import { ExecutiveDashboard } from "@/features/dashboard/executive-dashboard";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AI Workspace — TalentAI Enterprise" },
+      { title: "Executive Dashboard — TalentAI Enterprise" },
       {
         name: "description",
         content:
-          "Ask your workforce anything. The enterprise AI copilot answers from synchronized GitHub, Jira, ClickUp, Excel and AI Intelligence data.",
+          "Top performers, promotion candidates, burnout risks, hiring recommendations and department productivity across your workforce.",
       },
-      { property: "og:title", content: "AI Workspace — TalentAI Enterprise" },
-      {
-        property: "og:description",
-        content: "Explainable talent recommendations, leaderboards and risk analysis from real delivery data.",
-      },
+      { property: "og:title", content: "Executive Dashboard — TalentAI Enterprise" },
+      { property: "og:description", content: "Workforce intelligence overview for your organization." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: () => <TalentWorkspace />,
+  component: ExecutiveDashboard,
 });
