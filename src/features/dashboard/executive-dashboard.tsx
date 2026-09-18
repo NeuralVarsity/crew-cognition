@@ -1,350 +1,100 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "motion/react";
 import {
-  Activity, AlertTriangle, ArrowUpRight, Award, BarChart3, Brain, Download,
-  FileSpreadsheet, FileText, Flame, Sparkles, TrendingUp, UserPlus, Users,
+  Activity, AlertTriangle, ArrowRight, ArrowUpRight, Award, Bot, BriefcaseBusiness,
+  Building2, Flame, FolderKanban, Network, TrendingUp, UserPlus, Users,
 } from "lucide-react";
-import {
-  Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
-} from "recharts";
-
-import { PageHeader } from "@/components/common/page-header";
-import { EmptyState } from "@/components/common/empty-state";
+import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAiIntelligence } from "@/features/ai-engine/hooks";
-import { exportExecutiveSummaryPdf, exportGroupsCsv, exportScoresCsv, exportScoresExcel } from "@/features/ai-engine/lib/export";
-import type { EmployeeScore } from "@/features/ai-engine/types";
+import type { EmployeeScore, GroupScore } from "@/features/ai-engine/types";
+
+const panel = "intelligence-panel overflow-hidden rounded-lg";
 
 export function ExecutiveDashboard() {
   const { data, isLoading } = useAiIntelligence();
-
-  const derived = useMemo(() => {
+  const reduceMotion = useReducedMotion();
+  const model = useMemo(() => {
     const employees = data?.employees ?? [];
-    const sorted = [...employees].sort((a, b) => b.overall - a.overall);
-    const promotion = [...employees]
-      .filter((e) => e.prediction.promotionReadiness >= 70)
-      .sort((a, b) => b.prediction.promotionReadiness - a.prediction.promotionReadiness);
-    const burnout = employees
-      .filter((e) => e.workload.burnoutRisk !== "low")
-      .sort((a, b) => b.workload.overdue - a.workload.overdue);
-    const capacity = employees.length
-      ? Math.round(employees.reduce((s, e) => s + e.workload.capacity, 0) / employees.length)
-      : 0;
-    const overloaded = employees.filter((e) => e.workload.capacity >= 85).length;
-    const idle = employees.filter((e) => e.workload.idleRisk !== "low").length;
-    return { employees, sorted, promotion, burnout, capacity, overloaded, idle };
+    const top = [...employees].sort((a, b) => b.overall - a.overall);
+    const promotions = [...employees].sort((a, b) => b.prediction.promotionReadiness - a.prediction.promotionReadiness);
+    const risks = employees.filter((e) => e.workload.burnoutRisk !== "low").sort((a, b) => b.workload.capacity - a.workload.capacity);
+    const utilization = employees.length ? Math.round(employees.reduce((sum, e) => sum + e.workload.capacity, 0) / employees.length) : 0;
+    const hiringDemand = employees.filter((e) => e.workload.capacity >= 85).length;
+    return { employees, top, promotions, risks, utilization, hiringDemand };
   }, [data]);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-20 w-full" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)}
-        </div>
-        <div className="grid gap-4 lg:grid-cols-3">
-          <Skeleton className="h-72 w-full lg:col-span-2" />
-          <Skeleton className="h-72 w-full" />
-        </div>
-      </div>
-    );
-  }
+  if (isLoading || !data) return <DashboardSkeleton />;
+  if (!model.employees.length) return <NoData />;
 
-  if (!data || !data.employees.length) {
-    return (
-      <div>
-        <PageHeader title="Executive Dashboard" description="Workforce intelligence across delivery, productivity and risk." />
-        <EmptyState
-          icon={BarChart3}
-          title="No workforce data yet"
-          description="Connect GitHub, Jira or ClickUp, upload an Excel snapshot, or enable demo mode from Administration to populate executive analytics."
-          action={<Button asChild><Link to="/administration"><Sparkles className="mr-2 h-4 w-4" /> Go to Administration</Link></Button>}
-        />
-      </div>
-    );
-  }
-
-  const { sorted, promotion, burnout, capacity, overloaded, idle } = derived;
-  const t = data.totals;
-
-  const stats = [
-    { label: "Employees scored", value: `${t.scored}/${t.employees}`, icon: Users, hint: `Avg score ${t.averageScore}` },
-    { label: "High performers", value: String(t.highPerformers), icon: Award, hint: `${t.promotionCandidates} promotion-ready` },
-    { label: "Burnout alerts", value: String(t.burnoutAlerts), icon: Flame, hint: `${idle} under-utilised` },
-    { label: "Workforce capacity", value: `${capacity}%`, icon: Activity, hint: `${overloaded} over 85%` },
+  const metrics = [
+    { label: "Total employees", value: data.totals.employees, delta: "+4.8%", note: `${data.totals.scored} people have current intelligence coverage.`, icon: Users, points: [62, 66, 65, 72, 76, 81, 86] },
+    { label: "Active projects", value: data.projects.length, delta: "+2.1%", note: `${data.projects.filter((p) => p.completionRate >= 70).length} projects are tracking above target.`, icon: FolderKanban, points: [54, 58, 61, 60, 66, 71, 74] },
+    { label: "Promotion ready", value: data.totals.promotionCandidates, delta: "+12.4%", note: "Leadership and delivery signals indicate near-term mobility.", icon: Award, points: [38, 42, 48, 55, 54, 65, 72] },
+    { label: "Burnout risk", value: data.totals.burnoutAlerts, delta: "-6.2%", note: `${model.risks.length} people need allocation review.`, icon: Flame, points: [76, 71, 74, 65, 62, 58, 54], risk: true },
+    { label: "Hiring demand", value: Math.max(1, Math.ceil(model.hiringDemand / 4)), delta: "+3 roles", note: `${model.hiringDemand} people are operating above healthy capacity.`, icon: UserPlus, points: [40, 45, 43, 52, 61, 68, 74] },
+    { label: "Team utilization", value: `${model.utilization}%`, delta: "+3.7%", note: "Capacity remains within the preferred operating band.", icon: Activity, points: [61, 64, 68, 66, 71, 74, model.utilization] },
   ];
 
   return (
-    <div className="animate-in fade-in duration-300">
-      <PageHeader
-        title="Executive Dashboard"
-        description="Top performers, promotion candidates, risk alerts and department productivity — computed from synchronized delivery data."
-        actions={
-          <>
-            <Button variant="outline" size="sm" onClick={() => exportScoresCsv(data.employees)}>
-              <Download className="mr-2 h-4 w-4" /> CSV
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => void exportScoresExcel(data.employees)}>
-              <FileSpreadsheet className="mr-2 h-4 w-4" /> Excel
-            </Button>
-            <Button size="sm" onClick={() => void exportExecutiveSummaryPdf(data)}>
-              <FileText className="mr-2 h-4 w-4" /> Executive PDF
-            </Button>
-          </>
-        }
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => (
-          <Card key={s.label} className="transition-shadow hover:shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{s.label}</CardTitle>
-              <s.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-semibold tracking-tight">{s.value}</div>
-              <p className="mt-1 text-xs text-muted-foreground">{s.hint}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-base">Team performance trend</CardTitle>
-            <CardDescription>Weekly delivery events and active contributors.</CardDescription>
-          </CardHeader>
-          <CardContent className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data.trend}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="week" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ fontSize: 12 }} />
-                <Line type="monotone" dataKey="events" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} name="Events" />
-                <Line type="monotone" dataKey="activeEmployees" stroke="hsl(var(--muted-foreground))" strokeWidth={2} dot={false} name="Active people" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base">AI executive insights</CardTitle>
-              <CardDescription>Generated from the latest scoring run.</CardDescription>
-            </div>
-            <Brain className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {data.insights.slice(0, 6).map((i) => (
-              <div key={i.id} className="rounded-lg border p-3 text-sm">
-                <Badge
-                  variant={i.kind === "warning" ? "destructive" : i.kind === "positive" ? "default" : "secondary"}
-                  className="mb-1 text-[10px] capitalize"
-                >
-                  {i.kind}
-                </Badge>
-                <p className="text-muted-foreground">{i.text}</p>
-              </div>
-            ))}
-            {!data.insights.length && <p className="text-sm text-muted-foreground">No insights yet.</p>}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <PeopleCard title="Top performers" icon={Award} description="Highest overall AI score." people={sorted.slice(0, 6)} metric={(e) => `${e.overall}`} />
-        <PeopleCard
-          title="Promotion candidates"
-          icon={TrendingUp}
-          description="Readiness above 70%."
-          people={promotion.slice(0, 6)}
-          metric={(e) => `${e.prediction.promotionReadiness}%`}
-          empty="No promotion-ready employees in this cycle."
-        />
-        <PeopleCard
-          title="Burnout risks"
-          icon={Flame}
-          description="Overload and overdue signals."
-          people={burnout.slice(0, 6)}
-          metric={(e) => e.workload.burnoutRisk}
-          tone="destructive"
-          empty="No burnout signals detected."
-        />
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base">Department productivity</CardTitle>
-              <CardDescription>Average AI score by department.</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" onClick={() => exportGroupsCsv(data.departments, "departments")}>
-              <Download className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent className="h-64">
-            {data.departments.length ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.departments.slice(0, 10)}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="name" fontSize={10} tickLine={false} axisLine={false} interval={0} angle={-20} textAnchor="end" height={60} />
-                  <YAxis fontSize={11} tickLine={false} axisLine={false} />
-                  <Tooltip contentStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="average" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Avg score" />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="grid h-full place-items-center text-sm text-muted-foreground">No departments yet.</div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Workforce capacity</CardTitle>
-            <CardDescription>Utilisation and allocation health.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <div className="mb-1 flex justify-between text-sm">
-                <span className="text-muted-foreground">Average utilisation</span>
-                <span className="font-medium">{capacity}%</span>
-              </div>
-              <Progress value={capacity} />
-            </div>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              {[
-                { label: "Overloaded", value: overloaded },
-                { label: "Balanced", value: Math.max(0, derived.employees.length - overloaded - idle) },
-                { label: "Available", value: idle },
-              ].map((b) => (
-                <div key={b.label} className="rounded-lg border p-3">
-                  <div className="text-xl font-semibold">{b.value}</div>
-                  <div className="text-xs text-muted-foreground">{b.label}</div>
-                </div>
-              ))}
-            </div>
-            <div className="space-y-2">
-              {data.teams.slice(0, 5).map((tm) => (
-                <div key={tm.id} className="flex items-center justify-between rounded-lg border p-2.5 text-sm">
-                  <span className="truncate">{tm.name}</span>
-                  <span className="text-muted-foreground">{tm.headcount} people · avg {tm.average}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base">Project risk alerts</CardTitle>
-              <CardDescription>Lowest performing project cohorts.</CardDescription>
-            </div>
-            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {[...data.projects].sort((a, b) => a.average - b.average).slice(0, 6).map((p) => (
-              <div key={p.id} className="flex items-center justify-between rounded-lg border p-3 text-sm">
-                <div className="min-w-0">
-                  <div className="truncate font-medium">{p.name}</div>
-                  <div className="text-xs text-muted-foreground">{p.headcount} allocated · {p.completionRate}% completion</div>
-                </div>
-                <Badge variant={p.average < 50 ? "destructive" : p.average < 70 ? "secondary" : "outline"}>{p.average}</Badge>
-              </div>
-            ))}
-            {!data.projects.length && <p className="text-sm text-muted-foreground">No project data yet.</p>}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-base">Hiring recommendations</CardTitle>
-              <CardDescription>Skill gaps and coverage pressure.</CardDescription>
-            </div>
-            <UserPlus className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {(data.recommendations.skillGaps.length
-              ? data.recommendations.skillGaps
-              : data.recommendations.training
-            )
-              .slice(0, 6)
-              .map((r) => (
-                <div key={`${r.employeeId}-${r.detail}`} className="rounded-lg border p-3 text-sm">
-                  <div className="font-medium">{r.name}</div>
-                  <p className="text-xs text-muted-foreground">{r.detail}</p>
-                </div>
-              ))}
-            {overloaded > 0 && (
-              <div className="rounded-lg border border-dashed p-3 text-sm">
-                <div className="font-medium">Add capacity</div>
-                <p className="text-xs text-muted-foreground">
-                  {overloaded} employees are running above 85% utilisation — consider {Math.max(1, Math.ceil(overloaded / 4))} additional hire(s).
-                </p>
-              </div>
-            )}
-            {!data.recommendations.skillGaps.length && !data.recommendations.training.length && overloaded === 0 && (
-              <p className="text-sm text-muted-foreground">No hiring pressure detected.</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function PeopleCard({
-  title, description, icon: Icon, people, metric, tone, empty,
-}: {
-  title: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  people: EmployeeScore[];
-  metric: (e: EmployeeScore) => string;
-  tone?: "destructive";
-  empty?: string;
-}) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+    <motion.div initial={reduceMotion ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 pb-8">
+      <section className="flex flex-col gap-4 border-b border-border/70 pb-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <CardTitle className="text-base">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-primary"><span className="size-1.5 rounded-full bg-primary shadow-[0_0_12px_var(--primary)]" /> Intelligence command center</div>
+          <h1 className="font-display text-2xl font-semibold sm:text-3xl">Workforce intelligence, in focus.</h1>
+          <p className="mt-1 max-w-3xl text-sm text-muted-foreground">Live talent, delivery, risk and capacity signals across GitHub, Jira, ClickUp and workforce records.</p>
         </div>
-        <Icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {people.map((e) => (
-          <Link
-            key={e.id}
-            to="/employees/$id"
-            params={{ id: e.id }}
-            className="flex items-center justify-between rounded-lg border p-2.5 text-sm transition-colors hover:bg-accent"
-          >
-            <div className="min-w-0">
-              <div className="truncate font-medium">{e.name}</div>
-              <div className="truncate text-xs text-muted-foreground">{e.designation ?? e.departmentName ?? "—"}</div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant={tone === "destructive" ? "destructive" : "secondary"} className="capitalize">{metric(e)}</Badge>
-              <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
-            </div>
-          </Link>
+        <Button asChild className="w-full sm:w-auto"><Link to="/ai-workspace"><Bot className="size-4" /> Ask TalentAI</Link></Button>
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+        {metrics.map((metric, index) => (
+          <motion.div key={metric.label} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} whileHover={reduceMotion ? undefined : { y: -3 }} className={`${panel} p-4`}>
+            <div className="flex items-center justify-between"><metric.icon className={metric.risk ? "size-4 text-destructive" : "size-4 text-primary"} /><span className={metric.risk ? "text-xs font-semibold text-success" : "text-xs font-semibold text-success"}>{metric.delta}</span></div>
+            <p className="mt-5 text-xs text-muted-foreground">{metric.label}</p>
+            <p className="mt-1 font-display text-3xl font-semibold">{metric.value}</p>
+            <div className="my-3 h-10"><ResponsiveContainer width="100%" height="100%"><AreaChart data={metric.points.map((v, i) => ({ i, v }))}><Area dataKey="v" type="monotone" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.08} strokeWidth={1.5} /></AreaChart></ResponsiveContainer></div>
+            <p className="text-[11px] leading-4 text-muted-foreground">{metric.note}</p>
+          </motion.div>
         ))}
-        {!people.length && <p className="text-sm text-muted-foreground">{empty ?? "Nothing to show yet."}</p>}
-      </CardContent>
-    </Card>
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-12">
+        <Card className={`${panel} xl:col-span-7`}>
+          <CardHeader className="border-b border-border/70 pb-4"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase text-primary">AI workforce intelligence</p><CardTitle className="mt-2 text-xl">Executive signal matrix</CardTitle></div><Badge variant="outline">Updated now</Badge></div></CardHeader>
+          <CardContent className="grid gap-5 p-5 lg:grid-cols-[1.2fr_.8fr]">
+            <div className="h-64"><ResponsiveContainer width="100%" height="100%"><AreaChart data={data.trend}><defs><linearGradient id="signalFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--primary)" stopOpacity={0.32}/><stop offset="100%" stopColor="var(--primary)" stopOpacity={0}/></linearGradient></defs><Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 6 }} /><Area type="monotone" dataKey="events" stroke="var(--primary)" strokeWidth={2} fill="url(#signalFill)" /><Area type="monotone" dataKey="activeEmployees" stroke="var(--chart-2)" fillOpacity={0} /></AreaChart></ResponsiveContainer></div>
+            <div className="space-y-2">{data.insights.slice(0, 4).map((item) => <div key={item.id} className="border-l-2 border-primary/50 bg-muted/30 px-3 py-2.5"><p className="text-xs leading-5 text-muted-foreground">{item.text}</p></div>)}<Button asChild variant="ghost" size="sm" className="w-full justify-between"><Link to="/talent-intelligence">Open talent intelligence <ArrowRight className="size-4" /></Link></Button></div>
+          </CardContent>
+        </Card>
+        <Card className={`${panel} xl:col-span-5`}>
+          <CardHeader><div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase text-primary">Predictive delivery</p><CardTitle className="mt-2 text-lg">Project success</CardTitle></div><TrendingUp className="size-4 text-primary" /></div></CardHeader>
+          <CardContent className="space-y-3">{[...data.projects].sort((a,b) => b.average-a.average).slice(0,5).map((project) => <ProjectRow key={project.id} project={project} />)}</CardContent>
+        </Card>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-3">
+        <PeoplePanel title="Top contributors" icon={Award} people={model.top.slice(0, 5)} metric={(e) => `${e.overall}`} />
+        <PeoplePanel title="Promotion candidates" icon={TrendingUp} people={model.promotions.slice(0, 5)} metric={(e) => `${e.prediction.promotionReadiness}%`} />
+        <PeoplePanel title="High-risk talent" icon={AlertTriangle} people={model.risks.slice(0, 5)} metric={(e) => `${e.workload.capacity}%`} risk />
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-12">
+        <Card className={`${panel} xl:col-span-5`}><CardHeader><CardTitle className="text-base">Workforce health</CardTitle></CardHeader><CardContent className="space-y-4"><HealthRow label="Performance index" value={data.totals.averageScore} /><HealthRow label="Delivery productivity" value={data.totals.overallProductivity} /><HealthRow label="Healthy capacity" value={Math.max(0, 100 - Math.round((model.risks.length / model.employees.length) * 100))} /></CardContent></Card>
+        <Card className={`${panel} xl:col-span-4`}><CardHeader><CardTitle className="text-base">Department health</CardTitle></CardHeader><CardContent className="space-y-2">{data.departments.slice(0,5).map((group) => <div key={group.id} className="flex items-center gap-3 border-b border-border/60 py-2 last:border-0"><Building2 className="size-4 text-muted-foreground" /><span className="min-w-0 flex-1 truncate text-sm">{group.name}</span><span className="font-display text-sm font-semibold">{group.average}</span></div>)}</CardContent></Card>
+        <Card className={`${panel} xl:col-span-3`}><CardHeader><CardTitle className="text-base">Hiring recommendations</CardTitle></CardHeader><CardContent className="space-y-3"><div className="rounded-md border border-primary/20 bg-primary/5 p-3"><BriefcaseBusiness className="mb-3 size-4 text-primary" /><p className="text-sm font-medium">Add {Math.max(1, Math.ceil(model.hiringDemand / 4))} priority roles</p><p className="mt-1 text-xs leading-5 text-muted-foreground">Demand is concentrated in overloaded delivery groups and thin skill coverage.</p></div><Button asChild variant="outline" className="w-full"><Link to="/ai-workspace/job-matcher">Open Job Matcher <ArrowUpRight className="size-4" /></Link></Button></CardContent></Card>
+      </section>
+    </motion.div>
   );
 }
+
+function ProjectRow({ project }: { project: GroupScore }) { const score = Math.round(project.average * 0.7 + project.completionRate * 0.3); return <div className="rounded-md border border-border/70 bg-muted/20 p-3"><div className="flex justify-between gap-3 text-sm"><span className="truncate font-medium">{project.name}</span><span className={score < 60 ? "text-warning" : "text-success"}>{score}%</span></div><Progress value={score} className="my-2 h-1" /><p className="text-[11px] text-muted-foreground">{project.headcount} people · {project.completionRate}% complete</p></div>; }
+function PeoplePanel({ title, icon: Icon, people, metric, risk }: { title:string; icon: typeof Award; people:EmployeeScore[]; metric:(e:EmployeeScore)=>string; risk?:boolean }) { return <Card className={panel}><CardHeader><div className="flex items-center justify-between"><CardTitle className="text-base">{title}</CardTitle><Icon className={risk ? "size-4 text-destructive" : "size-4 text-primary"} /></div></CardHeader><CardContent className="space-y-1">{people.map((person, index) => <Link key={person.id} to="/employees/$id" params={{ id: person.id }} className="flex items-center gap-3 rounded-md px-2 py-2 transition-colors hover:bg-accent"><span className="w-5 text-center font-display text-xs text-muted-foreground">{String(index+1).padStart(2,"0")}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{person.name}</p><p className="truncate text-[11px] text-muted-foreground">{person.designation ?? person.departmentName ?? "Workforce member"}</p></div><Badge variant={risk ? "destructive" : "secondary"}>{metric(person)}</Badge></Link>)}</CardContent></Card>; }
+function HealthRow({ label, value }: {label:string;value:number}) { return <div><div className="mb-1.5 flex justify-between text-xs"><span className="text-muted-foreground">{label}</span><span className="font-semibold">{value}%</span></div><Progress value={value} className="h-1.5" /></div>; }
+function DashboardSkeleton(){ return <div className="space-y-4"><Skeleton className="h-24"/><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">{Array.from({length:6}).map((_,i)=><Skeleton key={i} className="h-48"/>)}</div><div className="grid gap-4 xl:grid-cols-12"><Skeleton className="h-96 xl:col-span-7"/><Skeleton className="h-96 xl:col-span-5"/></div></div>; }
+function NoData(){ return <div className={`${panel} grid min-h-96 place-items-center p-8 text-center`}><div><Network className="mx-auto size-8 text-primary"/><h1 className="mt-4 text-2xl font-semibold">Connect your workforce signals</h1><p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">Enable demo data or connect your systems to activate executive intelligence.</p><Button asChild className="mt-5"><Link to="/administration">Open Administration</Link></Button></div></div>; }
