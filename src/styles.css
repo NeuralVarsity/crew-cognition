@@ -142,3 +142,24 @@
     color: var(--color-foreground);
   }
 }
+
+@keyframes liquid-glass-shimmer {
+  0%, 100% {
+    transform: translate3d(-18%, -8%, 0) rotate(8deg);
+    opacity: 0.32;
+  }
+  50% {
+    transform: translate3d(18%, 8%, 0) rotate(8deg);
+    opacity: 0.55;
+  }
+}
+
+@utility animate-liquid-glass-shimmer {
+  animation: liquid-glass-shimmer 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-liquid-glass-shimmer {
+    animation: none;
+  }
+}
