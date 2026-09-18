@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkforceIntelligenceRouteImport } from './routes/workforce-intelligence'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TeamsRouteImport } from './routes/teams'
+import { Route as TalentIntelligenceRouteImport } from './routes/talent-intelligence'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
@@ -55,6 +56,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const TeamsRoute = TeamsRouteImport.update({
   id: '/teams',
   path: '/teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentIntelligenceRoute = TalentIntelligenceRouteImport.update({
+  id: '/talent-intelligence',
+  path: '/talent-intelligence',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
@@ -293,6 +301,7 @@ export interface FileRoutesById {
   '/server-error': typeof ServerErrorRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/talent-intelligence': typeof TalentIntelligenceRoute
   '/teams': typeof TeamsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/workforce-intelligence': typeof WorkforceIntelligenceRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/server-error'
     | '/settings'
     | '/sitemap.xml'
+    | '/talent-intelligence'
     | '/teams'
     | '/unauthorized'
     | '/workforce-intelligence'
@@ -432,6 +444,7 @@ export interface RootRouteChildren {
   ServerErrorRoute: typeof ServerErrorRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TalentIntelligenceRoute: typeof TalentIntelligenceRoute
   TeamsRoute: typeof TeamsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   WorkforceIntelligenceRoute: typeof WorkforceIntelligenceRoute
@@ -466,6 +479,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/teams'
       preLoaderRoute: typeof TeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent-intelligence': {
+      id: '/talent-intelligence'
+      path: '/talent-intelligence'
+      fullPath: '/talent-intelligence'
+      preLoaderRoute: typeof TalentIntelligenceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -718,6 +738,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServerErrorRoute: ServerErrorRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TalentIntelligenceRoute: TalentIntelligenceRoute,
   TeamsRoute: TeamsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   WorkforceIntelligenceRoute: WorkforceIntelligenceRoute,
