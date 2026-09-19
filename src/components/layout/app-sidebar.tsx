@@ -13,12 +13,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { navGroups, navigation } from "@/config/navigation";
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const { isMobile, setOpenMobile } = useSidebar();
 
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border/70">
@@ -52,7 +54,7 @@ export function AppSidebar() {
                     return (
                       <SidebarMenuItem key={item.url}>
                         <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-                          <Link to={item.url}>
+                          <Link to={item.url} onClick={() => { if (isMobile) setOpenMobile(false); }}>
                             <item.icon />
                             <span>{item.title}</span>
                             {item.badge && (
