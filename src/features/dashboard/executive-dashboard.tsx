@@ -88,7 +88,7 @@ export function ExecutiveDashboard() {
                 </div>
               </div>
             </div>
-            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-t border-border/60 pt-4 text-xs"><span className="min-w-0 text-muted-foreground">AI summary · 12 live signal groups analyzed</span><Link to="/workforce-intelligence" className="flex min-h-11 shrink-0 items-center gap-1 font-semibold text-primary sm:min-h-0">Inspect model <ArrowRight className="size-3.5" /></Link></div>
+            <div className="mt-5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-t border-border/60 pt-4 text-xs"><span className="min-w-0 text-muted-foreground">AI summary · 12 live signal groups analyzed</span><Link to="/workforce-intelligence" className="flex min-h-11 shrink-0 items-center gap-1 font-semibold text-primary xl:min-h-0">Inspect model <ArrowRight className="size-3.5" /></Link></div>
           </div>
         </motion.div>
 
@@ -136,8 +136,8 @@ export function ExecutiveDashboard() {
           <CardContent className="grid gap-5 px-5 pb-5 lg:grid-cols-[.9fr_1.1fr]">
             <div>
               <label htmlFor="team-skill" className="text-xs font-semibold text-muted-foreground">Required skills</label>
-              <div className="mt-2 flex gap-2"><Input id="team-skill" className="h-11 sm:h-9" value={skillInput} onChange={(event) => setSkillInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addSkill(); } }} placeholder="Add a skill" /><Button size="icon" variant="outline" className="size-11 shrink-0 sm:size-9" onClick={addSkill} aria-label="Add required skill"><Plus className="size-4" /></Button></div>
-              <div className="mt-3 flex min-h-16 flex-wrap content-start gap-2">{skills.map((skill) => <Badge key={skill} variant="secondary" className="min-h-11 gap-1.5 py-1.5 xl:min-h-0">{skill}<button type="button" onClick={() => setSkills((current) => current.filter((item) => item !== skill))} aria-label={`Remove ${skill}`} className="grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground xl:size-auto"><X className="size-3" /></button></Badge>)}</div>
+              <div className="mt-2 flex gap-2"><Input id="team-skill" className="h-11 xl:h-9" value={skillInput} onChange={(event) => setSkillInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addSkill(); } }} placeholder="Add a skill" /><Button size="icon" variant="outline" className="size-11 shrink-0 xl:size-9" onClick={addSkill} aria-label="Add required skill"><Plus className="size-4" /></Button></div>
+              <div className="mt-3 flex min-h-16 flex-wrap content-start gap-2">{skills.map((skill) => <Badge key={skill} variant="secondary" className="min-h-11 gap-1.5 py-0 pr-0 xl:min-h-0 xl:py-1.5 xl:pr-2">{skill}<button type="button" onClick={() => setSkills((current) => current.filter((item) => item !== skill))} aria-label={`Remove ${skill}`} className="grid size-11 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground xl:size-auto"><X className="size-3" /></button></Badge>)}</div>
               <div className="mt-4 rounded-md border border-border/60 bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Skill coverage</p><div className="mt-2 flex items-end justify-between"><span className="font-display text-2xl font-semibold">{Math.min(98, 76 + skills.length * 4)}%</span><span className="text-xs text-success">Strong coverage</span></div><Progress value={Math.min(98, 76 + skills.length * 4)} className="mt-3 h-1.5" /></div>
             </div>
             <div className="rounded-md border border-primary/20 bg-primary/5 p-4">
