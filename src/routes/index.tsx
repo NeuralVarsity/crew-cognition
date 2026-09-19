@@ -4,14 +4,14 @@ import { ExecutiveDashboard } from "@/features/dashboard/executive-dashboard";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Executive Dashboard — TalentAI Enterprise" },
+      { title: "AI Workforce Command Center — TalentAI Enterprise" },
       {
         name: "description",
         content:
-          "Top performers, promotion candidates, burnout risks, hiring recommendations and department productivity across your workforce.",
+          "Real-time AI workforce intelligence for talent, delivery, organizational risk, skills, hiring and capacity decisions.",
       },
-      { property: "og:title", content: "Executive Dashboard — TalentAI Enterprise" },
-      { property: "og:description", content: "Workforce intelligence overview for your organization." },
+      { property: "og:title", content: "AI Workforce Command Center — TalentAI Enterprise" },
+      { property: "og:description", content: "An AI operating system for workforce intelligence and executive decisions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

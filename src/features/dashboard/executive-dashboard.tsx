@@ -80,10 +80,10 @@ export function ExecutiveDashboard() {
               </div>
               <div>
                 <div className="flex items-center gap-2 text-success"><TrendingUp className="size-4" /><span className="font-display text-lg font-semibold">6.2%</span><span className="text-xs text-muted-foreground">this month</span></div>
-                <h2 className="mt-5 font-display text-xl font-semibold">Workforce operating efficiently.</h2>
+                <h2 className="mt-5 font-display text-xl font-semibold">{model.health >= 75 ? "Workforce operating efficiently." : model.health >= 55 ? "Workforce stable with emerging pressure." : "Workforce intervention recommended."}</h2>
                 <div className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-                  <SignalLine positive text="Burnout exposure is decreasing across delivery teams." />
-                  <SignalLine positive text={`${data.totals.promotionCandidates} people show near-term promotion readiness.`} />
+                  <SignalLine positive={data.totals.burnoutAlerts === 0} text={data.totals.burnoutAlerts === 0 ? "High-severity burnout alerts remain contained." : `${data.totals.burnoutAlerts} high-severity burnout alerts need intervention.`} />
+                  <SignalLine positive={data.totals.promotionCandidates > 0} text={data.totals.promotionCandidates > 0 ? `${data.totals.promotionCandidates} people show near-term promotion readiness.` : "Promotion readiness needs targeted leadership development."} />
                   <SignalLine text={`${model.overloaded} workloads still need active rebalancing.`} />
                 </div>
               </div>
