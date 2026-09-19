@@ -59,14 +59,14 @@ export function ExecutiveDashboard() {
         </div>
         <div className="flex min-w-0 flex-wrap gap-2 lg:shrink-0">
           <Badge variant="outline" className="hidden h-9 items-center gap-2 border-success/20 bg-success/5 text-success sm:flex"><ShieldCheck className="size-3.5" /> Intelligence verified</Badge>
-          <Button asChild className="min-h-11 sm:min-h-9"><Link to="/ai-workspace"><Bot className="size-4" /> Ask TalentAI</Link></Button>
+          <Button asChild className="min-h-11 xl:min-h-9"><Link to="/ai-workspace"><Bot className="size-4" /> Ask TalentAI</Link></Button>
         </div>
       </header>
 
       <LiveStatus generatedAt={data.generatedAt} />
 
-      <section className="grid gap-4 xl:grid-cols-12">
-        <motion.div initial={reduceMotion ? false : { opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} className={`${panel} relative min-h-[330px] p-5 sm:p-7 xl:col-span-7`}>
+      <section className="grid gap-4 lg:grid-cols-12">
+        <motion.div initial={reduceMotion ? false : { opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} className={`${panel} relative min-h-[330px] p-5 sm:p-7 lg:col-span-7`}>
           <div aria-hidden className="absolute right-0 top-0 size-72 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative flex h-full flex-col">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:justify-between">
@@ -92,7 +92,7 @@ export function ExecutiveDashboard() {
           </div>
         </motion.div>
 
-        <motion.div initial={reduceMotion ? false : { opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 }} className={`${panel} p-5 sm:p-6 xl:col-span-5`}>
+        <motion.div initial={reduceMotion ? false : { opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 }} className={`${panel} p-5 sm:p-6 lg:col-span-5`}>
           <div className="flex items-center justify-between"><div><p className="text-xs font-semibold uppercase text-primary">Generated in real time</p><h2 className="mt-2 font-display text-xl font-semibold">Executive AI brief</h2></div><div className="grid size-10 place-items-center rounded-md border border-primary/20 bg-primary/10"><BrainCircuit className="size-5 text-primary" /></div></div>
           <div className="mt-5 space-y-3">
             <BriefItem icon={TrendingUp} label="Opportunity" title={`${data.totals.promotionCandidates} promotion moves identified`} text="Prioritize high-impact employees with sustained delivery and leadership signals." tone="positive" />
@@ -100,7 +100,7 @@ export function ExecutiveDashboard() {
             <BriefItem icon={UserPlus} label="Hiring" title={`${model.hiringDemand} priority roles recommended`} text="Demand is highest where utilization exceeds available internal mobility." />
             <BriefItem icon={Lightbulb} label="Next best action" title="Rebalance before opening all roles" text={`Move available talent into ${model.weakestDepartment?.name ?? "constrained teams"} to recover capacity.`} />
           </div>
-          <Button asChild variant="outline" className="mt-5 w-full justify-between"><Link to="/ai-workspace">Open full intelligence brief <ArrowUpRight className="size-4" /></Link></Button>
+          <Button asChild variant="outline" className="mt-5 min-h-11 w-full justify-between xl:min-h-9"><Link to="/ai-workspace">Open full intelligence brief <ArrowUpRight className="size-4" /></Link></Button>
         </motion.div>
       </section>
 
@@ -108,7 +108,7 @@ export function ExecutiveDashboard() {
         {model.metrics.map((metric, index) => <MetricCard key={metric.label} metric={metric} index={index} reduceMotion={Boolean(reduceMotion)} />)}
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-12">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
         <Card className={`${panel} xl:col-span-7`}>
           <SectionHead eyebrow="Continuous intelligence" title="AI insight feed" icon={Radar} action="View all signals" href="/talent-intelligence" />
           <CardContent className="space-y-0 px-5 pb-5">
@@ -124,7 +124,7 @@ export function ExecutiveDashboard() {
         </Card>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-12">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
         <Card className={`${panel} xl:col-span-5`}>
           <SectionHead eyebrow="Talent spotlight" title="Top organizational impact" icon={Award} action="View profile" href={`/employees/${model.top[0]?.id ?? ""}`} />
           <CardContent className="px-5 pb-5">
@@ -137,7 +137,7 @@ export function ExecutiveDashboard() {
             <div>
               <label htmlFor="team-skill" className="text-xs font-semibold text-muted-foreground">Required skills</label>
               <div className="mt-2 flex gap-2"><Input id="team-skill" className="h-11 sm:h-9" value={skillInput} onChange={(event) => setSkillInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addSkill(); } }} placeholder="Add a skill" /><Button size="icon" variant="outline" className="size-11 shrink-0 sm:size-9" onClick={addSkill} aria-label="Add required skill"><Plus className="size-4" /></Button></div>
-              <div className="mt-3 flex min-h-16 flex-wrap content-start gap-2">{skills.map((skill) => <Badge key={skill} variant="secondary" className="gap-1.5 py-1.5">{skill}<button type="button" onClick={() => setSkills((current) => current.filter((item) => item !== skill))} aria-label={`Remove ${skill}`} className="rounded-full text-muted-foreground transition-colors hover:text-foreground"><X className="size-3" /></button></Badge>)}</div>
+              <div className="mt-3 flex min-h-16 flex-wrap content-start gap-2">{skills.map((skill) => <Badge key={skill} variant="secondary" className="min-h-11 gap-1.5 py-1.5 xl:min-h-0">{skill}<button type="button" onClick={() => setSkills((current) => current.filter((item) => item !== skill))} aria-label={`Remove ${skill}`} className="grid size-7 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground xl:size-auto"><X className="size-3" /></button></Badge>)}</div>
               <div className="mt-4 rounded-md border border-border/60 bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Skill coverage</p><div className="mt-2 flex items-end justify-between"><span className="font-display text-2xl font-semibold">{Math.min(98, 76 + skills.length * 4)}%</span><span className="text-xs text-success">Strong coverage</span></div><Progress value={Math.min(98, 76 + skills.length * 4)} className="mt-3 h-1.5" /></div>
             </div>
             <div className="rounded-md border border-primary/20 bg-primary/5 p-4">
@@ -149,7 +149,7 @@ export function ExecutiveDashboard() {
         </Card>
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-12">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
         <Card className={`${panel} xl:col-span-7`}>
           <SectionHead eyebrow="Next-quarter intelligence" title="Workforce forecasting" icon={TrendingUp} action="Forecast details" href="/workforce-intelligence" />
           <CardContent className="px-5 pb-5">
@@ -175,7 +175,12 @@ function buildCommandModel(data?: AiIntelligence) {
   const health = data ? Math.min(99, Math.round(data.totals.averageScore * 0.55 + data.totals.overallProductivity * 0.25 + (100 - (risks.length / Math.max(1, employees.length)) * 100) * 0.2)) : 0;
   const confidence = data ? Math.round((data.totals.scored / Math.max(1, data.totals.employees)) * 100) : 0;
   const hiringDemand = Math.max(1, Math.ceil(overloaded / 4));
-  const departments = (data?.departments ?? []).slice(0, 6).map((group, index) => ({ ...group, utilization: Math.min(96, Math.max(42, utilization + ((index % 3) - 1) * 7)), capacity: Math.max(4, 100 - utilization - index * 2) }));
+  const departmentNames = ["Engineering", "AI", "Product", "Marketing", "Sales", "Operations"];
+  const sourceDepartments = data?.departments ?? [];
+  const departments = departmentNames.map((name, index) => {
+    const matching = sourceDepartments.find((group) => group.name.toLowerCase().includes(name.toLowerCase())) ?? sourceDepartments[index % Math.max(1, sourceDepartments.length)];
+    return { id: matching?.id ?? name, name, headcount: matching?.headcount ?? 0, average: matching?.average ?? health, top: matching?.top ?? health, bottom: matching?.bottom ?? health, completionRate: matching?.completionRate ?? 0, rank: matching?.rank ?? index + 1, utilization: Math.min(96, Math.max(42, utilization + ((index % 3) - 1) * 7)), capacity: Math.max(4, 100 - utilization - index * 2) };
+  });
   const weakestDepartment = [...departments].sort((a, b) => a.average - b.average)[0];
   const metrics = data ? [
     { label: "Employees", value: data.totals.employees, delta: "+4.8%", confidence: confidence, note: `${data.totals.scored} active intelligence profiles.`, icon: Users, points: [62, 66, 65, 72, 76, 81, 86] },
@@ -188,6 +193,7 @@ function buildCommandModel(data?: AiIntelligence) {
   const feed = [
     { type: "Promotion", title: `${top[0]?.name ?? "Top talent"} is ready for expanded scope`, text: "Sustained delivery, collaboration and leadership signals exceed cohort benchmarks.", time: "Now", icon: Award, tone: "positive" },
     { type: "Burnout", title: `${risks[0]?.name ?? "Delivery team"} shows capacity pressure`, text: `${risks[0]?.workload.capacity ?? utilization}% utilization with elevated workload persistence.`, time: "4m", icon: Flame, tone: "risk" },
+    { type: "Flight risk", title: `${risks[1]?.name ?? "Critical talent"} has elevated retention signals`, text: "Recognition, workload and activity patterns indicate a timely manager conversation.", time: "7m", icon: TrendingDown, tone: "warning" },
     { type: "Project risk", title: `${weakestDepartment?.name ?? "Product delivery"} requires intervention`, text: "Current performance and capacity indicate a material delivery dependency.", time: "11m", icon: AlertTriangle, tone: "warning" },
     { type: "Hiring", title: `${hiringDemand} role openings can protect next-quarter plans`, text: "AI recommends focused hiring only after internal mobility options are exhausted.", time: "18m", icon: BriefcaseBusiness, tone: "neutral" },
   ];
@@ -222,7 +228,7 @@ function Confidence({ value }: { value: number }) { return <Badge variant="outli
 function SignalLine({ text, positive }: { text: string; positive?: boolean }) { return <div className="flex gap-2"><CheckCircle2 className={positive ? "mt-0.5 size-4 shrink-0 text-success" : "mt-0.5 size-4 shrink-0 text-warning"} /><span>{text}</span></div>; }
 function BriefItem({ icon: Icon, label, title, text, tone }: { icon: typeof TrendingUp; label: string; title: string; text: string; tone?: string }) { const color = tone === "risk" ? "text-destructive bg-destructive/10" : tone === "positive" ? "text-success bg-success/10" : "text-primary bg-primary/10"; return <div className="flex gap-3 rounded-md border border-border/60 bg-muted/20 p-3"><div className={`grid size-8 shrink-0 place-items-center rounded-md ${color}`}><Icon className="size-4" /></div><div><p className="text-[10px] font-semibold uppercase text-muted-foreground">{label}</p><p className="mt-0.5 text-sm font-semibold">{title}</p><p className="mt-1 text-xs leading-4 text-muted-foreground">{text}</p></div></div>; }
 
-function SectionHead({ eyebrow, title, icon: Icon, action, href }: { eyebrow: string; title: string; icon: typeof Radar; action: string; href: string }) { return <CardHeader className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-b border-border/60 p-4 sm:p-5"><div className="min-w-0"><p className="text-[10px] font-semibold uppercase text-primary">{eyebrow}</p><CardTitle className="mt-2 truncate text-base sm:text-lg">{title}</CardTitle></div><Button asChild variant="ghost" size="sm" className="min-h-11 shrink-0 px-2 sm:min-h-8 sm:px-3"><Link to={href}><span className="hidden sm:inline">{action}</span><ArrowRight className="size-4" /><span className="sr-only sm:hidden">{action}</span></Link></Button><Icon className="hidden size-4 text-primary" /></CardHeader>; }
+function SectionHead({ eyebrow, title, icon: Icon, action, href }: { eyebrow: string; title: string; icon: typeof Radar; action: string; href: string }) { return <CardHeader className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-b border-border/60 p-4 sm:p-5"><div className="min-w-0"><p className="text-[10px] font-semibold uppercase text-primary">{eyebrow}</p><CardTitle className="mt-2 truncate text-base sm:text-lg">{title}</CardTitle></div><Button asChild variant="ghost" size="sm" className="min-h-11 shrink-0 px-2 xl:min-h-8 xl:px-3"><Link to={href}><span className="hidden sm:inline">{action}</span><ArrowRight className="size-4" /><span className="sr-only sm:hidden">{action}</span></Link></Button><Icon className="hidden size-4 text-primary" /></CardHeader>; }
 function InsightEvent({ item, last }: { item: ReturnType<typeof buildCommandModel>["feed"][number]; last: boolean }) { const Icon = item.icon; const color = item.tone === "risk" ? "bg-destructive text-destructive" : item.tone === "positive" ? "bg-success text-success" : item.tone === "warning" ? "bg-warning text-warning" : "bg-primary text-primary"; return <div className="relative flex gap-4 py-4"><div className="relative z-10 mt-0.5"><div className={`grid size-8 place-items-center rounded-full bg-opacity-10 ${color.replace("bg-", "bg-")}/10`}><Icon className={`size-4 ${color.split(" ")[1]}`} /></div>{!last && <div className="absolute left-1/2 top-8 h-[calc(100%+1rem)] w-px -translate-x-1/2 bg-border" />}</div><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="mb-2 text-[9px]">{item.type}</Badge><p className="text-sm font-semibold">{item.title}</p></div><span className="shrink-0 text-[10px] text-muted-foreground">{item.time}</span></div><p className="mt-1 text-xs leading-5 text-muted-foreground">{item.text}</p></div></div>; }
 function TeamHealthRow({ group }: { group: ReturnType<typeof buildCommandModel>["departments"][number] }) { const level = group.average >= 75 ? "Healthy" : group.average >= 55 ? "Watch" : "At risk"; const tone = level === "Healthy" ? "text-success" : level === "Watch" ? "text-warning" : "text-destructive"; return <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 py-3"><div className="min-w-0"><div className="flex items-center gap-2"><span className={`size-1.5 rounded-full ${level === "Healthy" ? "bg-success" : level === "Watch" ? "bg-warning" : "bg-destructive"}`} /><span className="truncate text-sm font-medium">{group.name}</span></div><p className="mt-1 pl-3.5 text-[10px] text-muted-foreground">{group.capacity}% capacity · {level}</p></div><div className="w-16"><p className="mb-1 text-right text-[10px] text-muted-foreground">{group.utilization}%</p><Progress value={group.utilization} className="h-1" /></div><span className={`w-8 text-right font-display text-sm font-semibold ${tone}`}>{group.average}</span></div>; }
 
