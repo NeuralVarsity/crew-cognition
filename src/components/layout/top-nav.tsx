@@ -57,7 +57,7 @@ export function TopNav() {
   const primaryRole = roles[0]?.replace(/_/g, " ") ?? "member";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/70 bg-background/82 px-3 backdrop-blur-xl sm:px-4">
+    <header className="sticky top-0 z-30 grid h-14 shrink-0 grid-cols-[auto_auto_minmax(0,1fr)] items-center gap-1 border-b border-border/70 bg-background/82 px-2 backdrop-blur-xl sm:flex sm:gap-2 sm:px-4">
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mx-1 h-5" />
 
@@ -78,12 +78,12 @@ export function TopNav() {
         ))}
       </nav>
 
-      <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+      <div className="ml-auto flex min-w-0 items-center justify-end gap-0.5 sm:gap-2">
         <GlobalSearch />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="hidden gap-2 sm:inline-flex">
+            <Button variant="outline" size="sm" className="hidden gap-2 xl:inline-flex">
               <Building className="h-4 w-4" />
               <span className="max-w-[110px] truncate">{orgQuery.data?.name ?? "Workspace"}</span>
               <ChevronDown className="h-3.5 w-3.5 opacity-60" />
@@ -95,7 +95,7 @@ export function TopNav() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
+        <Button variant="ghost" size="icon" aria-label="Notifications" className="relative size-11 xl:size-9">
           <Bell className="h-4 w-4" />
           <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-primary" />
         </Button>
@@ -104,7 +104,7 @@ export function TopNav() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition hover:bg-accent">
+            <button className="flex min-h-11 items-center gap-2 rounded-full py-1 pl-1 pr-1 transition hover:bg-accent xl:min-h-9 xl:pr-2">
               <Avatar className="h-7 w-7">
                 <AvatarFallback className="bg-primary text-xs text-primary-foreground">
                   {initials(profile?.full_name ?? profile?.email)}

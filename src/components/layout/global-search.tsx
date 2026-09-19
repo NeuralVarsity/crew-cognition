@@ -64,7 +64,7 @@ export function GlobalSearch() {
         variant="outline"
         size="sm"
         onClick={() => setOpen(true)}
-        className="hidden h-9 w-64 justify-start gap-2 text-muted-foreground md:inline-flex lg:w-80"
+        className="hidden h-9 w-64 justify-start gap-2 text-muted-foreground xl:inline-flex xl:w-80"
       >
         <Search className="h-4 w-4" />
         <span className="text-xs">Search…</span>
