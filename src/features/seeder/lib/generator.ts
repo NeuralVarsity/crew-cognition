@@ -99,9 +99,21 @@ const V = DEMO_VOLUME;
 export type SeedSummary = Record<string, number>;
 
 /** Builds the full interconnected demo dataset for one organization. */
+/** Stable 32-bit hash so generated ids are unique per organization. */
+function hashString(value: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    h ^= value.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
 export function generateDemoData(organizationId: string, seed = 20260101): SeedBatch[] {
   const r: Rng = makeRng(seed);
-  uuidRng = makeRng(seed ^ 0x5f356495);
+  // Ids must be deterministic across staged calls, but never collide with rows
+  // belonging to another organization, so the org id is mixed into the stream.
+  uuidRng = makeRng((seed ^ 0x5f356495 ^ hashString(organizationId)) >>> 0);
   const org = organizationId;
   const batches: SeedBatch[] = [];
   const push = (table: string, rows: Record<string, unknown>[]) => batches.push({ table, rows });

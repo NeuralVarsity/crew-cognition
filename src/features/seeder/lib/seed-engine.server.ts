@@ -5,10 +5,16 @@ type AnyClient = SupabaseClient<any, any, any>;
 
 const CHUNK = 500;
 
+/**
+ * Writes rows idempotently: every generated row carries a deterministic `id`,
+ * so re-running a stage overwrites instead of colliding on the primary key.
+ */
 async function insertRows(client: AnyClient, table: string, rows: Record<string, unknown>[]) {
   for (let i = 0; i < rows.length; i += CHUNK) {
     const slice = rows.slice(i, i + CHUNK);
-    const { error } = await client.from(table).insert(slice as never);
+    const { error } = await client
+      .from(table)
+      .upsert(slice as never, { onConflict: "id", ignoreDuplicates: false });
     if (error) throw new Error(`[seed:${table}] ${error.message}`);
   }
 }
