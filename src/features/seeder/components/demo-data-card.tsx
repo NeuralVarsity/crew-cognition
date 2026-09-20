@@ -107,7 +107,7 @@ export function DemoDataCard() {
           description="This deletes every existing record in this organization and replaces it with generated demo data. This cannot be undone."
           confirmLabel="Seed"
           destructive
-          onConfirm={() => seedMutation.mutate({})}
+          onConfirm={() => runOnce(() => seedMutation.mutate({}))}
           trigger={
             <Button size="sm" disabled={busy}>
               {seedMutation.isPending ? (
@@ -124,7 +124,7 @@ export function DemoDataCard() {
           description="Clears the organization and regenerates a brand new randomized demo dataset."
           confirmLabel="Reset"
           destructive
-          onConfirm={() => seedMutation.mutate({ seed: Math.floor(Math.random() * 1_000_000) })}
+          onConfirm={() => runOnce(() => seedMutation.mutate({ seed: Math.floor(Math.random() * 1_000_000) }))}
           trigger={
             <Button size="sm" variant="secondary" disabled={busy}>
               <RotateCcw className="mr-2 h-4 w-4" /> Reset demo data
@@ -136,7 +136,7 @@ export function DemoDataCard() {
           description="This permanently deletes all workforce, integration and analytics records in this organization."
           confirmLabel="Clear"
           destructive
-          onConfirm={() => clearMutation.mutate()}
+          onConfirm={() => runOnce(() => clearMutation.mutate())}
           trigger={
             <Button size="sm" variant="outline" disabled={busy}>
               {clearMutation.isPending ? (
