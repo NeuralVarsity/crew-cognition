@@ -71,6 +71,19 @@ export function DemoDataCard() {
 
   const busy = seedMutation.isPending || clearMutation.isPending;
 
+  /** Guards against a second click landing before React flips the pending flag. */
+  const runOnce = (action: () => void) => {
+    if (inFlight.current || busy) return;
+    inFlight.current = true;
+    try {
+      action();
+    } finally {
+      setTimeout(() => {
+        inFlight.current = false;
+      }, 1500);
+    }
+  };
+
   const refreshScores = () => {
     queryClient.invalidateQueries();
     toast.success("AI scores and analytics refreshed from the latest data");
