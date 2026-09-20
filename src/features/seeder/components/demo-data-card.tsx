@@ -8,21 +8,36 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
 import { clearDemoData, seedDemoData } from "../api/seed.functions";
 
+/** Keeps raw database errors out of the demo UI. */
+function friendlyError(error: unknown): string {
+  const raw = error instanceof Error ? error.message : String(error ?? "");
+  if (/permission|forbidden|not authenticated|role required/i.test(raw))
+    return "You need organization admin access to manage demo data.";
+  if (/network|fetch|timeout|failed to fetch/i.test(raw))
+    return "The demo workspace could not be reached. Please try again.";
+  return "We could not finish updating the demo workspace. Please try again.";
+}
+
 export function DemoDataCard() {
   const queryClient = useQueryClient();
   const runSeed = useServerFn(seedDemoData);
   const runClear = useServerFn(clearDemoData);
+  const inFlight = useRef(false);
+
   const seedMutation = useMutation({
     mutationFn: async (vars: { seed?: number } = {}) => {
       const seed = vars.seed ?? 20260101;
       let fromBatch = 0;
       let rows = 0;
       const startedAt = Date.now();
+      toast.loading("Refreshing demo environment…", { id: "seed-progress" });
       // The dataset is large, so seeding streams through in stages.
       for (let stage = 0; stage < 40; stage++) {
         const res = await runSeed({ data: { reset: fromBatch === 0, seed, fromBatch } });
         rows += res.totalRows;
-        toast.info(`Seeding… ${rows.toLocaleString()} rows written`, { id: "seed-progress" });
+        toast.loading(`Refreshing demo environment… ${rows.toLocaleString()} records ready`, {
+          id: "seed-progress",
+        });
         if (res.done || res.nextBatch == null) break;
         fromBatch = res.nextBatch;
       }
@@ -30,20 +45,27 @@ export function DemoDataCard() {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries();
-      toast.success(`Seeded ${res.rows.toLocaleString()} demo rows in ${(res.durationMs / 1000).toFixed(1)}s`, {
-        id: "seed-progress",
-      });
+      toast.success(
+        `Demo workspace generated successfully — ${res.rows.toLocaleString()} records in ${(res.durationMs / 1000).toFixed(1)}s`,
+        { id: "seed-progress" },
+      );
     },
-    onError: (e: Error) => toast.error(e.message, { id: "seed-progress" }),
+    onError: (e) => {
+      console.error("[demo-data] seed failed", e);
+      toast.error(friendlyError(e), { id: "seed-progress" });
+    },
   });
 
   const clearMutation = useMutation({
     mutationFn: () => runClear({}),
     onSuccess: (res) => {
       queryClient.invalidateQueries();
-      toast.success(`Removed ${res.totalRows.toLocaleString()} rows`);
+      toast.success(`Demo workspace cleared — ${res.totalRows.toLocaleString()} records removed`);
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e) => {
+      console.error("[demo-data] clear failed", e);
+      toast.error(friendlyError(e));
+    },
   });
 
   const busy = seedMutation.isPending || clearMutation.isPending;
